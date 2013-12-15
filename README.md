@@ -1,7 +1,7 @@
 Simple Token Authentication
 ===========================
 
-Token authentication support has been removed from [Devise][devise] for security reasons. In [this gist][original-gist], Devise's [José Valim][josevalim] explains how tkoen authentication should be performed in order to remain safe.
+Token authentication support has been removed from [Devise][devise] for security reasons. In [this gist][original-gist], Devise's [José Valim][josevalim] explains how token authentication should be performed in order to remain safe.
 
 This gem packages the content of the gist.
 
