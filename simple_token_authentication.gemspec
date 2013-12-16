@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Gonzalo Bulnes Guilpain"]
   s.email       = ["gon.bulnes@gmail.com"]
   s.homepage    = "https://github.com/gonzalo-bulnes/simple_token_authentication"
-  s.summary     = "Simple (but safe) token authentication for Rails API (compatible with Devise)."
+  s.summary     = "Simple (but safe) token authentication for Rails apps or API with Devise."
   s.license     = "GPLv3"
 
   s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
