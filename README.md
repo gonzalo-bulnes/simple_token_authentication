@@ -104,6 +104,13 @@ Credits
 
 It may sound a bit redundant, but this gem wouldn't exist without [this gist][original-gist].
 
+Help Wanted
+-----------
+
+Hi, thanks for having kept reading! You can probably help me to bump this gem version to `1.0.0`: I want it to be tested before removing the `beta` flag. If you can provide some help, please make yourself at home at the [issue #1][1].
+
+  [1]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues/1
+
 License
 -------
 
