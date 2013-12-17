@@ -10,3 +10,7 @@ test/dummy/.sass-cache
 # Rubygems
 *.gem
 
+# RVM
+.ruby-version
+.ruby-gemset
+
