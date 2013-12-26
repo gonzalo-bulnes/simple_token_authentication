@@ -28,10 +28,10 @@ module SimpleTokenAuthentication
 
       user_email = params[:user_email].presence
       # See https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
-      if User.respond_to? "find_by_email"
-        user = user_email && User.find_by_email(user_email)
-      elsif User.respond_to? "find_by"
+      if User.respond_to? "find_by"
         user = user_email && User.find_by(email: user_email)
+      elsif User.respond_to? "find_by_email"
+        user = user_email && User.find_by_email(user_email)
       end
 
       # Notice how we use Devise.secure_compare to compare the token
