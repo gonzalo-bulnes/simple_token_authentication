@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    simple_token_authentication (1.0.0.pre.beta.4)
+    simple_token_authentication (1.0.0.beta.5)
       actionmailer (>= 3.2.6, < 5)
       activerecord (>= 3.2.6, < 5)
       devise (~> 3.2.0)
