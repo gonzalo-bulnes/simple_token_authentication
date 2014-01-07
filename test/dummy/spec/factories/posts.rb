@@ -6,5 +6,6 @@ FactoryGirl.define do
   end
 
   factory :invalid_post, class: :post do
+    body "TODO"
   end
 end

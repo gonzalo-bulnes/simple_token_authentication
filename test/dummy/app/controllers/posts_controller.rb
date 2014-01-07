@@ -1,4 +1,8 @@
 class PostsController < ApplicationController
+
+  # Please do notice that this controller does NOT call `acts_as_authentication_handler`.
+  # See test/dummy/spec/requests/posts_specs.rb
+
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   # GET /posts
