@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @private_post.title %>
+</p>
+
+<p>
+  <strong>Body:</strong>
+  <%= @private_post.body %>
+</p>
+
+<p>
+  <strong>Published:</strong>
+  <%= @private_post.published %>
+</p>
+
+<%= link_to 'Edit', edit_private_post_path(@private_post) %> |
+<%= link_to 'Back', private_posts_path %>
