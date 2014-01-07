@@ -2,6 +2,7 @@ Simple Token Authentication
 ===========================
 
 [![Gem Version](https://badge.fury.io/rb/simple_token_authentication.png)](http://badge.fury.io/rb/simple_token_authentication)
+[![Build Status](https://secure.travis-ci.org/gonzalo-bulnes/simple_token_authentication?branch=master)](http://travis-ci.org/gonzalo-bulnes/simple_token_authentication)
 
 Token authentication support has been removed from [Devise][devise] for security reasons. In [this gist][original-gist], Devise's [José Valim][josevalim] explains how token authentication should be performed in order to remain safe.
 

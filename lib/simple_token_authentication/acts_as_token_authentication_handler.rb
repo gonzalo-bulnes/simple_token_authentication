@@ -1,5 +1,5 @@
 module SimpleTokenAuthentication
-  module ActsAsTokenAuthenticationHandler
+  module ActsAsTokenAuthenticationHandlerMethods
     extend ActiveSupport::Concern
 
     # Please see https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
@@ -45,10 +45,22 @@ module SimpleTokenAuthentication
         sign_in user, store: false
       end
     end
+  end
+
+  module ActsAsTokenAuthenticationHandler
+    extend ActiveSupport::Concern
+
+    # I have insulated the methods into an additional module to avoid before_filters
+    # to be applied by the `included` block before acts_as_token_authentication_handler was called.
+    # See https://github.com/gonzalo-bulnes/simple_token_authentication/issues/8#issuecomment-31707201
+
+    included do
+      # nop
+    end
 
     module ClassMethods
       def acts_as_token_authentication_handler(options = {})
-        include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
+        include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods
       end
     end
   end

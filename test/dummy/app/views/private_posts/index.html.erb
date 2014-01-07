@@ -1,0 +1,31 @@
+<h1>Listing private_posts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Body</th>
+      <th>Published</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @private_posts.each do |private_post| %>
+      <tr>
+        <td><%= private_post.title %></td>
+        <td><%= private_post.body %></td>
+        <td><%= private_post.published %></td>
+        <td><%= link_to 'Show', private_post %></td>
+        <td><%= link_to 'Edit', edit_private_post_path(private_post) %></td>
+        <td><%= link_to 'Destroy', private_post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Private post', new_private_post_path %>
