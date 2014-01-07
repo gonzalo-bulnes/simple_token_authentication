@@ -2,8 +2,9 @@
 
 FactoryGirl.define do
   factory :post do
-    title "MyString"
-    body "MyText"
-    published false
+    title "Gems testing with RSpec and Cucumber"
+  end
+
+  factory :invalid_post, class: :post do
   end
 end

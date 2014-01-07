@@ -12,7 +12,7 @@ describe Post do
     should respond_to :body
   end
 
-  it "has a published" do
+  it "has a state" do
     should respond_to :published
   end
 
@@ -38,9 +38,9 @@ describe Post do
   # attributes or objects are required.
   # See FactoryGirl.attributes_for() documentation
   #
-  # it "has an invalid factory" do
-  #   FactoryGirl.build(:invalid_post).should be_valid
-  # end
+  it "has an invalid factory" do
+    FactoryGirl.build(:invalid_post).should_not be_valid
+  end
 
   # Uncomment if your model has required attributes
   #
@@ -54,9 +54,9 @@ describe Post do
   # And this is an alternative way, which takes advantage of factories,
   # it's up to you to chose one, the other, or use both together.
   #
-  # it "requires a 'attribute'" do
-  #   FactoryGirl.build(:post, attribute: "").should_not be_valid
-  # end
+  it "requires a 'title'" do
+    FactoryGirl.build(:post, title: "").should_not be_valid
+  end
 
   # methods
 
