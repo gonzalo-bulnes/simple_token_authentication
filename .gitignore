@@ -14,3 +14,7 @@ test/dummy/.sass-cache
 .ruby-version
 .ruby-gemset
 
+
+# Editors
+simple_token_authentication.sublime-project
+simple_token_authentication.sublime-workspace
