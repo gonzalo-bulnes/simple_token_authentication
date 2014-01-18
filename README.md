@@ -73,7 +73,8 @@ rake db:migrate
 Configuration
 -------------
 
-Configure options with an initializer.  Below is an example with reasonable defaults:
+The behavior of simple_token_authentication can be customized with an initializer.
+Below is an example with reasonable defaults:
 
 ```ruby
 # config/initializers/simple_token_authentication.rb
