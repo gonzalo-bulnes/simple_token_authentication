@@ -79,13 +79,17 @@ Below is an example with reasonable defaults:
 ```ruby
 # config/initializers/simple_token_authentication.rb
 
-# sign_in_token defines if a user successfully authenticates with a token if 
-# they should have their session stored.  The default is false.
-#   false - user is not stored in the session, auth token must be provided 
-#           with each access
-#   true  - user is stored in the session, auth token must only be provided
-#           once
-SimpleTokenAuthentication.sign_in_token = false
+SimpleTokenAuthentication.configure do |config|
+
+  # sign_in_token defines if a user successfully authenticates with a token if 
+  # they should have their session stored.  The default is false.
+  #   false - user is not stored in the session, auth token must be provided 
+  #           with each access
+  #   true  - user is stored in the session, auth token must only be provided
+  #           once
+  config.sign_in_token = false
+end
+
 ```
 
 
