@@ -73,17 +73,22 @@ end
 Configuration
 -------------
 
-Configure options with an initializer.  Below is an example with reasonable defaults:
+Some aspects of the behavior of _Simple Token Authentication_ can be customized with an initializer.
+Below is an example with reasonable defaults:
 
 ```ruby
 # config/initializers/simple_token_authentication.rb
 
-# Configure the session persistence policy after a successful sign in,
-# in other words, if the authentication token acts as a signin token.
-# If true, user is stored in the session and the authentication token and
-# email may be provided only once.
-# If false, users must provide their authentication token and email at every request.
-# SimpleTokenAuthentication.sign_in_token = false
+SimpleTokenAuthentication.configure do |config|
+
+  # Configure the session persistence policy after a successful sign in,
+  # in other words, if the authentication token acts as a signin token.
+  # If true, user is stored in the session and the authentication token and
+  # email may be provided only once.
+  # If false, users must provide their authentication token and email at every request.
+  # config.sign_in_token = false
+
+end
 ```
 
 Usage
