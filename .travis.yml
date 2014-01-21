@@ -10,5 +10,6 @@ before_script:
   - RAILS_ENV=test bundle exec rake db:create
   - RAILS_ENV=test bundle exec rake db:schema:load
   - RAILS_ENV=test bundle exec rake db:seed
+  - cd ../..
 
-script: bundle exec rspec spec
+script: bundle exec cucumber
