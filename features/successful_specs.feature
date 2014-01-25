@@ -5,6 +5,7 @@ Feature: Smoke test
   I want to be able to programatically run RSpec within the dummy app
 
   @announce
+  @rspec
   Scenario: Run RSpec within the context of the dummy app
     When I run `rspec`
     Then the exit status should be 0
