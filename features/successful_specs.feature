@@ -4,12 +4,12 @@ Feature: Smoke test
   And to drive the dummy app setup with Cucumber and Aruba
   I want to be able to programatically run RSpec within the dummy app
 
-  @announce
   @rspec
   Scenario: Run RSpec within the context of the dummy app
+    Given I have a dummy app
     When I run `rspec`
     Then the exit status should be 0
     And the output should match:
       """
-      54 examples, 0 failures
+      0 failures
       """

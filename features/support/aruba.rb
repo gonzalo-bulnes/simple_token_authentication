@@ -1,7 +1,7 @@
 require 'aruba/cucumber'
 
 Before do
-  @dirs = ["test/dummy"]
+  @dirs = ["spec/dummy"]
 end
 
 Before('@rspec') do
