@@ -102,17 +102,29 @@ In fact, you can mix both methods and provide the `user_email` with one and the 
 
 If sign-in is successful, no other authentication method will be run, but if it doesn't (the authentication params were missing, or incorrect) then Devise takes control and tries to `authenticate_user!` with its own modules.
 
+Development
+-----------
+
+### Testing
+
+Since `v1.0.0`, this gem development is test-driven. Each use case should be described with [RSpec][rspec] within an example app. That app will be created and configured automatically by [Aruba][aruba] as a [Cucumber][cucumber] feature.
+
+The resulting Cucumber features are a bit verbose, and their output when errors occur is not ideal, but their output when they are passing, on the contrary, provides an easy to reproduce recipe to build the example app. I find that useful enough to be patient with red scenarii for now.
+
+  [aruba]: https://github.com/cucumber/aruba
+  [cucumber]: https://github.com/cucumber/cucumber-rails
+  [rspec]: https://www.relishapp.com/rspec/rspec-rails/docs
+
+You can run the full test suite with `cd simple_token_authentication && rake`.
+
+### Contributions
+
+Contributions are welcome! I'm not keeping a list of contributors for now, but any PR which references us all will be welcome.
+
 Credits
 -------
 
 It may sound a bit redundant, but this gem wouldn't exist without [this gist][original-gist].
-
-Help Wanted
------------
-
-Hi, thanks for having kept reading! You can probably help me to bump this gem version to `1.0.0`: I want it to be tested before removing the `beta` flag. If you can provide some help, please make yourself at home at the [issue #1][1].
-
-  [1]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues/1
 
 License
 -------
