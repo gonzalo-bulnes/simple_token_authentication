@@ -14,3 +14,6 @@ test/dummy/.sass-cache
 .ruby-version
 .ruby-gemset
 
+# dummy app
+spec/dummy
+
