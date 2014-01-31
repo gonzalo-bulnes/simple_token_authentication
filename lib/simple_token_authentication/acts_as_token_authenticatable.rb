@@ -18,7 +18,7 @@ module SimpleTokenAuthentication
     def generate_authentication_token
       loop do
         token = Devise.friendly_token
-        break token unless User.where(authentication_token: token).first
+        break token unless self.class.where(authentication_token: token).first
       end
     end
 
