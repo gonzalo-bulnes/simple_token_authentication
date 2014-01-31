@@ -35,7 +35,7 @@ Define which controller will handle authentication (typ. `ApplicationController`
 
 class ApplicationController < ActionController::Base
   # ...
-  acts_as_token_authentication_handler
+  acts_as_token_authentication_handler_for User
 
   # ...
 end
