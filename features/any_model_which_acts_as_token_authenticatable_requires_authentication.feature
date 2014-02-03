@@ -1,11 +1,11 @@
 # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/9
-Feature: Model which acts as token authenticatable requires authentication
+Feature: Any model which acts as token authenticatable requires authentication
   As a developer
   In order to protect some models with token authentication
   I want any model which acts as token authenticatable to require authentication
 
   @rspec
-  Scenario: Before calling `acts_as_token_authenticatable` no authentication is required
+  Scenario: Even if others do, models which don't act as token authenticatable do not require authentication
     Given I have a dummy app
 
     And I run `rails generate scaffold post title:string body:text --test-framework rspec --fixture-replacement factory_girl`
