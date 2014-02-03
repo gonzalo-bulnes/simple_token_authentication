@@ -70,6 +70,21 @@ rails g migration add_authentication_token_to_users authentication_token:string:
 rake db:migrate
 ```
 
+Configuration
+------------
+
+We are passing store false, so the user is not actually stored in the session and a token is needed for every request. If you want the token to work as a sign in token, you can simply change configuration.
+
+For this, add initializer file:
+
+	config/initializers/simple_token_authentication.rb
+
+And change default for persistent authentication
+
+    SimpleTokenAuthentication.configure do |config|
+    	config.persistent = true
+    end
+
 Usage
 -----
 
