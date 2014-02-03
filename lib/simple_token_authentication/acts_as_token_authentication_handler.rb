@@ -53,8 +53,7 @@ module SimpleTokenAuthentication
         # actually stored in the session and a token is needed
         # for every request. If you want the token to work as a
         # sign in token, you can simply remove store: false.
-        sign_in_token = SimpleTokenAuthentication.sign_in_token.presence
-        sign_in entity, store: sign_in_token
+        sign_in entity, store: SimpleTokenAuthentication.sign_in_token
       end
     end
 

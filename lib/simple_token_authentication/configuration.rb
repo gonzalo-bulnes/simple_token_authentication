@@ -1,19 +1,13 @@
 module SimpleTokenAuthentication
   module Configuration
-    attr_accessor(
-      :sign_in_token,
-    )
+
+    mattr_accessor :sign_in_token
+
+    # Default configuration
+    @@sign_in_token = false
 
     def configure
-      yield self
-    end
-
-    def self.extended(base)
-      base.set_default_configuration
-    end
-
-    def set_default_configuration
-      self.sign_in_token = false
+      yield self if block_given?
     end
   end
 end
