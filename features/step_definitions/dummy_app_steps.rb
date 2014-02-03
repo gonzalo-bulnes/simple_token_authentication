@@ -1,4 +1,10 @@
 Given /^I have a dummy app$/ do
+  raise "This step is deprecated, use 'I have a dummy app with a Devise-enabled User' instead."
+end
+
+Given /^I have a dummy app with a Devise-enabled (\w+)$/ do |model|
+  # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
+
   steps %Q{
     Given I cd to "../.."
     And a directory named "spec/dummy"
@@ -40,16 +46,14 @@ Given /^I have a dummy app$/ do
       """
   }
 
-  # By adding Devise to User, I implicitely add a User model. That's necessary
-  # because SimpleTokenAuthentication depends on it.
-  # See https://github.com/gonzalo-bulnes/simple_token_authentication/issues/2
+  # By adding Devise to a model, I implicitely create that model.
   steps %Q{
-    And I run `rails generate devise User`
+    And I run `rails generate devise #{model.camelize.singularize}`
   }
 
   # See https://github.com/gonzalo-bulnes/simple_token_authentication#installation
   steps %Q{
-    And I run `rails g migration add_authentication_token_to_users authentication_token:string:index`
+    And I run `rails g migration add_authentication_token_to_#{model.underscore.pluralize} authentication_token:string:index`
   }
 end
 
