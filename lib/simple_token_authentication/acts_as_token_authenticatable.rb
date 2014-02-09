@@ -22,6 +22,16 @@ module SimpleTokenAuthentication
       end
     end
 
+    def token_authentication_params
+      {}.tap do |params|
+        if self.respond_to?(:authentication_token) && self.authentication_token &&
+          self.respond_to?(:email) && self.email
+          params[:user_token] = authentication_token
+          params[:user_email] = email
+        end
+      end
+    end
+
     module ClassMethods
       def acts_as_token_authenticatable(options = {})
         include SimpleTokenAuthentication::ActsAsTokenAuthenticatable
