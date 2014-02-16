@@ -57,6 +57,14 @@ Given /^I have a dummy app with a Devise-enabled (\w+)$/ do |model|
   }
 end
 
+Given /^a scaffolded (\w+)$/ do |model|
+  # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
+
+  steps %Q{
+    And I run `rails generate scaffold #{model.underscore.singularize} title:string body:text --test-framework rspec --fixture-replacement factory_girl`
+  }
+end
+
 Given /^I prepare the test database$/ do
   steps %{
     And I set the environment variables to:

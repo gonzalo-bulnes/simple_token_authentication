@@ -7,9 +7,8 @@ Feature: Any model which acts as token authenticatable requires authentication
   @rspec
   Scenario: Even if others do, models which don't act as token authenticatable do not require authentication
     Given I have a dummy app with a Devise-enabled User
-
-    And I run `rails generate scaffold post title:string body:text --test-framework rspec --fixture-replacement factory_girl`
-    And I run `rails generate scaffold private_post title:string body:text --test-framework rspec --fixture-replacement factory_girl`
+    And a scaffolded Post
+    And a scaffolded PrivatePost
     And I prepare the test database
 
     And I overwrite "app/controllers/application_controller.rb" with:
