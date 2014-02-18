@@ -10,7 +10,7 @@ Feature: Any model can act as token authenticatable
     And I prepare the test database
     And the `authenticate_user!` method always raises an exception
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler`
+    And PrivatePostsController `acts_as_token_authentication_handler_for` User
     And I write to "spec/requests/private_posts_spec.rb" with:
       """
       require 'spec_helper'
@@ -50,7 +50,7 @@ Feature: Any model can act as token authenticatable
     And I prepare the test database
     And the `authenticate_api_admin!` method always raises an exception
     And ApiAdmin `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler`
+    And PrivatePostsController `acts_as_token_authentication_handler_for` ApiAdmin
     And I write to "spec/requests/private_posts_spec.rb" with:
       """
       require 'spec_helper'
