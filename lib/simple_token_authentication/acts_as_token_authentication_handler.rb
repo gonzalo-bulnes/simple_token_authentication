@@ -14,7 +14,8 @@ module SimpleTokenAuthentication
     end
 
     def authenticate_entity!
-      self.method("authenticate_#{@@entity.name.downcase}!".to_sym).call
+      # Caution: entity should be a singular camel-cased name but could be pluralized or underscored.
+      self.method("authenticate_#{@@entity.name.singularize.underscore}!".to_sym).call
     end
 
 
@@ -24,10 +25,10 @@ module SimpleTokenAuthentication
     def authenticate_entity_from_token!
       # Set the authentication token params if not already present,
       # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
-      params_token_name = "#{@@entity.name.downcase}_token".to_sym
-      params_email_name = "#{@@entity.name.downcase}_email".to_sym
-      header_token_name = "X-#{@@entity.name.capitalize}-Token"
-      header_email_name = "X-#{@@entity.name.capitalize}-Email"
+      params_token_name = "#{@@entity.name.singularize.underscore}_token".to_sym
+      params_email_name = "#{@@entity.name.singularize.underscore}_email".to_sym
+      header_token_name = "X-#{@@entity.name.singularize.camelize}-Token"
+      header_email_name = "X-#{@@entity.name.singularize.camelize}-Email"
       if token = params[params_token_name].blank? && request.headers[header_token_name]
         params[params_token_name] = token
       end
