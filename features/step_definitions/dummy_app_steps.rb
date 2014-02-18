@@ -65,7 +65,7 @@ Given /^a scaffolded (\w+)$/ do |model|
   }
 end
 
-Given /^the `authenticate_user!` method always raises an exception$/ do
+Given /^the `(\w+!?)` method always raises an exception$/ do |method_name|
 
   steps %Q{
     And I overwrite "app/controllers/application_controller.rb" with:
@@ -87,8 +87,8 @@ Given /^the `authenticate_user!` method always raises an exception$/ do
         # See test/dummy/app/controllers/posts_controller.rb and
         # test/dummy/app/controllers/private_posts_controller.rb
 
-        def authenticate_user!
-          raise "`authenticate_user!` was called."
+        def #{method_name}
+          raise "`#{method_name}` was called."
         end
       end
       """
