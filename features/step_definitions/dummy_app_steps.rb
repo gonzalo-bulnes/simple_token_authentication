@@ -152,6 +152,39 @@ Given /^the `(\w+!?)` method always raises an exception$/ do |method_name|
   }
 end
 
+Given /^the `(\w+!?)` and `(\w+!?)` methods always raise an exception$/ do |first_method_name, second_method_name|
+  steps %Q{
+    And I overwrite "app/controllers/application_controller.rb" with:
+      """
+      class ApplicationController < ActionController::Base
+        # Prevent CSRF attacks by raising an exception.
+        # For APIs, you may want to use :null_session instead.
+        protect_from_forgery with: :exception
+
+        # While `acts_as_token_authentication_handler` was not called,
+        # neither should be `authenticate_user!`.
+        # See https://github.com/gonzalo-bulnes/simple_token_authentication/issues/8
+        #
+        # Yet once `acts_as_token_authentication_handler` was called, `authenticate_user!`
+        # should also be called. Run `rspec` to ensure that's being true.
+        # If called, the `authenticate_user!` method will raise an exception, that
+        # allows both cases to be covered by their own spec example.
+        #
+        # See test/dummy/app/controllers/posts_controller.rb and
+        # test/dummy/app/controllers/private_posts_controller.rb
+
+        def #{first_method_name}
+          raise "`#{first_method_name}` was called."
+        end
+
+        def #{second_method_name}
+          raise "`#{second_method_name}` was called."
+        end
+      end
+      """
+  }
+end
+
 Given /^(\w+) `acts_as_token_authenticatable`$/ do |model|
   # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
 
