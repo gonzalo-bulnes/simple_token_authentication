@@ -5,7 +5,7 @@ Feature: Any model which acts as token authentication handler requires authentic
   I want any model which acts as token authenticatable to require authentication
 
   @rspec
-  Scenario: Even if others do, models which don't act as token authentication handlers do not require authentication
+  Scenario: Even if others do, controllers which don't act as token authentication handlers do not require authentication
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded Post
     And a scaffolded PrivatePost
@@ -73,7 +73,7 @@ Feature: Any model which acts as token authentication handler requires authentic
       """
 
   @rspec
-  Scenario: Any model which acts as token authentication handler requires authentication
+  Scenario: Any controller which acts as token authentication handler requires authentication from the corresponding model
     Given I have a dummy app with a Devise-enabled User
 
     And a scaffolded Post
