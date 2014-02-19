@@ -28,20 +28,7 @@ Install [Devise][devise] with any modules you want, then add the gem to your `Ge
 gem 'simple_token_authentication'
 ```
 
-Define which controller will handle authentication (typ. `ApplicationController`):
-
-```ruby
-# app/controllers/application_controller.rb
-
-class ApplicationController < ActionController::Base
-  # ...
-  acts_as_token_authentication_handler
-
-  # ...
-end
-```
-
-Define which model or models will be token authenticatable (typ. `User`):
+First define which model or models will be token authenticatable (typ. `User`):
 
 ```ruby
 # app/models/user.rb
@@ -68,6 +55,19 @@ If the model or models you chose have no `:authentication_token` attribute, add 
 ```bash
 rails g migration add_authentication_token_to_users authentication_token:string:index
 rake db:migrate
+```
+
+Finally define which controller will handle authentication (typ. `ApplicationController`) for which _token authenticatable_ model:
+
+```ruby
+# app/controllers/application_controller.rb
+
+class ApplicationController < ActionController::Base
+  # ...
+  acts_as_token_authentication_handler_for User
+
+  # ...
+end
 ```
 
 Usage
@@ -116,6 +116,17 @@ The resulting Cucumber features are a bit verbose, and their output when errors 
   [rspec]: https://www.relishapp.com/rspec/rspec-rails/docs
 
 You can run the full test suite with `cd simple_token_authentication && rake`.
+
+### Executable documentation
+
+The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format:
+
+```bash
+cd simple_token_authentication
+rake features_html # generate the features documentation
+
+# Open doc/features.html in your preferred web browser.
+```
 
 ### Contributions
 

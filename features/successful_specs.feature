@@ -6,7 +6,7 @@ Feature: Smoke test
 
   @rspec
   Scenario: Run RSpec within the context of the dummy app
-    Given I have a dummy app
+    Given I have a dummy app with a Devise-enabled User
     When I run `rspec`
     Then the exit status should be 0
     And the output should match:

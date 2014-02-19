@@ -26,6 +26,10 @@ begin
     t.cucumber_opts = "--format pretty"
   end
 
+  Cucumber::Rake::Task.new(:features_html) do |t|
+    t.cucumber_opts = "--format html --out doc/features.html"
+  end
+
 rescue LoadError
   desc 'Cucumber rake task not available'
   task :features do
