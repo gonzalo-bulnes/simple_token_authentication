@@ -117,6 +117,17 @@ The resulting Cucumber features are a bit verbose, and their output when errors 
 
 You can run the full test suite with `cd simple_token_authentication && rake`.
 
+### Executable documentation
+
+The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format:
+
+```bash
+cd simple_token_authentication
+rake features_html # generate the features documentation
+
+# Open doc/features.html in your preferred web browser.
+```
+
 ### Contributions
 
 Contributions are welcome! I'm not keeping a list of contributors for now, but any PR which references us all will be welcome.
