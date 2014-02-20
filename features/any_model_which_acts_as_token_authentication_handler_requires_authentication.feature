@@ -83,7 +83,7 @@ Feature: Any model which acts as token authentication handler requires authentic
     And the `authenticate_user!` method always raises an exception
 
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler`
 
     And I write to "spec/requests/posts_spec.rb" with:
       """
