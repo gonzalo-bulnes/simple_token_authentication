@@ -83,7 +83,7 @@ Feature: Any model which acts as token authentication handler requires authentic
     And the `authenticate_user!` method always raises an exception
 
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler`
 
     And I write to "spec/requests/posts_spec.rb" with:
       """
@@ -112,14 +112,16 @@ Feature: Any model which acts as token authentication handler requires authentic
       describe "PrivatePosts" do
         describe "GET /private_posts" do
 
-          context "since ApplicationController#acts_as_authentication_handler WAS called" do
+          context "since User `acts_as_token_authenticatable`" do
+            context "and ApplicationController#acts_as_authentication_handler WAS called" do
 
-            # See spec/dummy/app/controllers/private_posts_controller.rb
+              # See spec/dummy/app/controllers/private_posts_controller.rb
 
-            it "does require authentication" do
-              # `authenticate_user!` is configured to raise an exception when called,
-              # see spec/dummy/app/controllers/application_controller.rb
-              lambda { get private_posts_path }.should raise_exception(RuntimeError)
+              it "does require authentication" do
+                # `authenticate_user!` is configured to raise an exception when called,
+                # see spec/dummy/app/controllers/application_controller.rb
+                lambda { get private_posts_path }.should raise_exception(RuntimeError)
+              end
             end
           end
         end
@@ -165,12 +167,17 @@ Feature: Any model which acts as token authentication handler requires authentic
       """
       PrivatePosts
         GET /private_posts
-          since ApplicationController#acts_as_authentication_handler WAS called
-            does require authentication
+          since User `acts_as_token_authenticatable`
+            and ApplicationController#acts_as_authentication_handler WAS called
+              does require authentication
       """
     And the output should match:
       """
       PrivatePostsController
         actions
           all require authentication
+      """
+    And the output should contain:
+      """
+      DEPRECATION WARNING: `acts_as_token_authentication_handler()` is deprecated and may be removed from future releases, use `acts_as_token_authentication_handler_for(User)` instead.
       """
