@@ -102,6 +102,35 @@ In fact, you can mix both methods and provide the `user_email` with one and the 
 
 If sign-in is successful, no other authentication method will be run, but if it doesn't (the authentication params were missing, or incorrect) then Devise takes control and tries to `authenticate_user!` with its own modules.
 
+Documentation
+-------------
+
+### Executable documentation
+
+The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format:
+
+```bash
+cd simple_token_authentication
+rake features_html # generate the features documentation
+
+# Open doc/features.html in your preferred web browser.
+```
+
+I find that HTML output quite enjoyable, I hope you'll do so!
+
+### Frequently Asked Questions
+
+Any question? Please don't hesitate to open a new issue to get help. I keep questions tagged to make possible to [review the open questions][open-questions], while closed questions are organized as a sort of [FAQ][faq].
+
+  [open-questions]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues?labels=question&page=1&state=open
+  [faq]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues?direction=desc&labels=question&page=1&sort=comments&state=closed
+
+### Changelog
+
+Releases are commented to provide a brief [changelog][changelog].
+
+  [changelog]: https://github.com/gonzalo-bulnes/simple_token_authentication/releases
+
 Development
 -----------
 
@@ -118,22 +147,11 @@ The resulting Cucumber features are a bit verbose, and their output when errors 
 
 You can run the full test suite with `cd simple_token_authentication && rake`.
 
-### Executable documentation
-
-The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format:
-
-```bash
-cd simple_token_authentication
-rake features_html # generate the features documentation
-
-# Open doc/features.html in your preferred web browser.
-```
-
-I find that HTML output quite enjoyable, I hope you'll do so!
-
 ### Contributions
 
-Contributions are welcome! I'm not keeping a list of contributors for now, but any PR which references us all will be welcome.
+Contributions are welcome! I'm not personally maintaining any [list of contributors][contributors] for now, but any PR which references us all will be welcome.
+
+  [contributors]: https://github.com/gonzalo-bulnes/simple_token_authentication/graphs/contributors
 
 Credits
 -------
