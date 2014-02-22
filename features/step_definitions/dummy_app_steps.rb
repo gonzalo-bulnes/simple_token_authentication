@@ -34,6 +34,12 @@ Given /^I have a dummy app with a Devise-enabled (\w+)$/ do |model|
       """
       --format documentation
       """
+    And a directory named "spec/support"
+    And I write to "spec/support/factory_girl.rb" with:
+      """
+      require 'factory_girl_rails'
+      """
+    And a directory named "spec/factories"
     And I run `rails generate devise:install`
   }
 
