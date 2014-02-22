@@ -3,8 +3,9 @@ Feature: Defaults can be modifed via an initializer
   As a developer
   In order to set the defaults I prefer
   And to do it in the way I use to
-  I want a configuration mecanisme to be avaiable which allow me to override the gem defaults from an initializer file
+  I want a configuration mecanism to be avaiable which allow me to override the gem defaults from an initializer file
 
+  @rspec
   Scenario: Without intializer, the sign_in_token option defaults to false
     Given I have a dummy app with a Devise-enabled User
     And I prepare the test database
@@ -17,7 +18,7 @@ Feature: Defaults can be modifed via an initializer
 
           subject { SimpleTokenAuthentication.sign_in_token }
 
-          it "does not store the user in the session by default" do
+          it "defaults to false" do
             expect(subject).to be_false
           end
         end
@@ -29,10 +30,11 @@ Feature: Defaults can be modifed via an initializer
       """
       SimpleTokenAuthentication
         sign_in_token option
-          does not store the user in the session by default
+          defaults to false
       """
 
-  Scenario: Override the sign_in_token option value with an initalizer
+  @rspec
+  Scenario: Overriding the sign_in_token option value with an initalizer
     Given I have a dummy app with a Devise-enabled User
     And I prepare the test database
     And I write to "config/initializers/simple_token_authentication.rb" with:
@@ -61,7 +63,7 @@ Feature: Defaults can be modifed via an initializer
 
             # See config/initializers/simple_token_authentication.rb
 
-            it "stores the user in the session" do
+            it "holds value true" do
               expect(subject).to be_true
             end
           end
@@ -75,5 +77,5 @@ Feature: Defaults can be modifed via an initializer
       SimpleTokenAuthentication
         sign_in_token option
           when an initializer overrides it's default value
-            stores the user in the session
+            holds value true
       """
