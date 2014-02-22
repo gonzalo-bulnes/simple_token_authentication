@@ -109,11 +109,12 @@ Development
 
 Since `v1.0.0`, this gem development is test-driven. Each use case should be described with [RSpec][rspec] within an example app. That app will be created and configured automatically by [Aruba][aruba] as a [Cucumber][cucumber] feature.
 
-The resulting Cucumber features are a bit verbose, and their output when errors occur is not ideal, but their output when they are passing, on the contrary, provides an easy to reproduce recipe to build the example app. I find that useful enough to be patient with red scenarii for now.
+The resulting Cucumber features are a bit verbose, and their output when errors occur is not ideal, but their output when they are passing, on the contrary, provides an easy-to-reproduce recipe to build the example app (see [Executable documentation][exec-doc]). I find that useful enough to be patient with red scenarii for now.
 
   [aruba]: https://github.com/cucumber/aruba
   [cucumber]: https://github.com/cucumber/cucumber-rails
   [rspec]: https://www.relishapp.com/rspec/rspec-rails/docs
+  [exec-doc]: https://github.com/gonzalo-bulnes/simple_token_authentication#executable-documentation
 
 You can run the full test suite with `cd simple_token_authentication && rake`.
 
@@ -127,6 +128,8 @@ rake features_html # generate the features documentation
 
 # Open doc/features.html in your preferred web browser.
 ```
+
+I find that HTML output quite enjoyable, I hope you'll do so!
 
 ### Contributions
 
