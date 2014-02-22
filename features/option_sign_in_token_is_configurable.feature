@@ -10,28 +10,7 @@ Feature: The sign_in_token option can be configured via an initializer
     And a scaffolded PrivatePost
     And I prepare the test database
     And the `authenticate_user!` method always raises an exception
-    #And the `sign_in` method always raises an exception to show its arguments
-    And a directory named "lib/devise/controllers"
-    And I write to "lib/devise/controllers/sign_in_out.rb" with:
-      """
-      module Devise
-        module Controllers
-          # Provide sign in and sign out functionality.
-          # Included by default in all controllers.
-          module SignInOut
-
-            # Sign in a user that already was authenticated. This helper is useful for logging
-            # users in after sign up.
-            #
-            def sign_in(resource_or_scope, *args)
-              options = args.extract_options!
-              raise "`sign_in` was called with options `#{options.inspect}`."
-            end
-
-          end
-        end
-      end
-      """
+    And the `sign_in` method always raises an exception to show its arguments
     And User `acts_as_token_authenticatable`
     And PrivatePostsController `acts_as_token_authentication_handler_for` User
     And I write to "spec/factories/users.rb" with:
@@ -93,28 +72,7 @@ Feature: The sign_in_token option can be configured via an initializer
     And a scaffolded PrivatePost
     And I prepare the test database
     And the `authenticate_user!` method always raises an exception
-    #And the `sign_in` method always raises an exception to show its arguments
-    And a directory named "lib/devise/controllers"
-    And I write to "lib/devise/controllers/sign_in_out.rb" with:
-      """
-      module Devise
-        module Controllers
-          # Provide sign in and sign out functionality.
-          # Included by default in all controllers.
-          module SignInOut
-
-            # Sign in a user that already was authenticated. This helper is useful for logging
-            # users in after sign up.
-            #
-            def sign_in(resource_or_scope, *args)
-              options = args.extract_options!
-              raise "`sign_in` was called with options `#{options.inspect}`."
-            end
-
-          end
-        end
-      end
-      """
+    And the `sign_in` method always raises an exception to show its arguments
     And I write to "config/initializers/simple_token_authentication.rb" with:
       """
       SimpleTokenAuthentication.configure do |config|
