@@ -183,7 +183,7 @@ Given /^the `(\w+!?)` and `(\w+!?)` methods always raise an exception$/ do |firs
           raise "`#{first_method_name}` was called."
         end
 
-        def #{second_method_name}
+        def #{second_method_name} *args
           raise "`#{second_method_name}` was called."
         end
       end
