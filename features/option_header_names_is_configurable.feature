@@ -198,10 +198,10 @@ Feature: The header_names option can be configured via an initializer
       """
       PrivatePostsController
         GET /private_posts
+          when an initializer overrides the header_names default value
       """
       And the output should contain:
       """
-          when an initializer overrides the header_names default value
             and the custom headers are set in the request
               performs token authentication
       """
