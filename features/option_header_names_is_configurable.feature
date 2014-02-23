@@ -119,7 +119,7 @@ Feature: The header_names option can be configured via an initializer
         #   And the token authentification handler for SuperAdmin watches the following headers:
         #     `X-Admin-Auth-Token, X-SuperAdmin-Email`
         #
-        # (temporary commented out) config.header_names = { user: { authentication_token: 'X-User-Auth-Token', email: 'X-User-Email' } }
+        config.header_names = { user: { authentication_token: 'X-User-Auth-Token', email: 'X-User-Email' } }
 
       end
       """
@@ -199,13 +199,13 @@ Feature: The header_names option can be configured via an initializer
       PrivatePostsController
         GET /private_posts
       """
-      And the output should match:
+      And the output should contain:
       """
           when an initializer overrides the header_names default value
             and the custom headers are set in the request
               performs token authentication
       """
-      And the output should match:
+      And the output should contain:
       """
             and the custom headers are missing in the request (and no query params are used)
               even if the default headers are set in the request

@@ -7,6 +7,8 @@ module SimpleTokenAuthentication
 
     included do
       private :authenticate_entity_from_token!
+      private :header_token_name
+      private :header_email_name
       # This is our new function that comes before Devise's one
       before_filter :authenticate_entity_from_token!
       # This is Devise's authentication
@@ -32,8 +34,6 @@ module SimpleTokenAuthentication
       # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
       params_token_name = "#{@@entity.name.singularize.underscore}_token".to_sym
       params_email_name = "#{@@entity.name.singularize.underscore}_email".to_sym
-      header_token_name = "X-#{@@entity.name.singularize.camelize}-Token"
-      header_email_name = "X-#{@@entity.name.singularize.camelize}-Email"
       if token = params[params_token_name].blank? && request.headers[header_token_name]
         params[params_token_name] = token
       end
@@ -59,6 +59,24 @@ module SimpleTokenAuthentication
         # for every request. If you want the token to work as a
         # sign in token, you can simply remove store: false.
         sign_in entity, store: SimpleTokenAuthentication.sign_in_token
+      end
+    end
+
+    # Private: Return the name of the header to watch for the token authentication param
+    def header_token_name
+      if SimpleTokenAuthentication.header_names["#{@@entity.name.singularize.underscore}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{@@entity.name.singularize.underscore}".to_sym][:authentication_token]
+      else
+        "X-#{@@entity.name.singularize.camelize}-Token"
+      end
+    end
+
+    # Private: Return the name of the header to watch for the email param
+    def header_email_name
+      if SimpleTokenAuthentication.header_names["#{@@entity.name.singularize.underscore}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{@@entity.name.singularize.underscore}".to_sym][:email]
+      else
+        "X-#{@@entity.name.singularize.camelize}-Email"
       end
     end
 
