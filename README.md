@@ -128,7 +128,7 @@ Documentation
 
 ### Executable documentation
 
-The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format:
+The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format: see `doc/features.html`. The file is generated automatically by Cucumber, if necessary, you can update it by yourself:
 
 ```bash
 cd simple_token_authentication
