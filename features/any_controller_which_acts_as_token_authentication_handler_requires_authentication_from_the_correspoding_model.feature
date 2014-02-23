@@ -1,8 +1,8 @@
 # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/9
-Feature: Any model which acts as token authentication handler requires authentication
+Feature: Any controller which acts as token authentication handler requires authentication from the corresponding model
   As a developer
   In order to protect some models with token authentication
-  I want any model which acts as token authenticatable to require authentication
+  I want any controller which acts as token authenticatable to require authentication from the corresponding model
 
   @rspec
   Scenario: Even if others do, controllers which don't act as token authentication handlers do not require authentication

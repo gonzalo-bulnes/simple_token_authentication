@@ -70,6 +70,27 @@ class ApplicationController < ActionController::Base
 end
 ```
 
+Configuration
+-------------
+
+Some aspects of the behavior of _Simple Token Authentication_ can be customized with an initializer.
+Below is an example with reasonable defaults:
+
+```ruby
+# config/initializers/simple_token_authentication.rb
+
+SimpleTokenAuthentication.configure do |config|
+
+  # Configure the session persistence policy after a successful sign in,
+  # in other words, if the authentication token acts as a signin token.
+  # If true, user is stored in the session and the authentication token and
+  # email may be provided only once.
+  # If false, users must provide their authentication token and email at every request.
+  # config.sign_in_token = false
+
+end
+```
+
 Usage
 -----
 
@@ -102,24 +123,12 @@ In fact, you can mix both methods and provide the `user_email` with one and the 
 
 If sign-in is successful, no other authentication method will be run, but if it doesn't (the authentication params were missing, or incorrect) then Devise takes control and tries to `authenticate_user!` with its own modules.
 
-Development
------------
-
-### Testing
-
-Since `v1.0.0`, this gem development is test-driven. Each use case should be described with [RSpec][rspec] within an example app. That app will be created and configured automatically by [Aruba][aruba] as a [Cucumber][cucumber] feature.
-
-The resulting Cucumber features are a bit verbose, and their output when errors occur is not ideal, but their output when they are passing, on the contrary, provides an easy to reproduce recipe to build the example app. I find that useful enough to be patient with red scenarii for now.
-
-  [aruba]: https://github.com/cucumber/aruba
-  [cucumber]: https://github.com/cucumber/cucumber-rails
-  [rspec]: https://www.relishapp.com/rspec/rspec-rails/docs
-
-You can run the full test suite with `cd simple_token_authentication && rake`.
+Documentation
+-------------
 
 ### Executable documentation
 
-The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format:
+The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format: see `doc/features.html`. The file is generated automatically by Cucumber, if necessary, you can update it by yourself:
 
 ```bash
 cd simple_token_authentication
@@ -128,9 +137,42 @@ rake features_html # generate the features documentation
 # Open doc/features.html in your preferred web browser.
 ```
 
+I find that HTML output quite enjoyable, I hope you'll do so!
+
+### Frequently Asked Questions
+
+Any question? Please don't hesitate to open a new issue to get help. I keep questions tagged to make possible to [review the open questions][open-questions], while closed questions are organized as a sort of [FAQ][faq].
+
+  [open-questions]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues?labels=question&page=1&state=open
+  [faq]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues?direction=desc&labels=question&page=1&sort=comments&state=closed
+
+### Changelog
+
+Releases are commented to provide a brief [changelog][changelog].
+
+  [changelog]: https://github.com/gonzalo-bulnes/simple_token_authentication/releases
+
+Development
+-----------
+
+### Testing
+
+Since `v1.0.0`, this gem development is test-driven. Each use case should be described with [RSpec][rspec] within an example app. That app will be created and configured automatically by [Aruba][aruba] as a [Cucumber][cucumber] feature.
+
+The resulting Cucumber features are a bit verbose, and their output when errors occur is not ideal, but their output when they are passing, on the contrary, provides an easy-to-reproduce recipe to build the example app (see [Executable documentation][exec-doc]). I find that useful enough to be patient with red scenarii for now.
+
+  [aruba]: https://github.com/cucumber/aruba
+  [cucumber]: https://github.com/cucumber/cucumber-rails
+  [rspec]: https://www.relishapp.com/rspec/rspec-rails/docs
+  [exec-doc]: https://github.com/gonzalo-bulnes/simple_token_authentication#executable-documentation
+
+You can run the full test suite with `cd simple_token_authentication && rake`.
+
 ### Contributions
 
-Contributions are welcome! I'm not keeping a list of contributors for now, but any PR which references us all will be welcome.
+Contributions are welcome! I'm not personally maintaining any [list of contributors][contributors] for now, but any PR which references us all will be welcome.
+
+  [contributors]: https://github.com/gonzalo-bulnes/simple_token_authentication/graphs/contributors
 
 Credits
 -------
