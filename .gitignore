@@ -14,6 +14,9 @@ test/dummy/.sass-cache
 .ruby-version
 .ruby-gemset
 
-# dummy app
+# Dummy app
 spec/dummy
 
+# Editors
+*.sublime-project
+*.sublime-workspace

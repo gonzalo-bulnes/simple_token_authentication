@@ -34,6 +34,12 @@ Given /^I have a dummy app with a Devise-enabled (\w+)$/ do |model|
       """
       --format documentation
       """
+    And a directory named "spec/support"
+    And I write to "spec/support/factory_girl.rb" with:
+      """
+      require 'factory_girl_rails'
+      """
+    And a directory named "spec/factories"
     And I run `rails generate devise:install`
   }
 
@@ -179,6 +185,32 @@ Given /^the `(\w+!?)` and `(\w+!?)` methods always raise an exception$/ do |firs
 
         def #{second_method_name}
           raise "`#{second_method_name}` was called."
+        end
+      end
+      """
+  }
+end
+
+Given /^the `sign_in` method always raises an exception to show its arguments$/ do
+  steps %Q{
+    And a directory named "lib/devise/controllers"
+    And I write to "lib/devise/controllers/sign_in_out.rb" with:
+      """
+      module Devise
+        module Controllers
+          # Provide sign in and sign out functionality.
+          # Included by default in all controllers.
+          module SignInOut
+
+            # Sign in a user that already was authenticated. This helper is useful for logging
+            # users in after sign up.
+            #
+            def sign_in(resource_or_scope, *args)
+              options = args.extract_options!
+              raise "`sign_in` was called with options `#\{options.inspect\}`."
+            end
+
+          end
         end
       end
       """

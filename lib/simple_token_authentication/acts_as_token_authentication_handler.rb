@@ -11,6 +11,11 @@ module SimpleTokenAuthentication
       before_filter :authenticate_entity_from_token!
       # This is Devise's authentication
       before_filter :authenticate_entity!
+
+      # This is necessary to test which arguments were passed to sign_in
+      # from authenticate_entity_from_token!
+      # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/32
+      ActionController::Base.send :include, Devise::Controllers::SignInOut if Rails.env.test?
     end
 
     def authenticate_entity!
@@ -53,7 +58,7 @@ module SimpleTokenAuthentication
         # actually stored in the session and a token is needed
         # for every request. If you want the token to work as a
         # sign in token, you can simply remove store: false.
-        sign_in entity, store: false
+        sign_in entity, store: SimpleTokenAuthentication.sign_in_token
       end
     end
 
