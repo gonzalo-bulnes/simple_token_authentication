@@ -1,3 +1,7 @@
+Given /^PENDING "(.*)"$/ do |message|
+  pending message
+end
+
 Given /^I have a dummy app$/ do
   raise "This step is deprecated, use 'I have a dummy app with a Devise-enabled User' instead."
 end
@@ -46,10 +50,6 @@ Given /^I have a dummy app with a Devise-enabled (\w+)$/ do |model|
   # See http://stackoverflow.com/a/10587853
   steps %Q{
     And I run `sed -i "1s/^/require 'devise';/" config/initializers/devise.rb`
-    And I write to "config/initializers/simple_token_authentication.rb" with:
-      """
-      require 'simple_token_authentication'
-      """
   }
 
   # By adding Devise to a model, I implicitely create that model.
