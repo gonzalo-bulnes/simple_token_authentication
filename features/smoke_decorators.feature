@@ -77,12 +77,11 @@ Feature: Smoke test
       require 'spec_helper'
 
       describe PrivatePostsController do
-        it "is not decorated and raises NoMethodError" do
-          expect{ subject.decorated? }.to raise_exception NoMethodError
+        it "does not raise NoMethodError" do
+          expect{ subject.decorated? }.not_to raise_error
         end
 
-        it "should be decorated" do
-          pending "This example fails, but keeping it pending improves readability."
+        it "is decorated" do
           expect(subject.decorated?).to eq true
         end
       end
@@ -96,9 +95,9 @@ Feature: Smoke test
       """
     And the output should contain:
       """
-        should be decorated
+        is decorated
       """
     And the output should contain:
       """
-        is not decorated and raises NoMethodError
+        does not raise NoMethodError
       """
