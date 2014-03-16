@@ -1,3 +1,7 @@
+Given /^PENDING "(.*)"$/ do |message|
+  pending message
+end
+
 Given /^I have a dummy app$/ do
   raise "This step is deprecated, use 'I have a dummy app with a Devise-enabled User' instead."
 end
