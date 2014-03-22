@@ -59,8 +59,6 @@ Feature: Password change provokes the authentication token reset
 
               it "does not perform token authentication" do
 
-                pending "Work in Progress. Not yet implemented."
-
                 # TODO: change the user password, or, at least, call
                 # Devise::PasswordsController#update
 
@@ -170,7 +168,7 @@ Feature: Password change provokes the authentication token reset
     And the output should contain:
       """
             when the original authentication token is used
-              does not perform token authentication (PENDING: Work in Progress. Not yet implemented.)
+              does not perform token authentication
       """
     And the output should contain:
       """
