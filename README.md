@@ -118,7 +118,7 @@ Usage
 
 ### Tokens Generation
 
-Assuming `user` is an instance of `User`, which is _token authenticatable_: each time `user` will be saved, and `user.authentication_token.is_blank?` it receives a new and unique authentication token (via `Devise.friendly_token`).
+Assuming `user` is an instance of `User`, which is _token authenticatable_: each time `user` will be saved, and `user.authentication_token.blank?` it receives a new and unique authentication token (via `Devise.friendly_token`).
 
 ### Authentication Method 1: Query Params
 
