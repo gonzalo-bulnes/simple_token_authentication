@@ -45,7 +45,7 @@ Given /^I have a dummy app with a Devise-enabled (\w+)$/ do |model|
 
   # See http://stackoverflow.com/a/10587853
   steps %Q{
-    And I run `sed -i "1s/^/require 'devise';/" config/initializers/devise.rb`
+    And I run `sed -i "1s/^/require 'devise';/" config/application.rb`
     And I write to "config/initializers/simple_token_authentication.rb" with:
       """
       require 'simple_token_authentication'
