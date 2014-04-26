@@ -1,5 +1,5 @@
 # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/51
-Feature: Sign in statistics are tracked properly
+Feature: Sign in statistics are tracked via Devise
   As a developer
   In order to collect statistics about signins
   I want simple_token_authentication to integrate with Devise trackable strategy
