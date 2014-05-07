@@ -11,8 +11,6 @@ module SimpleTokenAuthentication
       private :header_email_name
       # This is our new function that comes before Devise's one
       before_filter :authenticate_entity_from_token!
-      # This is Devise's authentication
-      before_filter :authenticate_entity!
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
