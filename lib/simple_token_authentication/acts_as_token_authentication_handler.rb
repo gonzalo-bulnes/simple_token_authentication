@@ -104,18 +104,21 @@ module SimpleTokenAuthentication
 
     module ClassMethods
       def acts_as_token_authentication_handler_for(entity, options = {})
-        options = { fallback_to_devise: true }.merge(options)
+        options = { before_filter: true, fallback_to_devise: true }.merge(options)
 
         SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods.set_entity entity
         include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods
 
-        # This is our new function that comes before Devise's one
-        before_filter :authenticate_entity_from_token!
-        if options[:fallback_to_devise]
-          # This is Devise's authentication
-          before_filter :authenticate_entity!
-        else
-          before_filter :require_authentication_of_entity!
+        if options[:before_filter]
+          # This is our new function that comes before Devise's one
+          before_filter :authenticate_entity_from_token!
+
+          if options[:fallback_to_devise]
+            # This is Devise's authentication
+            before_filter :authenticate_entity!
+          else
+            before_filter :require_authentication_of_entity!
+          end
         end
       end
 
