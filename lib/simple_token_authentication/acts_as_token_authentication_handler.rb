@@ -7,17 +7,19 @@ module SimpleTokenAuthentication
 
     included do
       private :authenticate_entity_from_token!
+      private :require_authentication_of_entity!
       private :header_token_name
       private :header_email_name
-      # This is our new function that comes before Devise's one
-      before_filter :authenticate_entity_from_token!
-      # This is Devise's authentication
-      before_filter :authenticate_entity!
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
       # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/32
       ActionController::Base.send :include, Devise::Controllers::SignInOut if Rails.env.test?
+    end
+
+    def require_authentication_of_entity!
+      self.method(:"#{@@entity.name.singularize.underscore}_signed_in?").call ||
+        throw(:warden, scope: :"#{@@entity.name.singularize.underscore}")
     end
 
     def authenticate_entity!
@@ -102,8 +104,22 @@ module SimpleTokenAuthentication
 
     module ClassMethods
       def acts_as_token_authentication_handler_for(entity, options = {})
+        options = { before_filter: true, fallback_to_devise: true }.merge(options)
+
         SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods.set_entity entity
         include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods
+
+        if options[:before_filter]
+          # This is our new function that comes before Devise's one
+          before_filter :authenticate_entity_from_token!
+
+          if options[:fallback_to_devise]
+            # This is Devise's authentication
+            before_filter :authenticate_entity!
+          else
+            before_filter :require_authentication_of_entity!
+          end
+        end
       end
 
       def acts_as_token_authentication_handler
