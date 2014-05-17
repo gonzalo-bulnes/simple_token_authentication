@@ -307,6 +307,83 @@ Given /^PrivatePostsController `acts_as_token_authentication_handler`$/ do
   }
 end
 
+Given /^(\w+) `acts_as_token_authentication_handler_for` (\w+) with options:$/ do |controller, model, options|
+  # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
+  # Caution: controller must be a camel cased name: e.g. CamelCasedController
+
+  controller_back = controller
+  controller = controller.gsub(/Controller/, '').singularize
+
+  steps %Q{
+    And I overwrite "app/controllers/#{controller_back.underscore}.rb" with:
+      """
+      class #{controller_back} < ApplicationController
+
+        # Please do notice that this controller DOES call `acts_as_authentication_handler` with options.
+        # See test/dummy/spec/requests/posts_specs.rb
+        acts_as_token_authentication_handler_for #{model.singularize.camelize}, #{options}
+
+        before_action :set_#{controller.underscore}, only: [:show, :edit, :update, :destroy]
+
+        # GET /#{controller.underscore}
+        def index
+          @#{controller.pluralize.underscore} = #{controller}.all
+        end
+
+        # GET /#{controller.underscore}/1
+        def show
+        end
+
+        # GET /#{controller.underscore}/new
+        def new
+          @#{controller.underscore} = #{controller}.new
+        end
+
+        # GET /#{controller.underscore}/1/edit
+        def edit
+        end
+
+        # POST /#{controller.underscore}
+        def create
+          @#{controller.underscore} = #{controller}.new(#{controller.underscore}_params)
+
+          if @#{controller.underscore}.save
+            redirect_to @#{controller.underscore}, notice: '#{controller} was successfully created.'
+          else
+            render action: 'new'
+          end
+        end
+
+        # PATCH/PUT /#{controller.underscore}/1
+        def update
+          if @#{controller.underscore}.update(#{controller.underscore}_params)
+            redirect_to @#{controller.underscore}, notice: '#{controller} was successfully updated.'
+          else
+            render action: 'edit'
+          end
+        end
+
+        # DELETE /#{controller.underscore}/1
+        def destroy
+          @#{controller.underscore}.destroy
+          redirect_to #{controller.pluralize.underscore}_url, notice: '#{controller} was successfully destroyed.'
+        end
+
+        private
+          # Use callbacks to share common setup or constraints between actions.
+          def set_#{controller.underscore}
+            @#{controller.underscore} = #{controller}.find(params[:id])
+          end
+
+          # Only allow a trusted parameter "white list" through.
+          def #{controller.underscore}_params
+            params.require(:#{controller.underscore}).permit(:title, :body)
+          end
+      end
+      """
+  }
+end
+
 Given /^PrivatePostsController `acts_as_token_authentication_handler_for` (\w+)$/ do |model|
   # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
 
@@ -380,7 +457,7 @@ Given /^PrivatePostsController `acts_as_token_authentication_handler_for` (\w+)$
   }
 end
 
-Given /^I silence the PrivatePostsController spec errors$/ do
+Given /^I silence the (\w+) spec errors$/ do |controller|
   puts """
   Errors should never pass silently.
   Unless explicitly silenced.
@@ -388,20 +465,20 @@ Given /^I silence the PrivatePostsController spec errors$/ do
   """
 
   steps %Q{
-    And I overwrite "spec/controllers/private_posts_controller_spec.rb" with:
+    And I overwrite "spec/controllers/#{controller.underscore}_spec.rb" with:
       """
       require 'spec_helper'
 
-      describe PrivatePostsController do
+      describe #{controller} do
 
         # This should return the minimal set of attributes required to create a valid
-        # PrivatePost. As you add validations to PrivatePost, be sure to
+        # #{controller}. As you add validations to #{controller}, be sure to
         # adjust the attributes here as well.
         let(:valid_attributes) { { "title" => "MyString" } }
 
         # This should return the minimal set of values that should be in the session
         # in order to pass any filters (e.g. authentication) defined in
-        # PrivatePostsController. Be sure to keep this updated too.
+        # #{controller}. Be sure to keep this updated too.
         let(:valid_session) { {} }
 
         describe "actions" do
