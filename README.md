@@ -66,7 +66,11 @@ Finally define which controller will handle authentication (typ. `ApplicationCon
 
 class ApplicationController < ActionController::Base
   # ...
+
   acts_as_token_authentication_handler_for User
+  # Security note: API controllers with no-CSRF protection should disable the Devise fallback.
+  # See #49 for details.
+  # acts_as_token_authentication_handler_for User, fallback_to_devise: false
 
   # ...
 end

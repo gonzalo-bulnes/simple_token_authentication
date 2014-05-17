@@ -11,8 +11,6 @@ module SimpleTokenAuthentication
       private :header_email_name
       # This is our new function that comes before Devise's one
       before_filter :authenticate_entity_from_token!
-      # This is Devise's authentication
-      before_filter :authenticate_entity!
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
@@ -89,6 +87,15 @@ module SimpleTokenAuthentication
     end
   end
 
+  module ActsAsTokenAuthenticationHandlerDeviseFallback
+    extend ActiveSupport::Concern
+
+    included do
+      # This is Devise's authentication
+      before_filter :authenticate_entity!
+    end
+  end
+
   module ActsAsTokenAuthenticationHandler
     extend ActiveSupport::Concern
 
@@ -102,8 +109,11 @@ module SimpleTokenAuthentication
 
     module ClassMethods
       def acts_as_token_authentication_handler_for(entity, options = {})
+        options = { fallback_to_devise: true }.merge(options)
+
         SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods.set_entity entity
         include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods
+        include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerDeviseFallback if options[:fallback_to_devise]
       end
 
       def acts_as_token_authentication_handler
