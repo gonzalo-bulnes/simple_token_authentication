@@ -250,7 +250,7 @@ Feature: Any controller which acts as token authentication handler requires auth
       end
       """
 
-    When I run `rspec --format documentation`
+    When I run `rspec --format documentation --order defined`
     Then the exit status should be 0
     And the output should match:
       """
