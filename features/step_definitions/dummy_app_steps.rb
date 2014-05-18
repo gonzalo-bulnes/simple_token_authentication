@@ -384,8 +384,10 @@ Given /^(\w+) `acts_as_token_authentication_handler_for` (\w+) with options:$/ d
   }
 end
 
-Given /^PrivatePostsController `acts_as_token_authentication_handler_for` (\w+)$/ do |model|
+Given /^PrivatePostsController `acts_as_token_authentication_handler_for( only: \[:\w+, :\w+\])?` (\w+)$/ do |only, model|
   # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
+
+  options = ['', [only].select(&:presence)].flatten.join(',')
 
   steps %Q{
     And I overwrite "app/controllers/private_posts_controller.rb" with:
@@ -394,7 +396,7 @@ Given /^PrivatePostsController `acts_as_token_authentication_handler_for` (\w+)$
 
         # Please do notice that this controller DOES call `acts_as_authentication_handler`.
         # See test/dummy/spec/requests/posts_specs.rb
-        acts_as_token_authentication_handler_for #{model.singularize.camelize}
+        acts_as_token_authentication_handler_for #{model.singularize.camelize} #{options}
 
         before_action :set_private_post, only: [:show, :edit, :update, :destroy]
 
