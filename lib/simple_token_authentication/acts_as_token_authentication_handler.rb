@@ -56,10 +56,10 @@ module SimpleTokenAuthentication
         # See https://github.com/plataformatec/devise/issues/953
         env["devise.skip_trackable"] = true
 
-        # Notice we are passing store false, so the entity is not
-        # actually stored in the session and a token is needed
-        # for every request. If you want the token to work as a
-        # sign in token, you can simply remove store: false.
+        # Notice the store option defaults to false, so the entity
+        # is not actually stored in the session and a token is needed
+        # for every request. That behaviour can be configured through
+        # the sign_in_token option.
         sign_in entity, store: SimpleTokenAuthentication.sign_in_token
       end
     end
