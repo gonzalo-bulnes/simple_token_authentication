@@ -73,6 +73,10 @@ class ApplicationController < ActionController::Base
   # see #49 for details.
   # acts_as_token_authentication_handler_for User, fallback_to_devise: false
 
+  # The token authentication requirement can target specific controller action:
+  # acts_as_token_authentication_handler_for User, only: [:create, :update, :destroy]
+  # acts_as_token_authentication_handler_for User, except: [:index, :show]
+
   # ...
 end
 ```
