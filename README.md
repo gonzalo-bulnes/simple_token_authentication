@@ -68,9 +68,14 @@ class ApplicationController < ActionController::Base
   # ...
 
   acts_as_token_authentication_handler_for User
-  # Security note: API controllers with no-CSRF protection should disable the Devise fallback.
-  # See #49 for details.
+
+  # Security note: controllers with no-CSRF protection must disable the Devise fallback,
+  # see #49 for details.
   # acts_as_token_authentication_handler_for User, fallback_to_devise: false
+
+  # The token authentication requirement can target specific controller action:
+  # acts_as_token_authentication_handler_for User, only: [:create, :update, :destroy]
+  # acts_as_token_authentication_handler_for User, except: [:index, :show]
 
   # ...
 end
@@ -147,7 +152,11 @@ In fact, you can mix both methods and provide the `user_email` with one and the 
 
 ### Integration with other authentication methods
 
-If sign-in is successful, no other authentication method will be run, but if it doesn't (the authentication params were missing, or incorrect) then Devise takes control and tries to `authenticate_user!` with its own modules.
+If sign-in is successful, no other authentication method will be run, but if it doesn't (the authentication params were missing, or incorrect) then Devise takes control and tries to `authenticate_user!` with its own modules. That behaviour can however be modified for any controller through the **fallback_to_devise** option.
+
+**Important**: Please do notice that controller actions whithout CSRF protection **must** disable the Devise fallback for [security reasons][csrf]. Since Rails enables CSRF protection by default, this configuration requirement should only affect controllers where you have disabled it, which may be the case of API controllers.
+
+  [csrf]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues/49
 
 Documentation
 -------------
