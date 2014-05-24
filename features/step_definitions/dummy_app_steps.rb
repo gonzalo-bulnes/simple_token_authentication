@@ -191,7 +191,7 @@ Given /^the `(\w+!?)` and `(\w+!?)` methods always raise an exception$/ do |firs
   }
 end
 
-Given /^the `sign_in` method always raises an exception to show its arguments$/ do
+Given /^the `sign_in` method always raises an exception to show its options$/ do
   steps %Q{
     And a directory named "lib/devise/controllers"
     And I write to "lib/devise/controllers/sign_in_out.rb" with:
