@@ -1,7 +1,7 @@
 # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/64
 Feature: Several token authenticatable models (Devise scopes) can be used with the same token autentication handler
   As a developer
-  In order to be able to authenticate with several distinct models for a same action
+  In order to be able to authenticate with several distinct models (e.g. `User` and `Admin`) for a same action (e.g. PrivatePostsController#index)
   I want any token authentication handler to be able to deal with several token authenticatable models (Devise scopes)
 
   @rspe

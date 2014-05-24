@@ -1,7 +1,7 @@
 # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/28
 Feature: Any model can act as token authenticatable
   As a developer
-  In order to protect some models with token authentication
+  In order to protect some resources (e.g. `PrivatePost`) with token authentication
   I want any Devise-enabled model (not only User) to be able to act as token authenticatable
 
   @rspec

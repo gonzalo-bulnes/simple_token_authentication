@@ -1,8 +1,8 @@
 # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/#61
 Feature: The `acts_as_token_authentication_handler` filter has a fallback_to_devise option
   As a developer
-  In order to build safe API authentication by token
-  And to keep being able to use token authentication in non-API scnearii
+  In order to ensure token authentication remains safe with CSRF protection disabled (e.g. in an API scenario)
+  And to keep being able to use token authentication with CSRF protection enabled (e.g. in non-API scnearii)
   I want the fallback_to_devise option to be available at a controller level
 
   @rspec

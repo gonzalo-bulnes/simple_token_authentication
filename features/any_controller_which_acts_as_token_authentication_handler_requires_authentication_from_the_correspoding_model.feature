@@ -2,8 +2,8 @@
 # See also https://github.com/gonzalo-bulnes/simple_token_authentication/pull/62
 Feature: Any controller which acts as token authentication handler requires authentication from the corresponding model
   As a developer
-  In order to protect some models with token authentication
-  I want any controller which acts as token authenticatable to require authentication from the corresponding model
+  In order to protect some resources (e.g. `PrivatePost`) with token authentication
+  I want any controller which acts as token authentication handler (e.g. `PrivatePostsController`) to require authentication from the corresponding token authenticatable model (e.g. `User`)
 
   @rspec
   Scenario: Even if others do, controllers which don't act as token authentication handlers do not require authentication
