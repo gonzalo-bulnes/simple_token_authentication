@@ -16,7 +16,7 @@ Feature: Sign in statistics are tracked via Devise
       require 'spec_helper'
 
       describe "Sign in" do
-        
+
         context "with valid credentials" do
 
           before do
@@ -57,7 +57,7 @@ Feature: Sign in statistics are tracked via Devise
       require 'spec_helper'
 
       describe "Token-authenticated request" do
-        
+
         context "with valid email and token" do
 
           before do

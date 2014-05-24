@@ -217,6 +217,32 @@ Given /^the `sign_in` method always raises an exception to show its options$/ do
   }
 end
 
+
+Given /^the `sign_in` method always raises an exception to show its resource or scope$/ do
+  steps %Q{
+    And a directory named "lib/devise/controllers"
+    And I write to "lib/devise/controllers/sign_in_out.rb" with:
+      """
+      module Devise
+        module Controllers
+          # Provide sign in and sign out functionality.
+          # Included by default in all controllers.
+          module SignInOut
+
+            # Sign in a user that already was authenticated. This helper is useful for logging
+            # users in after sign up.
+            #
+            def sign_in(resource_or_scope, *args)
+              raise "`sign_in` was called with resource or scope `#\{resource_or_scope.class\}`."
+            end
+
+          end
+        end
+      end
+      """
+  }
+end
+
 Given /^(\w+) `acts_as_token_authenticatable`$/ do |model|
   # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
 
