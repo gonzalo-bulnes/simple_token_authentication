@@ -333,77 +333,76 @@ Given /^PrivatePostsController `acts_as_token_authentication_handler`$/ do
   }
 end
 
-Given /^(\w+) `acts_as_token_authentication_handler_for` (\w+) with options:$/ do |controller, model, options|
-  # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
-  # Caution: controller must be a camel cased name: e.g. CamelCasedController
+Given /^(\w+) `acts_as_token_authentication_handler_for` (\w+) with options:$/ do |authentication_handler, authenticatable_model, options|
+  # Caution: authenticatable_model should be a singular camel-cased name but could be pluralized or underscored.
+  # Caution: authentication_handler must be a camel cased name: e.g. CamelCasedController
 
-  controller_back = controller
-  controller = controller.gsub(/Controller/, '').singularize
+  resource_to_protect = authentication_handler.gsub(/Controller/, '').singularize
 
   steps %Q{
-    And I overwrite "app/controllers/#{controller_back.underscore}.rb" with:
+    And I overwrite "app/controllers/#{authentication_handler.underscore}.rb" with:
       """
-      class #{controller_back} < ApplicationController
+      class #{authentication_handler} < ApplicationController
 
         # Please do notice that this controller DOES call `acts_as_authentication_handler` with options.
         # See test/dummy/spec/requests/posts_specs.rb
-        acts_as_token_authentication_handler_for #{model.singularize.camelize}, #{options}
+        acts_as_token_authentication_handler_for #{authenticatable_model.singularize.camelize}, #{options}
 
-        before_action :set_#{controller.underscore}, only: [:show, :edit, :update, :destroy]
+        before_action :set_#{resource_to_protect.underscore}, only: [:show, :edit, :update, :destroy]
 
-        # GET /#{controller.underscore}
+        # GET /#{resource_to_protect.underscore}
         def index
-          @#{controller.pluralize.underscore} = #{controller}.all
+          @#{resource_to_protect.pluralize.underscore} = #{resource_to_protect}.all
         end
 
-        # GET /#{controller.underscore}/1
+        # GET /#{resource_to_protect.underscore}/1
         def show
         end
 
-        # GET /#{controller.underscore}/new
+        # GET /#{resource_to_protect.underscore}/new
         def new
-          @#{controller.underscore} = #{controller}.new
+          @#{resource_to_protect.underscore} = #{resource_to_protect}.new
         end
 
-        # GET /#{controller.underscore}/1/edit
+        # GET /#{resource_to_protect.underscore}/1/edit
         def edit
         end
 
-        # POST /#{controller.underscore}
+        # POST /#{resource_to_protect.underscore}
         def create
-          @#{controller.underscore} = #{controller}.new(#{controller.underscore}_params)
+          @#{resource_to_protect.underscore} = #{resource_to_protect}.new(#{resource_to_protect.underscore}_params)
 
-          if @#{controller.underscore}.save
-            redirect_to @#{controller.underscore}, notice: '#{controller} was successfully created.'
+          if @#{resource_to_protect.underscore}.save
+            redirect_to @#{resource_to_protect.underscore}, notice: '#{resource_to_protect} was successfully created.'
           else
             render action: 'new'
           end
         end
 
-        # PATCH/PUT /#{controller.underscore}/1
+        # PATCH/PUT /#{resource_to_protect.underscore}/1
         def update
-          if @#{controller.underscore}.update(#{controller.underscore}_params)
-            redirect_to @#{controller.underscore}, notice: '#{controller} was successfully updated.'
+          if @#{resource_to_protect.underscore}.update(#{resource_to_protect.underscore}_params)
+            redirect_to @#{resource_to_protect.underscore}, notice: '#{resource_to_protect} was successfully updated.'
           else
             render action: 'edit'
           end
         end
 
-        # DELETE /#{controller.underscore}/1
+        # DELETE /#{resource_to_protect.underscore}/1
         def destroy
-          @#{controller.underscore}.destroy
-          redirect_to #{controller.pluralize.underscore}_url, notice: '#{controller} was successfully destroyed.'
+          @#{resource_to_protect.underscore}.destroy
+          redirect_to #{resource_to_protect.pluralize.underscore}_url, notice: '#{resource_to_protect} was successfully destroyed.'
         end
 
         private
           # Use callbacks to share common setup or constraints between actions.
-          def set_#{controller.underscore}
-            @#{controller.underscore} = #{controller}.find(params[:id])
+          def set_#{resource_to_protect.underscore}
+            @#{resource_to_protect.underscore} = #{resource_to_protect}.find(params[:id])
           end
 
           # Only allow a trusted parameter "white list" through.
-          def #{controller.underscore}_params
-            params.require(:#{controller.underscore}).permit(:title, :body)
+          def #{resource_to_protect.underscore}_params
+            params.require(:#{resource_to_protect.underscore}).permit(:title, :body)
           end
       end
       """
