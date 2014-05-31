@@ -49,7 +49,10 @@ Feature: Sign in statistics are tracked via Devise
 
     And User `acts_as_token_authenticatable`
     And a scaffolded PrivatePost
-    And PrivatePostsController `acts_as_token_authentication_handler`
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler
+      """
     And I prepare the test database
 
     And I write to "spec/requests/token_authenticated_request_spec.rb" with:
