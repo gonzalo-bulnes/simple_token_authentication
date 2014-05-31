@@ -11,7 +11,10 @@ Feature: The header_names option can be configured via an initializer
     And I prepare the test database
     And the `authenticate_user!` and `sign_in` methods always raise an exception
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for User
+      """
     And I write to "spec/factories/users.rb" with:
       """
       FactoryGirl.define do
@@ -124,7 +127,10 @@ Feature: The header_names option can be configured via an initializer
       end
       """
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for User
+      """
     And I write to "spec/factories/users.rb" with:
       """
       FactoryGirl.define do

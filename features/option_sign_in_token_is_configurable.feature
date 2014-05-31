@@ -12,7 +12,10 @@ Feature: The sign_in_token option can be configured via an initializer
     And the `authenticate_user!` method always raises an exception
     And the `sign_in` method always raises an exception to show its options
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for User
+      """
     And I write to "spec/factories/users.rb" with:
       """
       FactoryGirl.define do
@@ -87,7 +90,10 @@ Feature: The sign_in_token option can be configured via an initializer
       end
       """
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for User
+      """
     And I write to "spec/factories/users.rb" with:
       """
       FactoryGirl.define do
