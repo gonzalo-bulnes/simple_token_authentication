@@ -191,7 +191,7 @@ Given /^the `(\w+!?)` and `(\w+!?)` methods always raise an exception$/ do |firs
   }
 end
 
-Given /^the `sign_in` method always raises an exception to show its arguments$/ do
+Given /^the `sign_in` method always raises an exception to show its options$/ do
   steps %Q{
     And a directory named "lib/devise/controllers"
     And I write to "lib/devise/controllers/sign_in_out.rb" with:
@@ -208,6 +208,32 @@ Given /^the `sign_in` method always raises an exception to show its arguments$/ 
             def sign_in(resource_or_scope, *args)
               options = args.extract_options!
               raise "`sign_in` was called with options `#\{options.inspect\}`."
+            end
+
+          end
+        end
+      end
+      """
+  }
+end
+
+
+Given /^the `sign_in` method always raises an exception to show its resource or scope$/ do
+  steps %Q{
+    And a directory named "lib/devise/controllers"
+    And I write to "lib/devise/controllers/sign_in_out.rb" with:
+      """
+      module Devise
+        module Controllers
+          # Provide sign in and sign out functionality.
+          # Included by default in all controllers.
+          module SignInOut
+
+            # Sign in a user that already was authenticated. This helper is useful for logging
+            # users in after sign up.
+            #
+            def sign_in(resource_or_scope, *args)
+              raise "`sign_in` was called with resource or scope `#\{resource_or_scope.class\}`."
             end
 
           end
@@ -235,226 +261,40 @@ Given /^(\w+) `acts_as_token_authenticatable`$/ do |model|
   }
 end
 
-Given /^PrivatePostsController `acts_as_token_authentication_handler`$/ do
+Given /^(\w+) `acts_as_token_authentication_handler` through:$/ do |authentication_handler, token_authentication_configuration|
+  # Caution: authentication_handler should be a singular camel-cased controller name,
+  # but could be pluralized or underscored.
 
-  steps %Q{
-    And I overwrite "app/controllers/private_posts_controller.rb" with:
-      """
-      class PrivatePostsController < ApplicationController
+  in_current_dir do
+    # Insert the token_authentication_configuration in the controller's file
+    # See http://stackoverflow.com/a/2139100
 
-        # Please do notice that this controller DOES call `acts_as_authentication_handler`.
-        # See test/dummy/spec/requests/posts_specs.rb
-        acts_as_token_authentication_handler
+    # E.g. app/controllers/private_posts_controller (without extension)
+    file_name = "app/controllers/#{authentication_handler.singularize.underscore}"
 
-        before_action :set_private_post, only: [:show, :edit, :update, :destroy]
+    tempfile = File.open("#{file_name}.tmp", 'w')
+    origfile = File.new("#{file_name}.rb") # read-only
 
-        # GET /private_posts
-        def index
-          @private_posts = PrivatePost.all
-        end
+    # The .tmp file is a copy of the .rb file, with a few additional lines
+    origfile.each do |line|
+      tempfile << line
+      # Insert the TOKEN_AUTHENTICATION_CONFIG right after the controller class declaration
+      if line =~ /class #{authentication_handler.singularize.camelize}/
+        tempfile << <<-TOKEN_AUTHENTICATION_CONFIG
 
-        # GET /private_posts/1
-        def show
-        end
+  # Please do notice that this controller DOES call `acts_as_authentication_handler`  with options.
+  # See test/dummy/spec/requests
+  #{token_authentication_configuration}
 
-        # GET /private_posts/new
-        def new
-          @private_post = PrivatePost.new
-        end
-
-        # GET /private_posts/1/edit
-        def edit
-        end
-
-        # POST /private_posts
-        def create
-          @private_post = PrivatePost.new(private_post_params)
-
-          if @private_post.save
-            redirect_to @private_post, notice: 'Private post was successfully created.'
-          else
-            render action: 'new'
-          end
-        end
-
-        # PATCH/PUT /private_posts/1
-        def update
-          if @private_post.update(private_post_params)
-            redirect_to @private_post, notice: 'Private post was successfully updated.'
-          else
-            render action: 'edit'
-          end
-        end
-
-        # DELETE /private_posts/1
-        def destroy
-          @private_post.destroy
-          redirect_to private_posts_url, notice: 'Private post was successfully destroyed.'
-        end
-
-        private
-          # Use callbacks to share common setup or constraints between actions.
-          def set_private_post
-            @private_post = PrivatePost.find(params[:id])
-          end
-
-          # Only allow a trusted parameter "white list" through.
-          def private_post_params
-            params.require(:private_post).permit(:title, :body)
-          end
+        TOKEN_AUTHENTICATION_CONFIG
       end
-      """
-  }
-end
+    end
+    origfile.close
+    tempfile.close
 
-Given /^(\w+) `acts_as_token_authentication_handler_for` (\w+) with options:$/ do |controller, model, options|
-  # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
-  # Caution: controller must be a camel cased name: e.g. CamelCasedController
-
-  controller_back = controller
-  controller = controller.gsub(/Controller/, '').singularize
-
-  steps %Q{
-    And I overwrite "app/controllers/#{controller_back.underscore}.rb" with:
-      """
-      class #{controller_back} < ApplicationController
-
-        # Please do notice that this controller DOES call `acts_as_authentication_handler` with options.
-        # See test/dummy/spec/requests/posts_specs.rb
-        acts_as_token_authentication_handler_for #{model.singularize.camelize}, #{options}
-
-        before_action :set_#{controller.underscore}, only: [:show, :edit, :update, :destroy]
-
-        # GET /#{controller.underscore}
-        def index
-          @#{controller.pluralize.underscore} = #{controller}.all
-        end
-
-        # GET /#{controller.underscore}/1
-        def show
-        end
-
-        # GET /#{controller.underscore}/new
-        def new
-          @#{controller.underscore} = #{controller}.new
-        end
-
-        # GET /#{controller.underscore}/1/edit
-        def edit
-        end
-
-        # POST /#{controller.underscore}
-        def create
-          @#{controller.underscore} = #{controller}.new(#{controller.underscore}_params)
-
-          if @#{controller.underscore}.save
-            redirect_to @#{controller.underscore}, notice: '#{controller} was successfully created.'
-          else
-            render action: 'new'
-          end
-        end
-
-        # PATCH/PUT /#{controller.underscore}/1
-        def update
-          if @#{controller.underscore}.update(#{controller.underscore}_params)
-            redirect_to @#{controller.underscore}, notice: '#{controller} was successfully updated.'
-          else
-            render action: 'edit'
-          end
-        end
-
-        # DELETE /#{controller.underscore}/1
-        def destroy
-          @#{controller.underscore}.destroy
-          redirect_to #{controller.pluralize.underscore}_url, notice: '#{controller} was successfully destroyed.'
-        end
-
-        private
-          # Use callbacks to share common setup or constraints between actions.
-          def set_#{controller.underscore}
-            @#{controller.underscore} = #{controller}.find(params[:id])
-          end
-
-          # Only allow a trusted parameter "white list" through.
-          def #{controller.underscore}_params
-            params.require(:#{controller.underscore}).permit(:title, :body)
-          end
-      end
-      """
-  }
-end
-
-Given /^PrivatePostsController `acts_as_token_authentication_handler_for` (\w+)$/ do |model|
-  # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
-
-  steps %Q{
-    And I overwrite "app/controllers/private_posts_controller.rb" with:
-      """
-      class PrivatePostsController < ApplicationController
-
-        # Please do notice that this controller DOES call `acts_as_authentication_handler`.
-        # See test/dummy/spec/requests/posts_specs.rb
-        acts_as_token_authentication_handler_for #{model.singularize.camelize}
-
-        before_action :set_private_post, only: [:show, :edit, :update, :destroy]
-
-        # GET /private_posts
-        def index
-          @private_posts = PrivatePost.all
-        end
-
-        # GET /private_posts/1
-        def show
-        end
-
-        # GET /private_posts/new
-        def new
-          @private_post = PrivatePost.new
-        end
-
-        # GET /private_posts/1/edit
-        def edit
-        end
-
-        # POST /private_posts
-        def create
-          @private_post = PrivatePost.new(private_post_params)
-
-          if @private_post.save
-            redirect_to @private_post, notice: 'Private post was successfully created.'
-          else
-            render action: 'new'
-          end
-        end
-
-        # PATCH/PUT /private_posts/1
-        def update
-          if @private_post.update(private_post_params)
-            redirect_to @private_post, notice: 'Private post was successfully updated.'
-          else
-            render action: 'edit'
-          end
-        end
-
-        # DELETE /private_posts/1
-        def destroy
-          @private_post.destroy
-          redirect_to private_posts_url, notice: 'Private post was successfully destroyed.'
-        end
-
-        private
-          # Use callbacks to share common setup or constraints between actions.
-          def set_private_post
-            @private_post = PrivatePost.find(params[:id])
-          end
-
-          # Only allow a trusted parameter "white list" through.
-          def private_post_params
-            params.require(:private_post).permit(:title, :body)
-          end
-      end
-      """
-  }
+    # Overwrite the .rb file with the temporary file
+    FileUtils.mv("#{file_name}.tmp", "#{file_name}.rb")
+  end
 end
 
 Given /^I silence the (\w+) spec errors$/ do |controller|

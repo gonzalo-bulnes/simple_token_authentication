@@ -1,8 +1,8 @@
 # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/#61
 Feature: The `acts_as_token_authentication_handler` filter has a fallback_to_devise option
   As a developer
-  In order to build safe API authentication by token
-  And to keep being able to use token authentication in non-API scnearii
+  In order to ensure token authentication remains safe with CSRF protection disabled (e.g. in an API scenario)
+  And to keep being able to use token authentication with CSRF protection enabled (e.g. in non-API scnearii)
   I want the fallback_to_devise option to be available at a controller level
 
   @rspec
@@ -12,7 +12,10 @@ Feature: The `acts_as_token_authentication_handler` filter has a fallback_to_dev
     And I prepare the test database
     And the `authenticate_user!` and `sign_in` methods always raise an exception
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for User
+      """
     And I write to "spec/factories/users.rb" with:
       """
       FactoryGirl.define do
@@ -78,13 +81,13 @@ Feature: The `acts_as_token_authentication_handler` filter has a fallback_to_dev
     And I prepare the test database
     And the `authenticate_user!` and `sign_in` methods always raise an exception
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User with options:
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
       """
-      fallback_to_devise: true
+      acts_as_token_authentication_handler_for User, fallback_to_devise: true
       """
-    And ApiPrivatePostsController `acts_as_token_authentication_handler_for` User with options:
+    And ApiPrivatePostsController `acts_as_token_authentication_handler` through:
       """
-      fallback_to_devise: false
+      acts_as_token_authentication_handler_for User, fallback_to_devise: false
       """
     And I write to "spec/factories/users.rb" with:
       """

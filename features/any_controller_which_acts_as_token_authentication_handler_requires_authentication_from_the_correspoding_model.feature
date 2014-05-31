@@ -2,8 +2,8 @@
 # See also https://github.com/gonzalo-bulnes/simple_token_authentication/pull/62
 Feature: Any controller which acts as token authentication handler requires authentication from the corresponding model
   As a developer
-  In order to protect some models with token authentication
-  I want any controller which acts as token authenticatable to require authentication from the corresponding model
+  In order to protect some resources (e.g. `PrivatePost`) with token authentication
+  I want any controller which acts as token authentication handler (e.g. `PrivatePostsController`) to require authentication from the corresponding token authenticatable model (e.g. `User`)
 
   @rspec
   Scenario: Even if others do, controllers which don't act as token authentication handlers do not require authentication
@@ -84,7 +84,10 @@ Feature: Any controller which acts as token authentication handler requires auth
     And the `authenticate_user!` method always raises an exception
 
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler`
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler
+      """
 
     And I write to "spec/requests/posts_spec.rb" with:
       """
@@ -193,9 +196,9 @@ Feature: Any controller which acts as token authentication handler requires auth
     And the `authenticate_user!` method always raises an exception
 
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User with options:
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
       """
-      only: [:create, :update, :destroy]
+      acts_as_token_authentication_handler_for User, only: [:create, :update, :destroy]
       """
 
     And I overwrite "spec/controllers/private_posts_controller_spec.rb" with:
@@ -322,9 +325,9 @@ Feature: Any controller which acts as token authentication handler requires auth
     And the `authenticate_user!` method always raises an exception
 
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User with options:
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
       """
-      except: [:index, :show, :new, :edit]
+      acts_as_token_authentication_handler_for User, except: [:index, :show, :new, :edit]
       """
 
     And I overwrite "spec/controllers/private_posts_controller_spec.rb" with:

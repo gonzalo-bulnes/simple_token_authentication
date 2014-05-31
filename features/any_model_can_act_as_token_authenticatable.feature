@@ -1,7 +1,7 @@
 # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/28
 Feature: Any model can act as token authenticatable
   As a developer
-  In order to protect some models with token authentication
+  In order to protect some resources (e.g. `PrivatePost`) with token authentication
   I want any Devise-enabled model (not only User) to be able to act as token authenticatable
 
   @rspec
@@ -11,7 +11,10 @@ Feature: Any model can act as token authenticatable
     And I prepare the test database
     And the `authenticate_user!` method always raises an exception
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for User
+      """
     And I write to "spec/requests/private_posts_spec.rb" with:
       """
       require 'spec_helper'
@@ -52,7 +55,10 @@ Feature: Any model can act as token authenticatable
     And I prepare the test database
     And the `authenticate_api_admin!` method always raises an exception
     And ApiAdmin `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` ApiAdmin
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for ApiAdmin
+      """
     And I write to "spec/requests/private_posts_spec.rb" with:
       """
       require 'spec_helper'
@@ -96,7 +102,10 @@ Feature: Any model can act as token authenticatable
 
     And User `acts_as_token_authenticatable`
     And Admin `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for User
+      """
 
     And I write to "spec/requests/private_posts_spec.rb" with:
       """
@@ -165,7 +174,10 @@ Feature: Any model can act as token authenticatable
 
     And User `acts_as_token_authenticatable`
     And Admin `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` Admin
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
+      """
+      acts_as_token_authentication_handler_for Admin
+      """
 
     And I write to "spec/requests/private_posts_spec.rb" with:
       """
