@@ -262,77 +262,39 @@ Given /^(\w+) `acts_as_token_authenticatable`$/ do |model|
 end
 
 Given /^(\w+) `acts_as_token_authentication_handler` through:$/ do |authentication_handler, token_authentication_configuration|
+  # Caution: authentication_handler should be a singular camel-cased controller name,
+  # but could be pluralized or underscored.
 
-  resource_to_protect = authentication_handler.gsub(/Controller/, '').singularize
+  in_current_dir do
+    # Insert the token_authentication_configuration in the controller's file
+    # See http://stackoverflow.com/a/2139100
 
-  steps %Q{
-    And I overwrite "app/controllers/#{authentication_handler.underscore}.rb" with:
-      """
-      class #{authentication_handler} < ApplicationController
+    # E.g. app/controllers/private_posts_controller (without extension)
+    file_name = "app/controllers/#{authentication_handler.singularize.underscore}"
 
-        # Please do notice that this controller DOES call `acts_as_authentication_handler` with options.
-        # See test/dummy/spec/requests/posts_specs.rb
-        #{token_authentication_configuration}
+    tempfile = File.open("#{file_name}.tmp", 'w')
+    origfile = File.new("#{file_name}.rb") # read-only
 
-        before_action :set_#{resource_to_protect.underscore}, only: [:show, :edit, :update, :destroy]
+    # The .tmp file is a copy of the .rb file, with a few additional lines
+    origfile.each do |line|
+      tempfile << line
+      # Insert the TOKEN_AUTHENTICATION_CONFIG right after the controller class declaration
+      if line =~ /class #{authentication_handler.singularize.camelize}/
+        tempfile << <<-TOKEN_AUTHENTICATION_CONFIG
 
-        # GET /#{resource_to_protect.underscore}
-        def index
-          @#{resource_to_protect.pluralize.underscore} = #{resource_to_protect}.all
-        end
+  # Please do notice that this controller DOES call `acts_as_authentication_handler`  with options.
+  # See test/dummy/spec/requests
+  #{token_authentication_configuration}
 
-        # GET /#{resource_to_protect.underscore}/1
-        def show
-        end
-
-        # GET /#{resource_to_protect.underscore}/new
-        def new
-          @#{resource_to_protect.underscore} = #{resource_to_protect}.new
-        end
-
-        # GET /#{resource_to_protect.underscore}/1/edit
-        def edit
-        end
-
-        # POST /#{resource_to_protect.underscore}
-        def create
-          @#{resource_to_protect.underscore} = #{resource_to_protect}.new(#{resource_to_protect.underscore}_params)
-
-          if @#{resource_to_protect.underscore}.save
-            redirect_to @#{resource_to_protect.underscore}, notice: '#{resource_to_protect} was successfully created.'
-          else
-            render action: 'new'
-          end
-        end
-
-        # PATCH/PUT /#{resource_to_protect.underscore}/1
-        def update
-          if @#{resource_to_protect.underscore}.update(#{resource_to_protect.underscore}_params)
-            redirect_to @#{resource_to_protect.underscore}, notice: '#{resource_to_protect} was successfully updated.'
-          else
-            render action: 'edit'
-          end
-        end
-
-        # DELETE /#{resource_to_protect.underscore}/1
-        def destroy
-          @#{resource_to_protect.underscore}.destroy
-          redirect_to #{resource_to_protect.pluralize.underscore}_url, notice: '#{resource_to_protect} was successfully destroyed.'
-        end
-
-        private
-          # Use callbacks to share common setup or constraints between actions.
-          def set_#{resource_to_protect.underscore}
-            @#{resource_to_protect.underscore} = #{resource_to_protect}.find(params[:id])
-          end
-
-          # Only allow a trusted parameter "white list" through.
-          def #{resource_to_protect.underscore}_params
-            params.require(:#{resource_to_protect.underscore}).permit(:title, :body)
-          end
+        TOKEN_AUTHENTICATION_CONFIG
       end
-      """
-  }
+    end
+    origfile.close
+    tempfile.close
+
+    # Overwrite the .rb file with the temporary file
+    FileUtils.mv("#{file_name}.tmp", "#{file_name}.rb")
+  end
 end
 
 Given /^I silence the (\w+) spec errors$/ do |controller|

@@ -4,7 +4,7 @@ Feature: Several token authenticatable models (Devise scopes) can be used with t
   In order to be able to authenticate with several distinct models (e.g. `User` and `Admin`) for a same action (e.g. PrivatePostsController#index)
   I want any token authentication handler to be able to deal with several token authenticatable models (Devise scopes)
 
-  @rspe
+  @rspec
   Scenario: `User` and `Admin` both act as token authenticatable (Part 3)
     Given I have a dummy app with a Devise-enabled User and Admin
     And a scaffolded PrivatePost
