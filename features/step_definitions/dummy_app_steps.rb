@@ -333,82 +333,6 @@ Given /^PrivatePostsController `acts_as_token_authentication_handler`$/ do
   }
 end
 
-Given /^(\w+) `acts_as_token_authentication_handler_for` (\w+) with options:$/ do |authentication_handler, authenticatable_model, options|
-  # Caution: authenticatable_model should be a singular camel-cased name but could be pluralized or underscored.
-  # Caution: authentication_handler must be a camel cased name: e.g. CamelCasedController
-
-  resource_to_protect = authentication_handler.gsub(/Controller/, '').singularize
-
-  steps %Q{
-    And I overwrite "app/controllers/#{authentication_handler.underscore}.rb" with:
-      """
-      class #{authentication_handler} < ApplicationController
-
-        # Please do notice that this controller DOES call `acts_as_authentication_handler` with options.
-        # See test/dummy/spec/requests/posts_specs.rb
-        acts_as_token_authentication_handler_for #{authenticatable_model.singularize.camelize}, #{options}
-
-        before_action :set_#{resource_to_protect.underscore}, only: [:show, :edit, :update, :destroy]
-
-        # GET /#{resource_to_protect.underscore}
-        def index
-          @#{resource_to_protect.pluralize.underscore} = #{resource_to_protect}.all
-        end
-
-        # GET /#{resource_to_protect.underscore}/1
-        def show
-        end
-
-        # GET /#{resource_to_protect.underscore}/new
-        def new
-          @#{resource_to_protect.underscore} = #{resource_to_protect}.new
-        end
-
-        # GET /#{resource_to_protect.underscore}/1/edit
-        def edit
-        end
-
-        # POST /#{resource_to_protect.underscore}
-        def create
-          @#{resource_to_protect.underscore} = #{resource_to_protect}.new(#{resource_to_protect.underscore}_params)
-
-          if @#{resource_to_protect.underscore}.save
-            redirect_to @#{resource_to_protect.underscore}, notice: '#{resource_to_protect} was successfully created.'
-          else
-            render action: 'new'
-          end
-        end
-
-        # PATCH/PUT /#{resource_to_protect.underscore}/1
-        def update
-          if @#{resource_to_protect.underscore}.update(#{resource_to_protect.underscore}_params)
-            redirect_to @#{resource_to_protect.underscore}, notice: '#{resource_to_protect} was successfully updated.'
-          else
-            render action: 'edit'
-          end
-        end
-
-        # DELETE /#{resource_to_protect.underscore}/1
-        def destroy
-          @#{resource_to_protect.underscore}.destroy
-          redirect_to #{resource_to_protect.pluralize.underscore}_url, notice: '#{resource_to_protect} was successfully destroyed.'
-        end
-
-        private
-          # Use callbacks to share common setup or constraints between actions.
-          def set_#{resource_to_protect.underscore}
-            @#{resource_to_protect.underscore} = #{resource_to_protect}.find(params[:id])
-          end
-
-          # Only allow a trusted parameter "white list" through.
-          def #{resource_to_protect.underscore}_params
-            params.require(:#{resource_to_protect.underscore}).permit(:title, :body)
-          end
-      end
-      """
-  }
-end
-
 Given /^PrivatePostsController `acts_as_token_authentication_handler_for` (\w+)$/ do |model|
   # Caution: model should be a singular camel-cased name but could be pluralized or underscored.
 
@@ -482,72 +406,74 @@ Given /^PrivatePostsController `acts_as_token_authentication_handler_for` (\w+)$
   }
 end
 
-Given /^PrivatePostsController `acts_as_token_authentication_handler` through:$/ do |token_authentication_configuration|
+Given /^(\w+) `acts_as_token_authentication_handler` through:$/ do |authentication_handler, token_authentication_configuration|
+
+  resource_to_protect = authentication_handler.gsub(/Controller/, '').singularize
 
   steps %Q{
-    And I overwrite "app/controllers/private_posts_controller.rb" with:
+    And I overwrite "app/controllers/#{authentication_handler.underscore}.rb" with:
       """
-      class PrivatePostsController < ApplicationController
+      class #{authentication_handler} < ApplicationController
 
-        # Please do notice that this controller DOES call `acts_as_authentication_handler`.
+        # Please do notice that this controller DOES call `acts_as_authentication_handler` with options.
         # See test/dummy/spec/requests/posts_specs.rb
         #{token_authentication_configuration}
 
-        before_action :set_private_post, only: [:show, :edit, :update, :destroy]
+        before_action :set_#{resource_to_protect.underscore}, only: [:show, :edit, :update, :destroy]
 
-        # GET /private_posts
+        # GET /#{resource_to_protect.underscore}
         def index
-          @private_posts = PrivatePost.all
+          @#{resource_to_protect.pluralize.underscore} = #{resource_to_protect}.all
         end
 
-        # GET /private_posts/1
+        # GET /#{resource_to_protect.underscore}/1
         def show
         end
 
-        # GET /private_posts/new
+        # GET /#{resource_to_protect.underscore}/new
         def new
-          @private_post = PrivatePost.new
+          @#{resource_to_protect.underscore} = #{resource_to_protect}.new
         end
 
-        # GET /private_posts/1/edit
+        # GET /#{resource_to_protect.underscore}/1/edit
         def edit
         end
 
-        # POST /private_posts
+        # POST /#{resource_to_protect.underscore}
         def create
-          @private_post = PrivatePost.new(private_post_params)
+          @#{resource_to_protect.underscore} = #{resource_to_protect}.new(#{resource_to_protect.underscore}_params)
 
-          if @private_post.save
-            redirect_to @private_post, notice: 'Private post was successfully created.'
+          if @#{resource_to_protect.underscore}.save
+            redirect_to @#{resource_to_protect.underscore}, notice: '#{resource_to_protect} was successfully created.'
           else
             render action: 'new'
           end
         end
 
-        # PATCH/PUT /private_posts/1
+        # PATCH/PUT /#{resource_to_protect.underscore}/1
         def update
-          if @private_post.update(private_post_params)
-            redirect_to @private_post, notice: 'Private post was successfully updated.'
+          if @#{resource_to_protect.underscore}.update(#{resource_to_protect.underscore}_params)
+            redirect_to @#{resource_to_protect.underscore}, notice: '#{resource_to_protect} was successfully updated.'
           else
             render action: 'edit'
           end
         end
 
-        # DELETE /private_posts/1
+        # DELETE /#{resource_to_protect.underscore}/1
         def destroy
-          @private_post.destroy
-          redirect_to private_posts_url, notice: 'Private post was successfully destroyed.'
+          @#{resource_to_protect.underscore}.destroy
+          redirect_to #{resource_to_protect.pluralize.underscore}_url, notice: '#{resource_to_protect} was successfully destroyed.'
         end
 
         private
           # Use callbacks to share common setup or constraints between actions.
-          def set_private_post
-            @private_post = PrivatePost.find(params[:id])
+          def set_#{resource_to_protect.underscore}
+            @#{resource_to_protect.underscore} = #{resource_to_protect}.find(params[:id])
           end
 
           # Only allow a trusted parameter "white list" through.
-          def private_post_params
-            params.require(:private_post).permit(:title, :body)
+          def #{resource_to_protect.underscore}_params
+            params.require(:#{resource_to_protect.underscore}).permit(:title, :body)
           end
       end
       """

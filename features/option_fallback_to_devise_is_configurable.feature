@@ -78,13 +78,13 @@ Feature: The `acts_as_token_authentication_handler` filter has a fallback_to_dev
     And I prepare the test database
     And the `authenticate_user!` and `sign_in` methods always raise an exception
     And User `acts_as_token_authenticatable`
-    And PrivatePostsController `acts_as_token_authentication_handler_for` User with options:
+    And PrivatePostsController `acts_as_token_authentication_handler` through:
       """
-      fallback_to_devise: true
+      acts_as_token_authentication_handler_for User, fallback_to_devise: true
       """
-    And ApiPrivatePostsController `acts_as_token_authentication_handler_for` User with options:
+    And ApiPrivatePostsController `acts_as_token_authentication_handler` through:
       """
-      fallback_to_devise: false
+      acts_as_token_authentication_handler_for User, fallback_to_devise: false
       """
     And I write to "spec/factories/users.rb" with:
       """
