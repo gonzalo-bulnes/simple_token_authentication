@@ -1,8 +1,5 @@
 require 'devise'
 
-require 'simple_token_authentication/model'
-require 'simple_token_authentication/acts_as_token_authentication_handler'
-
 module Devise
   mattr_accessor :token_header_names
   @@header_names = {}
