@@ -40,19 +40,19 @@ module Devise
       end
 
       def configured_headings
-        ::Devise.token_header_names[.to_sym]
+        ::Devise.token_header_names[snake_resource_name.to_sym]
       end
 
       def token_header
         configured_key = configured_headings[:authentication_token]
         token_key = configured_key.presence ? configured_key : "X-#{mapping.to.name}-Token"
-        return request.headers[token_key]
+        request.headers[token_key]
       end
 
       def lookup_header
         configured_key = configured_headings[login_with.to_sym]
         lookup_key = configured_key.presence ? configured_key : "X-#{mapping.to.name}-#{login_with.camelize}"
-        return request.headers[lookup_key]
+        request.headers[lookup_key]
       end
     end
   end
