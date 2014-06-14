@@ -2,7 +2,7 @@ require 'devise'
 
 module Devise
   mattr_accessor :token_header_names
-  @@header_names = {}
+  @@token_header_names = {}
 
   mattr_accessor :sign_in_token
   @@sign_in_token = false
