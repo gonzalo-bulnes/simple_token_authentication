@@ -19,6 +19,10 @@ module Devise
 
       end
 
+      def store
+        ::Devise.sign_in_token
+      end
+
       private
 
       def snake_resource_name
