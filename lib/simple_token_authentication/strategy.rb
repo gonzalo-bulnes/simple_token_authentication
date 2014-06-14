@@ -9,8 +9,8 @@ module Devise
       end
 
       def authenticate!
-        resource = mapping.to.find_for_authentication(auth_key)
-        
+        resource = mapping.to.find_for_authentication(login_with => auth_key)
+
         if resource && validate(resource) { Devise.secure_compare(resource.authentication_token, token) }
           success!(resource)
         else
