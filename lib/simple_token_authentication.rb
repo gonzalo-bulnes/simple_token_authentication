@@ -9,7 +9,7 @@ module Devise
 end
 
 Devise.add_module(
-  :simple_token_authentication,
+  :simple_token_authenticatable,
   route: :session,
   strategy: true,
   controller: :session,

@@ -2,7 +2,7 @@ require 'simple_token_authentication/strategy'
 
 module Devise
   module Models
-    module SimpleTokenAuthentication
+    module SimpleTokenAuthenticatable
       extend ActiveSupport::Concern
 
       # Please see https://gist.github.com/josevalim/fb706b1e933ef01e4fb6

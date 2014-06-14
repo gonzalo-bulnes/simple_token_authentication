@@ -2,7 +2,7 @@ require 'devise/strategies/authenticatable'
 
 module Devise
   module Strategies
-    class SimpleTokenAuthentication < Authenticatable
+    class SimpleTokenAuthenticatable < Authenticatable
 
       def valid?
         auth_key.present?
@@ -33,7 +33,7 @@ module Devise
         'email'
       end
 
-      # Pass in auth key as resource_name_key e.g. user_email or 
+      # Pass in auth key as resource_name_key e.g. user_email or
       def auth_key
         params["#{snake_resource_name}_#{login_with}"] || lookup_header
       end
@@ -61,4 +61,4 @@ module Devise
   end
 end
 
-Warden::Strategies.add(:simple_token_authenticatable, Devise::Strategies::SimpleTokenAuthentication)
+Warden::Strategies.add(:simple_token_authenticatable, Devise::Strategies::SimpleTokenAuthenticatable)
