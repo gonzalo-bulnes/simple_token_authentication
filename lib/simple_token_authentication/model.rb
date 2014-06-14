@@ -10,6 +10,7 @@ module Devise
 
       included do
         private :generate_authentication_token
+        before_save :ensure_authentication_token
       end
 
       def ensure_authentication_token
@@ -26,7 +27,6 @@ module Devise
       end
 
       module ClassMethods
-        # before_save :ensure_authentication_token
       end
     end
   end
