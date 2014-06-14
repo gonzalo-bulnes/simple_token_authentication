@@ -43,7 +43,7 @@ module Devise
       end
 
       def configured_headings
-        ::Devise.token_header_names[snake_resource_name.to_sym]
+        ::Devise.token_header_names[snake_resource_name.to_sym] || {}
       end
 
       def token_header
