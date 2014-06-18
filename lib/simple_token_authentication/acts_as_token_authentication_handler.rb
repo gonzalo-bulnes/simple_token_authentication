@@ -13,7 +13,7 @@ module SimpleTokenAuthentication
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
       # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/32
-      ActionController::Base.send :include, Devise::Controllers::SignInOut if Rails.env.test?
+      ApplicationController.send :include, Devise::Controllers::SignInOut if Rails.env.test?
     end
 
     def authenticate_entity!(entity_class)
@@ -130,4 +130,7 @@ module SimpleTokenAuthentication
     end
   end
 end
-ActionController::Base.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
+
+ActiveSupport.on_load :action_controller do
+  include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
+end
