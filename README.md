@@ -158,6 +158,15 @@ SimpleTokenAuthentication.configure do |config|
   #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
 
+  # Configure the Devise trackable strategy integration.
+  #
+  # If true, tracking is disabled for token authentication: signing in through
+  # token authentication won't modify the Devise trackable statistics.
+  #
+  # If false, given Devise trackable is configured for the relevant model,
+  # then signing in through token authentication will be tracked as any other sign in.
+  #
+  # config.skip_devise_trackable = true
 end
 ```
 
