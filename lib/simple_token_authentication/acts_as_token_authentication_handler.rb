@@ -50,8 +50,7 @@ module SimpleTokenAuthentication
       # in the database with the token given in the params, mitigating
       # timing attacks.
       if entity && Devise.secure_compare(entity.authentication_token, params[params_token_name])
-        # Sign in using token should not be tracked by Devise trackable
-        # See https://github.com/plataformatec/devise/issues/953
+        # Defaults to true so your trackable stats are not polluted by api requests
         env["devise.skip_trackable"] = SimpleTokenAuthentication.skip_trackable
 
         # Notice the store option defaults to false, so the entity

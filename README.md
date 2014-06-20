@@ -127,9 +127,10 @@ SimpleTokenAuthentication.configure do |config|
   #     `X-Admin-Auth-Token, X-SuperAdmin-Email`
   #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
-  #
+
   # Configure the trackable policy. By default this module is deactivated as sign in using
   # token should not be tracked by Devise trackable.
+  # See https://github.com/plataformatec/devise/issues/953
   # If false, trackable module must be configured in your model(s)
   # config.skip_trackable = true
 
