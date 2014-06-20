@@ -52,7 +52,7 @@ module SimpleTokenAuthentication
       if entity && Devise.secure_compare(entity.authentication_token, params[params_token_name])
         # Sign in using token should not be tracked by Devise trackable
         # See https://github.com/plataformatec/devise/issues/953
-        env["devise.skip_trackable"] = true
+        env["devise.skip_trackable"] = SimpleTokenAuthentication.skip_trackable
 
         # Notice the store option defaults to false, so the entity
         # is not actually stored in the session and a token is needed
