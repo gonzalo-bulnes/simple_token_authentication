@@ -20,7 +20,7 @@ module Devise
       end
 
       def store
-        ::Devise.sign_in_token
+        ::SimpleTokenAuthentication.sign_in_token
       end
 
       private
@@ -43,7 +43,7 @@ module Devise
       end
 
       def configured_headings
-        ::Devise.token_header_names[snake_resource_name.to_sym] || {}
+        ::SimpleTokenAuthentication.header_names[snake_resource_name.to_sym] || {}
       end
 
       def token_header
