@@ -3,6 +3,7 @@ module SimpleTokenAuthentication
 
     mattr_accessor :header_names
     mattr_accessor :sign_in_token
+    mattr_accessor :skip_trackable
 
     # Default configuration
     @@header_names = {}
