@@ -10,9 +10,9 @@ module SimpleTokenAuthentication
       private :header_token_name
       private :header_email_name
       # This is our new function that comes before Devise's one
-      before_filter :authenticate_entity_from_token!
+      before_filter :authenticate_entity_from_token!, @@options
       # This is Devise's authentication
-      before_filter :authenticate_entity!, :authenticate_entity_options!
+      before_filter :authenticate_entity!, @@options
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
@@ -26,15 +26,6 @@ module SimpleTokenAuthentication
 
       self.method(auth_str.to_sym).call
     end
-
-    def authenticate_entity_options!
-      options = {}
-      # if we have options then we make sure to pass them too.
-      options = @@options if @@options
-
-      options
-    end
-
 
     # For this example, we are simply using token authentication
     # via parameters. However, anyone could use Rails's token
