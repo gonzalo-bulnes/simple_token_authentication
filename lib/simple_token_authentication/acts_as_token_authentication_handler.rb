@@ -12,7 +12,7 @@ module SimpleTokenAuthentication
       # This is our new function that comes before Devise's one
       before_filter :authenticate_entity_from_token!
       # This is Devise's authentication
-      before_filter :authenticate_entity!, authenticate_entity_options!
+      before_filter :authenticate_entity!
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
@@ -22,17 +22,7 @@ module SimpleTokenAuthentication
 
     def authenticate_entity!
       # Caution: entity should be a singular camel-cased name but could be pluralized or underscored.
-      auth_str = "authenticate_#{@@entity.name.singularize.underscore}!"
-
-      self.method(auth_str.to_sym).call
-    end
-
-    def authenticate_entity_options!
-      options = {}
-      # if we have options then we make sure to pass them too.
-      options = @@options if @@options
-
-      options
+      self.method("authenticate_#{@@entity.name.singularize.underscore}!".to_sym).call
     end
 
 
@@ -93,12 +83,6 @@ module SimpleTokenAuthentication
     def self.set_entity entity
       @@entity = entity
     end
-
-    def self.set_options options
-      @@options = options
-    end
-
-
   end
 
   module ActsAsTokenAuthenticationHandler
@@ -115,7 +99,6 @@ module SimpleTokenAuthentication
     module ClassMethods
       def acts_as_token_authentication_handler_for(entity, options = {})
         SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods.set_entity entity
-        SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods.set_options options
         include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods
       end
 
