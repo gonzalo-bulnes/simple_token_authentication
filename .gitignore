@@ -20,3 +20,5 @@ spec/dummy
 # Editors
 *.sublime-project
 *.sublime-workspace
+.idea/
+*.iml
