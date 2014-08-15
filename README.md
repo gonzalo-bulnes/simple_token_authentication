@@ -137,7 +137,7 @@ SimpleTokenAuthentication.configure do |config|
   # This parameter should match the main parameter you set up in your Devise configuration.
   # Check: https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address#tell-devise-to-use-username-in-the-authentication_keys
   #
-  # config.header_names = { user: 'email' }
+  # config.auth_parameter_name = { user: 'email' }
 
 end
 ```
