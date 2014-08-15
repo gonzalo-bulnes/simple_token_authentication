@@ -9,6 +9,7 @@ module SimpleTokenAuthentication
     # Default configuration
     @@header_names = {}
     @@sign_in_token = false
+    @@auth_parameter_name = {}
 
     def configure
       yield self if block_given?
