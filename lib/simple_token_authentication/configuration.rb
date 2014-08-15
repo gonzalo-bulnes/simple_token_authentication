@@ -3,6 +3,8 @@ module SimpleTokenAuthentication
 
     mattr_accessor :header_names
     mattr_accessor :sign_in_token
+    mattr_accessor :auth_parameter_name
+
 
     # Default configuration
     @@header_names = {}
