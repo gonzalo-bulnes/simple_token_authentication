@@ -143,3 +143,6 @@ module SimpleTokenAuthentication
   end
 end
 ActionController::Base.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
+if defined?(ActionController::API)
+  ActionController::API.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
+end
