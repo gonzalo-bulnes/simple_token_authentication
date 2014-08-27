@@ -14,7 +14,6 @@ module SimpleTokenAuthentication
       # from authenticate_entity_from_token!
       # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/32
       ActionController::Base.send :include, Devise::Controllers::SignInOut if Rails.env.test?
-      ActionController::API.send :include, Devise::Controllers::SignInOut if Rails.env.test? && defined?(ActionController::API)
     end
 
     def authenticate_entity!(entity_class)
