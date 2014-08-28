@@ -56,7 +56,11 @@ Feature: Password change provokes the authentication token reset
 
           context "once the password has been changed" do
             context "when the original authentication token is used" do
+
               it "does not perform token authentication" do
+
+                # TODO: change the user password, or, at least, call
+                # Devise::PasswordsController#update
 
                 # `sign_in` is configured to raise an exception when called,
                 # see spec/dummy/app/controllers/application_controller.rb
@@ -115,8 +119,8 @@ Feature: Password change provokes the authentication token reset
 
           it "renews the user's authentication token" do
             original_authentication_token = user.authentication_token
-
-            expect(user.renew_authentication_token!).to change(user.authentication_token)
+            user.renew_authentication_token!
+            expect(user.authentication_token).not_to eq(original_authentication_token)
           end
         end
       end
@@ -129,6 +133,9 @@ Feature: Password change provokes the authentication token reset
     And the output should match:
       """
       User
+      """
+    And the output should match:
+      """
         #renew_authentication_token
       """
     And the output should match:

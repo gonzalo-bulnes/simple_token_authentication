@@ -22,6 +22,15 @@ module SimpleTokenAuthentication
       end
     end
 
+    def renew_authentication_token!
+      obsolete_token = self.authentication_token
+      loop do
+        token = generate_authentication_token
+        break self.authentication_token = token unless token == obsolete_token
+      end
+      self.save
+    end
+
     module ClassMethods
       def acts_as_token_authenticatable(options = {})
         include SimpleTokenAuthentication::ActsAsTokenAuthenticatable
