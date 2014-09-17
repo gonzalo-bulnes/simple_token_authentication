@@ -75,12 +75,24 @@ module SimpleTokenAuthentication
 
     # Private: Return the name of the header to watch for the token authentication param
     def header_token_name
-      SimpleTokenAuthentication.header_names[entitiy_class_sym].try([:authentication_token]) || "X-#{entity_class.name.singularize.camelize}-Token"
+      header_auth_hash.presence || "X-#{entity_class.name.singularize.camelize}-Token"
     end
 
     # Private: Return the name of the header to watch for the email param
     def header_email_name
-      SimpleTokenAuthentication.header_names[entitiy_class_sym].try([:email]) || "X-#{entity_class.name.singularize.camelize}-Email"
+      header_email_hash.presence || "X-#{entity_class.name.singularize.camelize}-Email"
+    end
+
+    def header_auth_hash
+      header_names[:authentication_token] if header_names
+    end
+
+    def header_email_hash
+      header_names[:email] if header_names
+    end
+
+    def header_names
+      SimpleTokenAuthentication.header_names[entitiy_class_sym]
     end
   end
 
