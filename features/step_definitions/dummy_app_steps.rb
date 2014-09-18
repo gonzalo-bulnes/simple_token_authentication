@@ -110,6 +110,7 @@ Given /^I have a dummy app with a Devise-enabled (\w+) and (\w+)$/ do |first_mod
   # By adding Devise to a model, I implicitely create that model.
   steps %Q{
     And I run `rails generate devise #{first_model.camelize.singularize}`
+    And I run `sed -i "s/# config.secret_key/config.secret_key/" config/initializers/devise.rb`
     And I run `rails generate devise #{second_model.camelize.singularize}`
   }
 
