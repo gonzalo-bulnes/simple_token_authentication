@@ -51,4 +51,25 @@ rescue LoadError
   end
 end
 
-task default: [:features, :inch]
+begin
+  require 'rspec/core/rake_task'
+
+  desc 'Provide public and private interfaces documentation'
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.rspec_opts = "--format documentation --color"
+  end
+
+  namespace :spec do
+    desc 'Provide public interface documentation'
+    RSpec::Core::RakeTask.new(:public) do |t|
+      t.rspec_opts = "--format documentation --color --tag public"
+    end
+  end
+rescue LoadError
+  desc 'RSpec rake task not available'
+  task :spec do
+  abort 'RSpec rake task is not available. Be sure to install rspec-core as a gem or plugin'
+  end
+end
+
+task default: [:spec, :features, :inch]
