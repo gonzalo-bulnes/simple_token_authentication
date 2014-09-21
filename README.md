@@ -5,6 +5,7 @@ Simple Token Authentication
 [![Build Status](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication.png?branch=master)](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication)
 [![Code Climate](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication.png)](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication)
 [![Dependency Status](https://gemnasium.com/gonzalo-bulnes/simple_token_authentication.svg)](https://gemnasium.com/gonzalo-bulnes/simple_token_authentication)
+[![Inline docs](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication.svg?branch=master)](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication)
 
 Token authentication support has been removed from [Devise][devise] for security reasons. In [this gist][original-gist], Devise's [José Valim][josevalim] explains how token authentication should be performed in order to remain safe.
 

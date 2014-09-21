@@ -8,6 +8,7 @@ module SimpleTokenAuthentication
     @@header_names = {}
     @@sign_in_token = false
 
+    # Allow the default configuration to be overwritten from initializers
     def configure
       yield self if block_given?
     end
