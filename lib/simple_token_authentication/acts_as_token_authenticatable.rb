@@ -24,7 +24,6 @@ module SimpleTokenAuthentication
 
     module ClassMethods
       def acts_as_token_authenticatable(options = {})
-        include SimpleTokenAuthentication::ActsAsTokenAuthenticatable
         before_save :ensure_authentication_token
       end
     end
