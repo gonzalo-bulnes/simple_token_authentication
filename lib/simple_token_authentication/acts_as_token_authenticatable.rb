@@ -7,6 +7,8 @@ module SimpleTokenAuthentication
 
     included do
       private :generate_authentication_token
+      private :token_suitable?
+      private :generate_token
     end
 
     def ensure_authentication_token
@@ -17,9 +19,17 @@ module SimpleTokenAuthentication
 
     def generate_authentication_token
       loop do
-        token = Devise.friendly_token
-        break token unless self.class.exists?(authentication_token: token)
+        token = generate_token
+        break token if token_suitable?(token)
       end
+    end
+
+    def generate_token
+      Devise.friendly_token
+    end
+
+    def token_suitable?(token)
+      not self.class.exists?(authentication_token: token)
     end
 
     module ClassMethods
