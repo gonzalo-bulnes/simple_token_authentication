@@ -8,28 +8,28 @@ module SimpleTokenAuthentication
     included do
       private :generate_authentication_token
       private :token_suitable?
-      private :generate_token
+      private :token_generator
     end
 
     def ensure_authentication_token
       if authentication_token.blank?
-        self.authentication_token = generate_authentication_token
+        self.authentication_token = generate_authentication_token(token_generator)
       end
     end
 
-    def generate_authentication_token
+    def generate_authentication_token(token_generator)
       loop do
-        token = generate_token
+        token = token_generator.generate_token
         break token if token_suitable?(token)
       end
     end
 
-    def generate_token
-      Devise.friendly_token
-    end
-
     def token_suitable?(token)
       not self.class.exists?(authentication_token: token)
+    end
+
+    def token_generator
+      @token_generator ||= TokenGenerator.new
     end
 
     module ClassMethods
