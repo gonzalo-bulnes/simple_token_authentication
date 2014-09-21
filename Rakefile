@@ -51,4 +51,17 @@ rescue LoadError
   end
 end
 
-task default: [:features, :inch]
+begin
+  require 'rspec/core/rake_task'
+
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.rspec_opts = "--format documentation --color"
+  end
+rescue LoadError
+  desc 'RSpec rake task not available'
+  task :spec do
+  abort 'RSpec rake task is not available. Be sure to install rspec-core as a gem or plugin'
+  end
+end
+
+task default: [:spec, :features, :inch]
