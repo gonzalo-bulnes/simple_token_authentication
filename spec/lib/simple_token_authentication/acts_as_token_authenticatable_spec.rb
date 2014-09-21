@@ -17,7 +17,7 @@ describe 'A token authenticatable class (or one of its children)' do
     [klass, child_klass]
   end
 
-  it 'responds to :acts_as_token_authenticatable' do
+  it 'responds to :acts_as_token_authenticatable', public: true do
     subjects.each do |subject|
       expect(subject).to respond_to :acts_as_token_authenticatable
     end
@@ -26,7 +26,7 @@ describe 'A token authenticatable class (or one of its children)' do
   describe 'which supports the :before_save hook' do
 
     context 'when it acts as token authenticatable' do
-      it 'ensures its instances have an authentication token before being saved' do
+      it 'ensures its instances have an authentication token before being saved', public: true do
         subjects.each do |subject|
           expect(subject).to receive(:before_save).with(:ensure_authentication_token)
           subject.acts_as_token_authenticatable
@@ -79,7 +79,7 @@ describe 'A token authenticatable class (or one of its children)' do
         end
       end
 
-      it 'ensures its authentication token is unique' do
+      it 'ensures its authentication token is unique', public: true do
         subjects.each do |subject|
           subject.ensure_authentication_token
 
