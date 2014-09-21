@@ -1,6 +1,6 @@
 module SimpleTokenAuthentication
   module ActsAsTokenAuthenticatable
-    extend ActiveSupport::Concern
+    extend ::ActiveSupport::Concern
 
     # Please see https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
     # before editing this file, the discussion is very interesting.
