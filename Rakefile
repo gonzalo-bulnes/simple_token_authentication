@@ -54,15 +54,13 @@ end
 begin
   require 'rspec/core/rake_task'
 
-  desc 'Provide public and private interfaces documentation'
-  RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = "--format documentation --color"
-  end
+  desc 'Provide private interfaces documentation'
+  RSpec::Core::RakeTask.new(:spec)
 
   namespace :spec do
-    desc 'Provide public interface documentation'
+    desc 'Provide public interfaces documentation'
     RSpec::Core::RakeTask.new(:public) do |t|
-      t.rspec_opts = "--format documentation --color --tag public"
+      t.rspec_opts = "--tag public"
     end
   end
 rescue LoadError
@@ -72,4 +70,4 @@ rescue LoadError
   end
 end
 
-task default: [:spec, :features, :inch]
+task default: ['spec:public', :features, :inch]
