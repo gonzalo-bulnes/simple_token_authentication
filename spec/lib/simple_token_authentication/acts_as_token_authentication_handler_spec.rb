@@ -17,6 +17,17 @@ def skip_rails_test_environment_code
   rails.stub_chain(:env, :test?).and_return(false)
 end
 
+def double_user_model
+  user = double()
+  stub_const('User', user)
+  user.stub(:name).and_return('User')
+end
+
+def double_super_admin_model
+  super_admin = double()
+  stub_const('SuperAdmin', super_admin)
+  super_admin.stub(:name).and_return('SuperAdmin')
+end
 
 describe 'A token authentication handler class (or one of its children)' do
 
@@ -71,16 +82,13 @@ describe 'A token authentication handler class (or one of its children)' do
 
       before(:each) do
         ignore_cucumber_hack
-
-        @user = double()
-        stub_const('User', @user)
-        @user.stub(:name).and_return('User')
+        double_user_model
       end
 
       it 'ensures its instances require user to authenticate from token or any Devise strategy before any action', public: true do
         subjects.each do |subject|
           expect(subject).to receive(:before_filter).with(:authenticate_user_from_token!, {})
-          subject.acts_as_token_authentication_handler_for @user
+          subject.acts_as_token_authentication_handler_for User
         end
       end
 
@@ -93,7 +101,7 @@ describe 'A token authentication handler class (or one of its children)' do
         it 'ensures its instances require user to authenticate from token before any action', public: true do
           subjects.each do |subject|
             expect(subject).to receive(:before_filter).with(:authenticate_user_from_token, {})
-            subject.acts_as_token_authentication_handler_for @user, options
+            subject.acts_as_token_authentication_handler_for User, options
           end
         end
       end
@@ -102,10 +110,7 @@ describe 'A token authentication handler class (or one of its children)' do
 
         let!(:klass) do
           ignore_cucumber_hack
-
-          @user = double()
-          stub_const('User', @user)
-          @user.stub(:name).and_return('User')
+          double_user_model
 
           class SimpleTokenAuthentication::SomeClass; end
           SimpleTokenAuthentication::SomeClass.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
@@ -150,16 +155,13 @@ describe 'A token authentication handler class (or one of its children)' do
 
       before(:each) do
         ignore_cucumber_hack
-
-        @super_admin = double()
-        stub_const('SuperAdmin', @super_admin)
-        @super_admin.stub(:name).and_return('SuperAdmin')
+        double_super_admin_model
       end
 
       it 'ensures its instances require super_admin to authenticate from token or any Devise strategy before any action', public: true do
         subjects.each do |subject|
           expect(subject).to receive(:before_filter).with(:authenticate_super_admin_from_token!, {})
-          subject.acts_as_token_authentication_handler_for @super_admin
+          subject.acts_as_token_authentication_handler_for SuperAdmin
         end
       end
 
@@ -172,7 +174,7 @@ describe 'A token authentication handler class (or one of its children)' do
         it 'ensures its instances require super_admin to authenticate from token before any action', public: true do
           subjects.each do |subject|
             expect(subject).to receive(:before_filter).with(:authenticate_super_admin_from_token, {})
-            subject.acts_as_token_authentication_handler_for @super_admin, options
+            subject.acts_as_token_authentication_handler_for SuperAdmin, options
           end
         end
       end
@@ -182,10 +184,7 @@ describe 'A token authentication handler class (or one of its children)' do
         # ! to ensure it gets defined before subjects
         let!(:klass) do
           ignore_cucumber_hack
-
-          @user = double()
-          stub_const('SuperAdmin', @user)
-          @user.stub(:name).and_return('SuperAdmin')
+          double_super_admin_model
 
           class SimpleTokenAuthentication::SomeClass; end
           SimpleTokenAuthentication::SomeClass.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
