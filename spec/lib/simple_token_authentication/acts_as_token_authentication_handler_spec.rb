@@ -2,14 +2,18 @@ require 'spec_helper'
 
 # Returns a dummy class which includes the module under test.
 def define_dummy_class_which_includes(module_under_test)
-  SimpleTokenAuthentication.const_set(:SomeClass, Class.new)
+  unless defined? SimpleTokenAuthentication::SomeClass
+    SimpleTokenAuthentication.const_set(:SomeClass, Class.new)
+  end
   SimpleTokenAuthentication::SomeClass.send :include, module_under_test
   SimpleTokenAuthentication::SomeClass
 end
 
 # Returns a dummy class which inherits from parent_class.
 def define_dummy_class_child_of(parent_class)
-  SimpleTokenAuthentication.const_set(:SomeChildClass, Class.new(parent_class))
+  unless defined? SimpleTokenAuthentication::SomeChildClass
+    SimpleTokenAuthentication.const_set(:SomeChildClass, Class.new(parent_class))
+  end
   SimpleTokenAuthentication::SomeChildClass
 end
 
@@ -48,41 +52,32 @@ describe 'A token authentication handler class (or one of its children)' do
     ensure_examples_independence
   end
 
-  let(:klass) do
-    define_dummy_class_which_includes(
-      SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
-  end
+  before(:each) do
+    klass       = define_dummy_class_which_includes(
+                     SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
+    child_klass = define_dummy_class_child_of(klass)
 
-  let(:child_klass) do
-    define_dummy_class_child_of(klass)
-  end
-
-  let(:subjects) do
     # all specs must apply to classes which include the module and their children
-    [klass, child_klass]
+    @subjects   = [klass, child_klass]
   end
 
   it 'responds to :acts_as_token_authentication_handler_for', public: true do
-    subjects.each do |subject|
+    @subjects.each do |subject|
       expect(subject).to respond_to :acts_as_token_authentication_handler_for
     end
   end
 
   it 'responds to :acts_as_token_authentication_handler', public: true, deprecated: true do
-    subjects.each do |subject|
+    @subjects.each do |subject|
       expect(subject).to respond_to :acts_as_token_authentication_handler
     end
   end
 
   describe 'which support the :before_filter hook' do
 
-    let(:subjects) do
-      # all specs must apply to classes which include the module and their children
-      [klass, child_klass]
-    end
 
     before(:each) do
-      subjects.each do |subject|
+      @subjects.each do |subject|
         subject.stub(:before_filter)
       end
     end
@@ -97,7 +92,7 @@ describe 'A token authentication handler class (or one of its children)' do
       end
 
       it 'ensures its instances require user to authenticate from token or any Devise strategy before any action', public: true do
-        subjects.each do |subject|
+        @subjects.each do |subject|
           expect(subject).to receive(:before_filter).with(:authenticate_user_from_token!, {})
           subject.acts_as_token_authentication_handler_for User
         end
@@ -110,7 +105,7 @@ describe 'A token authentication handler class (or one of its children)' do
         end
 
         it 'ensures its instances require user to authenticate from token before any action', public: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).to receive(:before_filter).with(:authenticate_user_from_token, {})
             subject.acts_as_token_authentication_handler_for User, options
           end
@@ -119,7 +114,7 @@ describe 'A token authentication handler class (or one of its children)' do
 
       describe 'instance' do
 
-        let!(:klass) do
+        before(:each) do
           ignore_cucumber_hack
           double_user_model
 
@@ -129,31 +124,31 @@ describe 'A token authentication handler class (or one of its children)' do
           klass.class_eval do
             acts_as_token_authentication_handler_for User
           end
-          klass
+
+          child_klass = define_dummy_class_child_of(klass)
+          @subjects   = [klass.new, child_klass.new]
         end
 
-        let(:subjects) { [klass.new, child_klass.new] }
-
         it 'responds to :authenticate_user_from_token', protected: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).to respond_to :authenticate_user_from_token
           end
         end
 
         it 'responds to :authenticate_user_from_token!', protected: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).to respond_to :authenticate_user_from_token!
           end
         end
 
         it 'does not respond to :authenticate_super_admin_from_token', protected: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).not_to respond_to :authenticate_super_admin_from_token
           end
         end
 
         it 'does not respond to :authenticate_super_admin_from_token!', protected: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).not_to respond_to :authenticate_super_admin_from_token!
           end
         end
@@ -170,7 +165,7 @@ describe 'A token authentication handler class (or one of its children)' do
       end
 
       it 'ensures its instances require super_admin to authenticate from token or any Devise strategy before any action', public: true do
-        subjects.each do |subject|
+        @subjects.each do |subject|
           expect(subject).to receive(:before_filter).with(:authenticate_super_admin_from_token!, {})
           subject.acts_as_token_authentication_handler_for SuperAdmin
         end
@@ -183,7 +178,7 @@ describe 'A token authentication handler class (or one of its children)' do
         end
 
         it 'ensures its instances require super_admin to authenticate from token before any action', public: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).to receive(:before_filter).with(:authenticate_super_admin_from_token, {})
             subject.acts_as_token_authentication_handler_for SuperAdmin, options
           end
@@ -193,7 +188,7 @@ describe 'A token authentication handler class (or one of its children)' do
       describe 'instance' do
 
         # ! to ensure it gets defined before subjects
-        let!(:klass) do
+        before(:each) do
           ignore_cucumber_hack
           double_super_admin_model
 
@@ -203,31 +198,31 @@ describe 'A token authentication handler class (or one of its children)' do
           klass.class_eval do
             acts_as_token_authentication_handler_for SuperAdmin
           end
-          klass
+
+          child_klass = define_dummy_class_child_of(klass)
+          @subjects   = [klass.new, child_klass.new]
         end
 
-        let(:subjects) { [klass.new, child_klass.new] }
-
         it 'responds to :authenticate_super_admin_from_token', protected: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).to respond_to :authenticate_super_admin_from_token
           end
         end
 
         it 'responds to :authenticate_super_admin_from_token!', protected: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).to respond_to :authenticate_super_admin_from_token!
           end
         end
 
         it 'do not respond to :authenticate_user_from_token', protected: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).not_to respond_to :authenticate_user_from_token
           end
         end
 
         it 'do not respond to :authenticate_user_from_token!', protected: true do
-          subjects.each do |subject|
+          @subjects.each do |subject|
             expect(subject).not_to respond_to :authenticate_user_from_token!
           end
         end
