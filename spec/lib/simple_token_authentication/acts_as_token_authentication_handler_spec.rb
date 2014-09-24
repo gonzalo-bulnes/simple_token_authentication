@@ -6,6 +6,18 @@ def ensure_examples_independence
   SimpleTokenAuthentication.send(:remove_const, :SomeChildClass)
 end
 
+def ignore_cucumber_hack
+  skip_rails_test_environment_code
+end
+
+# Skip the code intended to be run in the Rails test environment
+def skip_rails_test_environment_code
+  rails = double()
+  stub_const('Rails', rails)
+  rails.stub_chain(:env, :test?).and_return(false)
+end
+
+
 describe 'A token authentication handler class (or one of its children)' do
 
   after(:each) do
@@ -58,10 +70,7 @@ describe 'A token authentication handler class (or one of its children)' do
     context 'and which acts as token authentication handler for User' do
 
       before(:each) do
-        # skip the code intended to be run in the Rails test environment
-        rails = double()
-        stub_const('Rails', rails)
-        rails.stub_chain(:env, :test?).and_return(false)
+        ignore_cucumber_hack
 
         @user = double()
         stub_const('User', @user)
@@ -92,10 +101,7 @@ describe 'A token authentication handler class (or one of its children)' do
       describe 'instance' do
 
         let!(:klass) do
-          # skip the code intended to be run in the Rails test environment
-          rails = double()
-          stub_const('Rails', rails)
-          rails.stub_chain(:env, :test?).and_return(false)
+          ignore_cucumber_hack
 
           @user = double()
           stub_const('User', @user)
@@ -143,10 +149,7 @@ describe 'A token authentication handler class (or one of its children)' do
     context 'and which acts as token authentication handler for SuperAdmin' do
 
       before(:each) do
-        # skip the code intended to be run in the Rails test environment
-        rails = double()
-        stub_const('Rails', rails)
-        rails.stub_chain(:env, :test?).and_return(false)
+        ignore_cucumber_hack
 
         @super_admin = double()
         stub_const('SuperAdmin', @super_admin)
@@ -178,10 +181,7 @@ describe 'A token authentication handler class (or one of its children)' do
 
         # ! to ensure it gets defined before subjects
         let!(:klass) do
-          # skip the code intended to be run in the Rails test environment
-          rails = double()
-          stub_const('Rails', rails)
-          rails.stub_chain(:env, :test?).and_return(false)
+          ignore_cucumber_hack
 
           @user = double()
           stub_const('SuperAdmin', @user)
