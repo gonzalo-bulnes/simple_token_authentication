@@ -23,10 +23,6 @@ module SimpleTokenAuthentication
       self.method("authenticate_#{entity_name_underscore(entity_class)}!".to_sym).call
     end
 
-
-    # For this example, we are simply using token authentication
-    # via parameters. However, anyone could use Rails's token
-    # authentication features to get the token from a header.
     def authenticate_entity_from_token!(entity_class)
       # Set the authentication token params if not already present,
       # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
