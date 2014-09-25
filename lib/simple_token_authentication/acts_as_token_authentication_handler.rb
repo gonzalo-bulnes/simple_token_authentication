@@ -116,17 +116,21 @@ module SimpleTokenAuthentication
       def define_acts_as_token_authentication_helpers_for(entity_class)
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
           def authenticate_#{entity_name_underscore(entity_class)}_from_token
-            authenticate_entity_from_token!(#{entity_class.name})
+            authenticate_entity_from_token!(#{entity_name(entity_class)})
           end
 
           def authenticate_#{entity_name_underscore(entity_class)}_from_token!
-            authenticate_entity_from_token!(#{entity_class.name})
-            authenticate_entity!(#{entity_class.name})
+            authenticate_entity_from_token!(#{entity_name(entity_class)})
+            authenticate_entity!(#{entity_name(entity_class)})
           end
         METHODS
       end
 
       private
+
+      def entity_name entity
+        entity.name
+      end
 
       def entity_name_underscore entity
         entity.name.singularize.underscore
