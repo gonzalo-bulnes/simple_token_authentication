@@ -1,5 +1,20 @@
 require 'spec_helper'
 
+
+class DummyTokenGenerator
+  def initialize(args={})
+    @tokens_to_be_generated = args[:tokens_to_be_generated]
+  end
+
+  def generate_token
+    @tokens_to_be_generated.shift
+  end
+end
+
+describe DummyTokenGenerator do
+  it_behaves_like 'a token generator'
+end
+
 describe 'A token authenticatable class (or one of its children)' do
 
   after(:each) do
@@ -41,16 +56,6 @@ describe 'A token authenticatable class (or one of its children)' do
 
       before(:each) do
         TOKENS_IN_USE = ['ExampleTok3n', '4notherTokeN']
-
-        class DummyTokenGenerator
-          def initialize(args={})
-            @tokens_to_be_generated = args[:tokens_to_be_generated]
-          end
-
-          def generate_token
-            @tokens_to_be_generated.shift
-          end
-        end
 
         @subjects.each do |k|
           k.class_eval do
