@@ -120,7 +120,6 @@ describe 'A token authentication handler class (or one of its children)' do
 
           klass = define_dummy_class_which_includes(
                     SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
-          klass.stub(:before_filter)
           klass.class_eval do
             acts_as_token_authentication_handler_for User
           end
@@ -194,7 +193,6 @@ describe 'A token authentication handler class (or one of its children)' do
 
           klass = define_dummy_class_which_includes(
                     SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
-          klass.stub(:before_filter)
           klass.class_eval do
             acts_as_token_authentication_handler_for SuperAdmin
           end
