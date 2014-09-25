@@ -101,9 +101,9 @@ module SimpleTokenAuthentication
         define_acts_as_token_authentication_helpers_for(entity)
 
         authenticate_method = if options[:fallback_to_devise]
-          :"authenticate_#{entity.name.singularize.underscore}_from_token!"
+          :"authenticate_#{entity_name_underscore(entity)}_from_token!"
         else
-          :"authenticate_#{entity.name.singularize.underscore}_from_token"
+          :"authenticate_#{entity_name_underscore(entity)}_from_token"
         end
         before_filter authenticate_method, options.slice(:only, :except)
       end
@@ -114,18 +114,22 @@ module SimpleTokenAuthentication
       end
 
       def define_acts_as_token_authentication_helpers_for(entity_class)
-        entity_underscored = entity_class.name.singularize.underscore
-
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
-          def authenticate_#{entity_underscored}_from_token
+          def authenticate_#{entity_name_underscore(entity_class)}_from_token
             authenticate_entity_from_token!(#{entity_class.name})
           end
 
-          def authenticate_#{entity_underscored}_from_token!
+          def authenticate_#{entity_name_underscore(entity_class)}_from_token!
             authenticate_entity_from_token!(#{entity_class.name})
             authenticate_entity!(#{entity_class.name})
           end
         METHODS
+      end
+
+      private
+
+      def entity_name_underscore entity
+        entity.name.singularize.underscore
       end
     end
   end
