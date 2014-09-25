@@ -9,6 +9,7 @@ module SimpleTokenAuthentication
       private :authenticate_entity_from_token!
       private :header_token_name
       private :header_email_name
+      private :entity_name_camelize
       private :entity_name_underscore
 
       # This is necessary to test which arguments were passed to sign_in
@@ -63,6 +64,10 @@ module SimpleTokenAuthentication
       end
     end
 
+    def entity_name_camelize entity
+      entity.name.singularize.camelize
+    end
+
     def entity_name_underscore entity
       entity.name.singularize.underscore
     end
@@ -72,7 +77,7 @@ module SimpleTokenAuthentication
       if SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity_class)}".to_sym].presence
         SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity_class)}".to_sym][:authentication_token]
       else
-        "X-#{entity_class.name.singularize.camelize}-Token"
+        "X-#{entity_name_camelize(entity_class)}-Token"
       end
     end
 
@@ -81,7 +86,7 @@ module SimpleTokenAuthentication
       if SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity_class)}".to_sym].presence
         SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity_class)}".to_sym][:email]
       else
-        "X-#{entity_class.name.singularize.camelize}-Email"
+        "X-#{entity_name_camelize(entity_class)}-Email"
       end
     end
   end
