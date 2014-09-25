@@ -9,6 +9,7 @@ module SimpleTokenAuthentication
       private :authenticate_entity_from_token!
       private :header_token_name
       private :header_email_name
+      private :entity_name_underscore
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
@@ -18,7 +19,7 @@ module SimpleTokenAuthentication
 
     def authenticate_entity!(entity_class)
       # Caution: entity should be a singular camel-cased name but could be pluralized or underscored.
-      self.method("authenticate_#{entity_class.name.singularize.underscore}!".to_sym).call
+      self.method("authenticate_#{entity_name_underscore(entity_class)}!".to_sym).call
     end
 
 
@@ -28,8 +29,8 @@ module SimpleTokenAuthentication
     def authenticate_entity_from_token!(entity_class)
       # Set the authentication token params if not already present,
       # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
-      params_token_name = "#{entity_class.name.singularize.underscore}_token".to_sym
-      params_email_name = "#{entity_class.name.singularize.underscore}_email".to_sym
+      params_token_name = "#{entity_name_underscore(entity_class)}_token".to_sym
+      params_email_name = "#{entity_name_underscore(entity_class)}_email".to_sym
       if token = params[params_token_name].blank? && request.headers[header_token_name(entity_class)]
         params[params_token_name] = token
       end
@@ -62,10 +63,14 @@ module SimpleTokenAuthentication
       end
     end
 
+    def entity_name_underscore entity
+      entity.name.singularize.underscore
+    end
+
     # Private: Return the name of the header to watch for the token authentication param
     def header_token_name(entity_class)
-      if SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym][:authentication_token]
+      if SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity_class)}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity_class)}".to_sym][:authentication_token]
       else
         "X-#{entity_class.name.singularize.camelize}-Token"
       end
@@ -73,8 +78,8 @@ module SimpleTokenAuthentication
 
     # Private: Return the name of the header to watch for the email param
     def header_email_name(entity_class)
-      if SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym][:email]
+      if SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity_class)}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity_class)}".to_sym][:email]
       else
         "X-#{entity_class.name.singularize.camelize}-Email"
       end
