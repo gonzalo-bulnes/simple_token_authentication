@@ -35,6 +35,7 @@ require 'cucumber/rails'
 # recommended as it will mask a lot of errors for you!
 #
 ActionController::Base.allow_rescue = false
+ActionController::API.allow_rescue = false if defined? ActionController::API
 
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
