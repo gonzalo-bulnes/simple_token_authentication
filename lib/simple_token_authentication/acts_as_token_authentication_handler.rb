@@ -16,40 +16,18 @@ module SimpleTokenAuthentication
       ActionController::Base.send :include, Devise::Controllers::SignInOut if Rails.env.test?
     end
 
-    def authenticate_entity!(entity_class)
-      # Caution: entity should be a singular camel-cased name but could be pluralized or underscored.
-      self.method("authenticate_#{entity_class.name.singularize.underscore}!".to_sym).call
+    def authenticate_entity!(given_entity_class)
+      @entity_class = given_entity_class
+      self.method("authenticate_#{entity_class_string}!".to_sym).call
     end
-
 
     # For this example, we are simply using token authentication
     # via parameters. However, anyone could use Rails's token
     # authentication features to get the token from a header.
-    def authenticate_entity_from_token!(entity_class)
-      # Set the authentication token params if not already present,
-      # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
-      params_token_name = "#{entity_class.name.singularize.underscore}_token".to_sym
-      params_email_name = "#{entity_class.name.singularize.underscore}_email".to_sym
-      if token = params[params_token_name].blank? && request.headers[header_token_name(entity_class)]
-        params[params_token_name] = token
-      end
-      if email = params[params_email_name].blank? && request.headers[header_email_name(entity_class)]
-        params[params_email_name] = email
-      end
-
-      email = params[params_email_name].presence
-      # See https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
-      entity = nil
-      if entity_class.respond_to? "find_by"
-        entity = email && entity_class.find_by(email: email)
-      elsif entity_class.respond_to? "find_by_email"
-        entity = email && entity_class.find_by_email(email)
-      end
-
-      # Notice how we use Devise.secure_compare to compare the token
-      # in the database with the token given in the params, mitigating
-      # timing attacks.
-      if entity && Devise.secure_compare(entity.authentication_token, params[params_token_name])
+    def authenticate_entity_from_token!(given_entity_class)
+      @entity_class = given_entity_class
+      entity = class_finder_method(email)
+      if entity && Devise.secure_compare(entity.authentication_token, token)
         # Sign in using token should not be tracked by Devise trackable
         # See https://github.com/plataformatec/devise/issues/953
         env["devise.skip_trackable"] = true
@@ -62,22 +40,59 @@ module SimpleTokenAuthentication
       end
     end
 
-    # Private: Return the name of the header to watch for the token authentication param
-    def header_token_name(entity_class)
-      if SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym][:authentication_token]
+    private
+
+    def entity_class
+      @entity_class
+    end
+
+    def entity_class_string
+      entity_class.name.singularize.underscore
+    end
+
+    def entitiy_class_sym
+      entity_class_string.to_sym
+    end
+
+    def token
+      params["#{entity_class_string}_token".to_sym] || request.headers[header_token_name]
+    end
+
+    def email
+      params["#{entity_class_string}_email".to_sym] || request.headers[header_email_name]
+    end
+
+    def class_finder_method(email)
+      case
+      when entity_class.respond_to?("find_by")
+        entity_class.find_by(email: email)
+      when entity_class.respond_to?("find_by_email")
+        entity_class.find_by_email(email)
       else
-        "X-#{entity_class.name.singularize.camelize}-Token"
+        nil
       end
     end
 
+    # Private: Return the name of the header to watch for the token authentication param
+    def header_token_name
+      header_auth_hash.presence || "X-#{entity_class.name.singularize.camelize}-Token"
+    end
+
     # Private: Return the name of the header to watch for the email param
-    def header_email_name(entity_class)
-      if SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym][:email]
-      else
-        "X-#{entity_class.name.singularize.camelize}-Email"
-      end
+    def header_email_name
+      header_email_hash.presence || "X-#{entity_class.name.singularize.camelize}-Email"
+    end
+
+    def header_auth_hash
+      header_names[:authentication_token] if header_names
+    end
+
+    def header_email_hash
+      header_names[:email] if header_names
+    end
+
+    def header_names
+      SimpleTokenAuthentication.header_names[entitiy_class_sym]
     end
   end
 
@@ -113,17 +128,17 @@ module SimpleTokenAuthentication
         acts_as_token_authentication_handler_for User
       end
 
-      def define_acts_as_token_authentication_helpers_for(entity_class)
-        entity_underscored = entity_class.name.singularize.underscore
+      def define_acts_as_token_authentication_helpers_for(given_entity_class)
+        entity_underscored = given_entity_class.name.singularize.underscore
 
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
           def authenticate_#{entity_underscored}_from_token
-            authenticate_entity_from_token!(#{entity_class.name})
+            authenticate_entity_from_token!(#{given_entity_class.name})
           end
 
           def authenticate_#{entity_underscored}_from_token!
-            authenticate_entity_from_token!(#{entity_class.name})
-            authenticate_entity!(#{entity_class.name})
+            authenticate_entity_from_token!(#{given_entity_class.name})
+            authenticate_entity!(#{given_entity_class.name})
           end
         METHODS
       end
