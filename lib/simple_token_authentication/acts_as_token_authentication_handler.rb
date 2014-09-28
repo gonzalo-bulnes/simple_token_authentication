@@ -13,6 +13,7 @@ module SimpleTokenAuthentication
       private :entity_identifier_header_name
       private :entity_token_param_name
       private :entity_identifier_param_name
+      private :get_token_from_params_or_headers
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
@@ -28,9 +29,6 @@ module SimpleTokenAuthentication
     def authenticate_entity_from_token!(entity_class)
       # Set the authentication token params if not already present,
       # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
-      if token = params[entity_token_param_name(entity_class)].blank? && request.headers[entity_token_header_name(entity_class)]
-        params[entity_token_param_name(entity_class)] = token
-      end
       if email = params[entity_identifier_param_name(entity_class)].blank? && request.headers[entity_identifier_header_name(entity_class)]
         params[entity_identifier_param_name(entity_class)] = email
       end
@@ -47,7 +45,7 @@ module SimpleTokenAuthentication
       # Notice how we use Devise.secure_compare to compare the token
       # in the database with the token given in the params, mitigating
       # timing attacks.
-      if entity && Devise.secure_compare(entity.authentication_token, params[entity_token_param_name(entity_class)])
+      if entity && Devise.secure_compare(entity.authentication_token, get_token_from_params_or_headers(entity_class))
         # Sign in using token should not be tracked by Devise trackable
         # See https://github.com/plataformatec/devise/issues/953
         env["devise.skip_trackable"] = true
@@ -92,6 +90,14 @@ module SimpleTokenAuthentication
 
     def entity_identifier_param_name entity
       "#{entity_name_underscore(entity)}_email".to_sym
+    end
+
+    def get_token_from_params_or_headers entity
+      # if the token is not present among params, get it from headers
+      if token = params[entity_token_param_name(entity)].blank? && request.headers[entity_token_header_name(entity)]
+        params[entity_token_param_name(entity)] = token
+      end
+      params[entity_token_param_name(entity)]
     end
   end
 
