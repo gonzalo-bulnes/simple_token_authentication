@@ -11,6 +11,7 @@ module SimpleTokenAuthentication
       private :header_email_name
       private :entity_name_camelize
       private :entity_name_underscore
+      private :entity_token_param_name
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
@@ -26,10 +27,9 @@ module SimpleTokenAuthentication
     def authenticate_entity_from_token!(entity_class)
       # Set the authentication token params if not already present,
       # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
-      params_token_name = "#{entity_name_underscore(entity_class)}_token".to_sym
       params_email_name = "#{entity_name_underscore(entity_class)}_email".to_sym
-      if token = params[params_token_name].blank? && request.headers[header_token_name(entity_class)]
-        params[params_token_name] = token
+      if token = params[entity_token_param_name(entity_class)].blank? && request.headers[header_token_name(entity_class)]
+        params[entity_token_param_name(entity_class)] = token
       end
       if email = params[params_email_name].blank? && request.headers[header_email_name(entity_class)]
         params[params_email_name] = email
@@ -47,7 +47,7 @@ module SimpleTokenAuthentication
       # Notice how we use Devise.secure_compare to compare the token
       # in the database with the token given in the params, mitigating
       # timing attacks.
-      if entity && Devise.secure_compare(entity.authentication_token, params[params_token_name])
+      if entity && Devise.secure_compare(entity.authentication_token, params[entity_token_param_name(entity_class)])
         # Sign in using token should not be tracked by Devise trackable
         # See https://github.com/plataformatec/devise/issues/953
         env["devise.skip_trackable"] = true
@@ -84,6 +84,10 @@ module SimpleTokenAuthentication
       else
         "X-#{entity_name_camelize(entity_class)}-Email"
       end
+    end
+
+    def entity_token_param_name entity
+      "#{entity_name_underscore(entity)}_token".to_sym
     end
   end
 
