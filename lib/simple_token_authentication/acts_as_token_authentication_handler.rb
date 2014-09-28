@@ -14,6 +14,7 @@ module SimpleTokenAuthentication
       private :entity_token_param_name
       private :entity_identifier_param_name
       private :get_token_from_params_or_headers
+      private :get_identifier_from_params_or_headers
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
@@ -27,13 +28,7 @@ module SimpleTokenAuthentication
     end
 
     def authenticate_entity_from_token!(entity_class)
-      # Set the authentication token params if not already present,
-      # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
-      if email = params[entity_identifier_param_name(entity_class)].blank? && request.headers[entity_identifier_header_name(entity_class)]
-        params[entity_identifier_param_name(entity_class)] = email
-      end
-
-      email = params[entity_identifier_param_name(entity_class)].presence
+      email = get_identifier_from_params_or_headers(entity_class).presence
       # See https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
       entity = nil
       if entity_class.respond_to? "find_by"
@@ -98,6 +93,14 @@ module SimpleTokenAuthentication
         params[entity_token_param_name(entity)] = token
       end
       params[entity_token_param_name(entity)]
+    end
+
+    def get_identifier_from_params_or_headers entity
+      # if the identifier (email) is not present among params, get it from headers
+      if email = params[entity_identifier_param_name(entity)].blank? && request.headers[entity_identifier_header_name(entity)]
+        params[entity_identifier_param_name(entity)] = email
+      end
+      params[entity_identifier_param_name(entity)]
     end
   end
 
