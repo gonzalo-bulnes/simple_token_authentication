@@ -12,6 +12,7 @@ module SimpleTokenAuthentication
       private :entity_name_camelize
       private :entity_name_underscore
       private :entity_token_param_name
+      private :entity_identifier_param_name
 
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
@@ -27,15 +28,14 @@ module SimpleTokenAuthentication
     def authenticate_entity_from_token!(entity_class)
       # Set the authentication token params if not already present,
       # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
-      params_email_name = "#{entity_name_underscore(entity_class)}_email".to_sym
       if token = params[entity_token_param_name(entity_class)].blank? && request.headers[header_token_name(entity_class)]
         params[entity_token_param_name(entity_class)] = token
       end
-      if email = params[params_email_name].blank? && request.headers[header_email_name(entity_class)]
-        params[params_email_name] = email
+      if email = params[entity_identifier_param_name(entity_class)].blank? && request.headers[header_email_name(entity_class)]
+        params[entity_identifier_param_name(entity_class)] = email
       end
 
-      email = params[params_email_name].presence
+      email = params[entity_identifier_param_name(entity_class)].presence
       # See https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
       entity = nil
       if entity_class.respond_to? "find_by"
@@ -88,6 +88,10 @@ module SimpleTokenAuthentication
 
     def entity_token_param_name entity
       "#{entity_name_underscore(entity)}_token".to_sym
+    end
+
+    def entity_identifier_param_name entity
+      "#{entity_name_underscore(entity)}_email".to_sym
     end
   end
 
