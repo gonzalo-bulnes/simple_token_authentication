@@ -8,7 +8,9 @@ module SimpleTokenAuthentication
     included do
       private :authenticate_entity_from_token!
       private :token_correct?
+      private :perform_sign_in!
       private :token_comparator
+      private :sign_in_handler
       private :find_record_from_identifier
 
       private :entity_name_camelize
@@ -35,21 +37,25 @@ module SimpleTokenAuthentication
       record = find_record_from_identifier(entity)
 
       if token_correct?(record, entity, token_comparator)
-        # Sign in using token should not be tracked by Devise trackable
-        # See https://github.com/plataformatec/devise/issues/953
-        env["devise.skip_trackable"] = true
-
-        # Notice the store option defaults to false, so the record
-        # identifier is not actually stored in the session and a token
-        # is needed for every request. That behaviour can be configured
-        # through the sign_in_token option.
-        sign_in record, store: SimpleTokenAuthentication.sign_in_token
+        perform_sign_in!(record, sign_in_handler)
       end
     end
 
     def token_correct?(record, entity, token_comparator)
       record && token_comparator.compare(record.authentication_token,
                                          get_token_from_params_or_headers(entity))
+    end
+
+    def perform_sign_in!(record, sign_in_handler)
+      # Sign in using token should not be tracked by Devise trackable
+      # See https://github.com/plataformatec/devise/issues/953
+      env["devise.skip_trackable"] = true
+
+      # Notice the store option defaults to false, so the record
+      # identifier is not actually stored in the session and a token
+      # is needed for every request. That behaviour can be configured
+      # through the sign_in_token option.
+      sign_in_handler.sign_in self, record, store: SimpleTokenAuthentication.sign_in_token
     end
 
     def find_record_from_identifier(entity)
@@ -117,6 +123,10 @@ module SimpleTokenAuthentication
 
     def token_comparator
       @token_comparator ||= TokenComparator.new
+    end
+
+    def sign_in_handler
+      @sign_in_handler ||= SignInHandler.new
     end
   end
 
