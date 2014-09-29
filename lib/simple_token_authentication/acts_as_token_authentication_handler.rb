@@ -7,6 +7,8 @@ module SimpleTokenAuthentication
 
     included do
       private :authenticate_entity_from_token!
+      private :token_correct?
+
       private :entity_name_camelize
       private :entity_name_underscore
       private :entity_token_header_name
@@ -40,7 +42,7 @@ module SimpleTokenAuthentication
       # Notice how we use Devise.secure_compare to compare the token
       # in the database with the token given in the params, mitigating
       # timing attacks.
-      if entity && Devise.secure_compare(entity.authentication_token, get_token_from_params_or_headers(entity_class))
+      if token_correct?(entity, entity_class)
         # Sign in using token should not be tracked by Devise trackable
         # See https://github.com/plataformatec/devise/issues/953
         env["devise.skip_trackable"] = true
@@ -51,6 +53,10 @@ module SimpleTokenAuthentication
         # the sign_in_token option.
         sign_in entity, store: SimpleTokenAuthentication.sign_in_token
       end
+    end
+
+    def token_correct?(record, entity)
+      record && Devise.secure_compare(entity.authentication_token, get_token_from_params_or_headers(entity))
     end
 
     def entity_name_camelize entity
