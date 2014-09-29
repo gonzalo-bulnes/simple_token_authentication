@@ -7,10 +7,12 @@ module SimpleTokenAuthentication
 
     included do
       private :authenticate_entity_from_token!
+      private :authenticate_entity_from_fallback!
       private :token_correct?
       private :perform_sign_in!
       private :token_comparator
       private :sign_in_handler
+      private :fallback_authentication_handler
       private :find_record_from_identifier
 
       private :entity_name_camelize
@@ -28,17 +30,16 @@ module SimpleTokenAuthentication
       ActionController::Base.send :include, Devise::Controllers::SignInOut if Rails.env.test?
     end
 
-    def authenticate_entity!(entity_class)
-      # Caution: entity should be a singular camel-cased name but could be pluralized or underscored.
-      self.method("authenticate_#{entity_name_underscore(entity_class)}!".to_sym).call
-    end
-
     def authenticate_entity_from_token!(entity)
       record = find_record_from_identifier(entity)
 
       if token_correct?(record, entity, token_comparator)
         perform_sign_in!(record, sign_in_handler)
       end
+    end
+
+    def authenticate_entity_from_fallback!(entity, fallback_authentication_handler)
+      fallback_authentication_handler.authenticate_entity!(self, entity)
     end
 
     def token_correct?(record, entity, token_comparator)
@@ -128,6 +129,10 @@ module SimpleTokenAuthentication
     def sign_in_handler
       @sign_in_handler ||= SignInHandler.new
     end
+
+    def fallback_authentication_handler
+      @fallback_authentication_handler ||= FallbackAuthenticationHandler.new
+    end
   end
 
   module ActsAsTokenAuthenticationHandler
@@ -170,7 +175,7 @@ module SimpleTokenAuthentication
 
           def authenticate_#{entity_name_underscore(entity_class)}_from_token!
             authenticate_entity_from_token!(#{entity_name(entity_class)})
-            authenticate_entity!(#{entity_name(entity_class)})
+            authenticate_entity_from_fallback!(#{entity_name(entity_class)}, fallback_authentication_handler)
           end
         METHODS
       end
