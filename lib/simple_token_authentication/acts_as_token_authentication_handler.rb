@@ -143,7 +143,9 @@ module SimpleTokenAuthentication
 
     module ClassMethods
       def acts_as_token_authentication_handler_for(model, options = {})
-        entity = Entity.new(model)
+        # Avoid creating twice the same entities
+        @entities ||= {}
+        entity = @entities[model.to_s] ||= Entity.new(model)
 
         options = { fallback_to_devise: true }.merge(options)
 
@@ -165,14 +167,21 @@ module SimpleTokenAuthentication
       end
 
       def define_acts_as_token_authentication_helpers_for(entity)
+
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
+          # Get an Entity instance by its name
+          def get_entity(name)
+            @entities ||= {}
+            @entities[name] ||= Entity.new(name.constantize)
+          end
+
           def authenticate_#{entity.name_underscore}_from_token
-            authenticate_entity_from_token!(#{entity_name(entity)})
+            authenticate_entity_from_token!(get_entity('#{entity.name}'))
           end
 
           def authenticate_#{entity.name_underscore}_from_token!
-            authenticate_entity_from_token!(#{entity_name(entity)})
-            authenticate_entity_from_fallback!(#{entity_name(entity)}, fallback_authentication_handler)
+            authenticate_entity_from_token!(get_entity('#{entity.name}'))
+            authenticate_entity_from_fallback!(get_entity('#{entity.name}'), fallback_authentication_handler)
           end
         METHODS
       end
