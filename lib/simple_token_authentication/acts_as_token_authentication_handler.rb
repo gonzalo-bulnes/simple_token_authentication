@@ -9,6 +9,7 @@ module SimpleTokenAuthentication
       private :authenticate_entity_from_token!
       private :token_correct?
       private :token_comparator
+      private :find_record_from_identifier
 
       private :entity_name_camelize
       private :entity_name_underscore
@@ -31,14 +32,7 @@ module SimpleTokenAuthentication
     end
 
     def authenticate_entity_from_token!(entity_class)
-      email = get_identifier_from_params_or_headers(entity_class).presence
-      # See https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
-      entity = nil
-      if entity_class.respond_to? "find_by"
-        entity = email && entity_class.find_by(email: email)
-      elsif entity_class.respond_to? "find_by_email"
-        entity = email && entity_class.find_by_email(email)
-      end
+      entity = find_record_from_identifier(entity_class)
 
       if token_correct?(record, entity, token_comparator)
         # Sign in using token should not be tracked by Devise trackable
@@ -56,6 +50,19 @@ module SimpleTokenAuthentication
     def token_correct?(record, entity, token_comparator)
       record && token_comparator.compare(record.authentication_token,
                                          get_token_from_params_or_headers(entity))
+    end
+
+    def find_record_from_identifier(entity)
+      email = get_identifier_from_params_or_headers(entity).presence
+
+      # Rails 3 and 4 finder methods are supported,
+      # see https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
+      record = nil
+      if entity.respond_to? "find_by"
+        record = email && entity.find_by(email: email)
+      elsif entity.respond_to? "find_by_email"
+        record = email && entity.find_by_email(email)
+      end
     end
 
     def entity_name_camelize entity
