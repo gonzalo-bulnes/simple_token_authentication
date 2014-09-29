@@ -167,15 +167,15 @@ module SimpleTokenAuthentication
         acts_as_token_authentication_handler_for User
       end
 
-      def define_acts_as_token_authentication_helpers_for(entity_class)
+      def define_acts_as_token_authentication_helpers_for(entity)
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
-          def authenticate_#{entity_name_underscore(entity_class)}_from_token
-            authenticate_entity_from_token!(#{entity_name(entity_class)})
+          def authenticate_#{entity_name_underscore(entity)}_from_token
+            authenticate_entity_from_token!(#{entity_name(entity)})
           end
 
-          def authenticate_#{entity_name_underscore(entity_class)}_from_token!
-            authenticate_entity_from_token!(#{entity_name(entity_class)})
-            authenticate_entity_from_fallback!(#{entity_name(entity_class)}, fallback_authentication_handler)
+          def authenticate_#{entity_name_underscore(entity)}_from_token!
+            authenticate_entity_from_token!(#{entity_name(entity)})
+            authenticate_entity_from_fallback!(#{entity_name(entity)}, fallback_authentication_handler)
           end
         METHODS
       end
