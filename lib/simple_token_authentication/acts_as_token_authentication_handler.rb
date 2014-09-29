@@ -185,12 +185,6 @@ module SimpleTokenAuthentication
           end
         METHODS
       end
-
-      private
-
-      def entity_name entity
-        entity.name
-      end
     end
   end
 end
