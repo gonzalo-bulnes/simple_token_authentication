@@ -147,7 +147,9 @@ module SimpleTokenAuthentication
     end
 
     module ClassMethods
-      def acts_as_token_authentication_handler_for(entity, options = {})
+      def acts_as_token_authentication_handler_for(model, options = {})
+        entity = Entity.new(model)
+
         options = { fallback_to_devise: true }.merge(options)
 
         include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods
@@ -187,7 +189,7 @@ module SimpleTokenAuthentication
       end
 
       def entity_name_underscore entity
-        entity.name.singularize.underscore
+        entity.name_underscore
       end
     end
   end
