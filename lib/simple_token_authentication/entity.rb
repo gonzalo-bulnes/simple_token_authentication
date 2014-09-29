@@ -34,5 +34,13 @@ module SimpleTokenAuthentication
         "X-#{name}-Email"
       end
     end
+
+    def token_param_name
+      "#{name_underscore}_token".to_sym
+    end
+
+    def identifier_param_name
+      "#{name_underscore}_email".to_sym
+    end
   end
 end

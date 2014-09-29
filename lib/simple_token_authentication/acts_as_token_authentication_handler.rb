@@ -15,8 +15,6 @@ module SimpleTokenAuthentication
       private :fallback_authentication_handler
       private :find_record_from_identifier
 
-      private :entity_token_param_name
-      private :entity_identifier_param_name
       private :get_token_from_params_or_headers
       private :get_identifier_from_params_or_headers
 
@@ -68,28 +66,20 @@ module SimpleTokenAuthentication
       end
     end
 
-    def entity_token_param_name entity
-      "#{entity.name_underscore}_token".to_sym
-    end
-
-    def entity_identifier_param_name entity
-      "#{entity.name_underscore}_email".to_sym
-    end
-
     def get_token_from_params_or_headers entity
       # if the token is not present among params, get it from headers
-      if token = params[entity_token_param_name(entity)].blank? && request.headers[entity.token_header_name]
-        params[entity_token_param_name(entity)] = token
+      if token = params[entity.token_param_name].blank? && request.headers[entity.token_header_name]
+        params[entity.token_param_name] = token
       end
-      params[entity_token_param_name(entity)]
+      params[entity.token_param_name]
     end
 
     def get_identifier_from_params_or_headers entity
       # if the identifier (email) is not present among params, get it from headers
-      if email = params[entity_identifier_param_name(entity)].blank? && request.headers[entity.identifier_header_name]
-        params[entity_identifier_param_name(entity)] = email
+      if email = params[entity.identifier_param_name].blank? && request.headers[entity.identifier_header_name]
+        params[entity.identifier_param_name] = email
       end
-      params[entity_identifier_param_name(entity)]
+      params[entity.identifier_param_name]
     end
 
     def token_comparator
