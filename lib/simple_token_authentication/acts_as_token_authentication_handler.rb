@@ -15,7 +15,6 @@ module SimpleTokenAuthentication
       private :fallback_authentication_handler
       private :find_record_from_identifier
 
-      private :entity_name_camelize
       private :entity_token_header_name
       private :entity_identifier_header_name
       private :entity_token_param_name
@@ -71,16 +70,12 @@ module SimpleTokenAuthentication
       end
     end
 
-    def entity_name_camelize entity
-      entity.name.singularize.camelize
-    end
-
     # Private: Return the name of the header to watch for the token authentication param
     def entity_token_header_name entity
       if SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym].presence
         SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym][:authentication_token]
       else
-        "X-#{entity_name_camelize(entity)}-Token"
+        "X-#{entity.name}-Token"
       end
     end
 
@@ -89,7 +84,7 @@ module SimpleTokenAuthentication
       if SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym].presence
         SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym][:email]
       else
-        "X-#{entity_name_camelize(entity)}-Email"
+        "X-#{entity.name}-Email"
       end
     end
 
