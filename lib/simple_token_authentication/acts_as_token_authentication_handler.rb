@@ -31,19 +31,19 @@ module SimpleTokenAuthentication
       self.method("authenticate_#{entity_name_underscore(entity_class)}!".to_sym).call
     end
 
-    def authenticate_entity_from_token!(entity_class)
-      entity = find_record_from_identifier(entity_class)
+    def authenticate_entity_from_token!(entity)
+      record = find_record_from_identifier(entity)
 
       if token_correct?(record, entity, token_comparator)
         # Sign in using token should not be tracked by Devise trackable
         # See https://github.com/plataformatec/devise/issues/953
         env["devise.skip_trackable"] = true
 
-        # Notice the store option defaults to false, so the entity
-        # is not actually stored in the session and a token is needed
-        # for every request. That behaviour can be configured through
-        # the sign_in_token option.
-        sign_in entity, store: SimpleTokenAuthentication.sign_in_token
+        # Notice the store option defaults to false, so the record
+        # identifier is not actually stored in the session and a token
+        # is needed for every request. That behaviour can be configured
+        # through the sign_in_token option.
+        sign_in record, store: SimpleTokenAuthentication.sign_in_token
       end
     end
 
