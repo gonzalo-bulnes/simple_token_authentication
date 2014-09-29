@@ -26,6 +26,10 @@ describe SimpleTokenAuthentication::Entity do
     expect(@subject).to respond_to :token_header_name
   end
 
+  it 'responds to :identifier_header_name', protected: true do
+    expect(@subject).to respond_to :identifier_header_name
+  end
+
   describe '#model' do
     it 'is a constant', protected: true do
       expect(@subject.model).to eq SuperUser
@@ -53,6 +57,16 @@ describe SimpleTokenAuthentication::Entity do
 
     it 'defines a non-standard header field' do
       expect(@subject.token_header_name[0..1]).to eq 'X-'
+    end
+  end
+
+  describe '#identifier_header_name', protected: true do
+    it 'is a String' do
+      expect(@subject.identifier_header_name).to be_instance_of String
+    end
+
+    it 'defines a non-standard header field' do
+      expect(@subject.identifier_header_name[0..1]).to eq 'X-'
     end
   end
 end
