@@ -16,7 +16,6 @@ module SimpleTokenAuthentication
       private :find_record_from_identifier
 
       private :entity_name_camelize
-      private :entity_name_underscore
       private :entity_token_header_name
       private :entity_identifier_header_name
       private :entity_token_param_name
@@ -76,14 +75,10 @@ module SimpleTokenAuthentication
       entity.name.singularize.camelize
     end
 
-    def entity_name_underscore entity
-      entity.name.singularize.underscore
-    end
-
     # Private: Return the name of the header to watch for the token authentication param
     def entity_token_header_name entity
-      if SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity)}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity)}".to_sym][:authentication_token]
+      if SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym][:authentication_token]
       else
         "X-#{entity_name_camelize(entity)}-Token"
       end
@@ -91,19 +86,19 @@ module SimpleTokenAuthentication
 
     # Private: Return the name of the header to watch for the email param
     def entity_identifier_header_name entity
-      if SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity)}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity_name_underscore(entity)}".to_sym][:email]
+      if SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym][:email]
       else
         "X-#{entity_name_camelize(entity)}-Email"
       end
     end
 
     def entity_token_param_name entity
-      "#{entity_name_underscore(entity)}_token".to_sym
+      "#{entity.name_underscore}_token".to_sym
     end
 
     def entity_identifier_param_name entity
-      "#{entity_name_underscore(entity)}_email".to_sym
+      "#{entity.name_underscore}_email".to_sym
     end
 
     def get_token_from_params_or_headers entity
@@ -157,9 +152,9 @@ module SimpleTokenAuthentication
         define_acts_as_token_authentication_helpers_for(entity)
 
         authenticate_method = if options[:fallback_to_devise]
-          :"authenticate_#{entity_name_underscore(entity)}_from_token!"
+          :"authenticate_#{entity.name_underscore}_from_token!"
         else
-          :"authenticate_#{entity_name_underscore(entity)}_from_token"
+          :"authenticate_#{entity.name_underscore}_from_token"
         end
         before_filter authenticate_method, options.slice(:only, :except)
       end
@@ -171,11 +166,11 @@ module SimpleTokenAuthentication
 
       def define_acts_as_token_authentication_helpers_for(entity)
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
-          def authenticate_#{entity_name_underscore(entity)}_from_token
+          def authenticate_#{entity.name_underscore}_from_token
             authenticate_entity_from_token!(#{entity_name(entity)})
           end
 
-          def authenticate_#{entity_name_underscore(entity)}_from_token!
+          def authenticate_#{entity.name_underscore}_from_token!
             authenticate_entity_from_token!(#{entity_name(entity)})
             authenticate_entity_from_fallback!(#{entity_name(entity)}, fallback_authentication_handler)
           end
@@ -186,10 +181,6 @@ module SimpleTokenAuthentication
 
       def entity_name entity
         entity.name
-      end
-
-      def entity_name_underscore entity
-        entity.name_underscore
       end
     end
   end

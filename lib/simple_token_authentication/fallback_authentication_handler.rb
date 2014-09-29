@@ -5,13 +5,7 @@ module SimpleTokenAuthentication
     # See http://rdoc.info/github/plataformatec/devise/master/\
     #            Devise/Controllers/Helpers#define_helpers-class_method
     def authenticate_entity!(controller, entity)
-      controller.send("authenticate_#{entity_name_underscore(entity)}!".to_sym)
-    end
-
-    private
-
-    def entity_name_underscore(entity)
-      entity.name.singularize.underscore
+      controller.send("authenticate_#{entity.name_underscore}!".to_sym)
     end
   end
 end
