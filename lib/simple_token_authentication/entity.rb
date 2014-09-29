@@ -14,7 +14,16 @@ module SimpleTokenAuthentication
     end
 
     def name_underscore
-      @name.underscore
+      name.underscore
+    end
+
+    # Private: Return the name of the header to watch for the token authentication param
+    def token_header_name
+      if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:authentication_token]
+      else
+        "X-#{name}-Token"
+      end
     end
   end
 end

@@ -22,6 +22,10 @@ describe SimpleTokenAuthentication::Entity do
     expect(@subject).to respond_to :name_underscore
   end
 
+  it 'responds to :token_header_name', protected: true do
+    expect(@subject).to respond_to :token_header_name
+  end
+
   describe '#model' do
     it 'is a constant', protected: true do
       expect(@subject.model).to eq SuperUser
@@ -39,6 +43,16 @@ describe SimpleTokenAuthentication::Entity do
     it 'is an underscored String' do
       expect(@subject.name_underscore).to be_instance_of String
       expect(@subject.name_underscore).to eq @subject.name_underscore.underscore
+    end
+  end
+
+  describe '#token_header_name', protected: true do
+    it 'is a String' do
+      expect(@subject.token_header_name).to be_instance_of String
+    end
+
+    it 'defines a non-standard header field' do
+      expect(@subject.token_header_name[0..1]).to eq 'X-'
     end
   end
 end

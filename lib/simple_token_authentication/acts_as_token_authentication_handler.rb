@@ -15,7 +15,6 @@ module SimpleTokenAuthentication
       private :fallback_authentication_handler
       private :find_record_from_identifier
 
-      private :entity_token_header_name
       private :entity_identifier_header_name
       private :entity_token_param_name
       private :entity_identifier_param_name
@@ -70,15 +69,6 @@ module SimpleTokenAuthentication
       end
     end
 
-    # Private: Return the name of the header to watch for the token authentication param
-    def entity_token_header_name entity
-      if SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym][:authentication_token]
-      else
-        "X-#{entity.name}-Token"
-      end
-    end
-
     # Private: Return the name of the header to watch for the email param
     def entity_identifier_header_name entity
       if SimpleTokenAuthentication.header_names["#{entity.name_underscore}".to_sym].presence
@@ -98,7 +88,7 @@ module SimpleTokenAuthentication
 
     def get_token_from_params_or_headers entity
       # if the token is not present among params, get it from headers
-      if token = params[entity_token_param_name(entity)].blank? && request.headers[entity_token_header_name(entity)]
+      if token = params[entity_token_param_name(entity)].blank? && request.headers[entity.token_header_name]
         params[entity_token_param_name(entity)] = token
       end
       params[entity_token_param_name(entity)]
