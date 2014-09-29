@@ -64,10 +64,10 @@ module SimpleTokenAuthentication
       # Rails 3 and 4 finder methods are supported,
       # see https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
       record = nil
-      if entity.respond_to? "find_by"
-        record = email && entity.find_by(email: email)
-      elsif entity.respond_to? "find_by_email"
-        record = email && entity.find_by_email(email)
+      if entity.model.respond_to? "find_by"
+        record = email && entity.model.find_by(email: email)
+      elsif entity.model.respond_to? "find_by_email"
+        record = email && entity.model.find_by_email(email)
       end
     end
 

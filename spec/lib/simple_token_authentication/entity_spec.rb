@@ -10,12 +10,22 @@ describe SimpleTokenAuthentication::Entity do
     @subject = SimpleTokenAuthentication::Entity.new(SuperUser)
   end
 
+  it 'responds to :model', protected: true do
+    expect(@subject).to respond_to :model
+  end
+
   it 'responds to :name', protected: true do
     expect(@subject).to respond_to :name
   end
 
   it 'responds to :name_underscore', protected: true do
     expect(@subject).to respond_to :name_underscore
+  end
+
+  describe '#model' do
+    it 'is a constant', protected: true do
+      expect(@subject.model).to eq SuperUser
+    end
   end
 
   describe '#name' do

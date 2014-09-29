@@ -5,6 +5,10 @@ module SimpleTokenAuthentication
       @name = model.name
     end
 
+    def model
+      @model
+    end
+
     def name
       @name
     end
