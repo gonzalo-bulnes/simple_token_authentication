@@ -15,8 +15,6 @@ module SimpleTokenAuthentication
       private :fallback_authentication_handler
       private :find_record_from_identifier
 
-      private :get_identifier_from_params_or_headers
-
       # This is necessary to test which arguments were passed to sign_in
       # from authenticate_entity_from_token!
       # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/32
@@ -53,7 +51,7 @@ module SimpleTokenAuthentication
     end
 
     def find_record_from_identifier(entity)
-      email = get_identifier_from_params_or_headers(entity).presence
+      email = entity.get_identifier_from_params_or_headers(self).presence
 
       # Rails 3 and 4 finder methods are supported,
       # see https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
@@ -63,14 +61,6 @@ module SimpleTokenAuthentication
       elsif entity.model.respond_to? "find_by_email"
         record = email && entity.model.find_by_email(email)
       end
-    end
-
-    def get_identifier_from_params_or_headers entity
-      # if the identifier (email) is not present among params, get it from headers
-      if email = params[entity.identifier_param_name].blank? && request.headers[entity.identifier_header_name]
-        params[entity.identifier_param_name] = email
-      end
-      params[entity.identifier_param_name]
     end
 
     def token_comparator

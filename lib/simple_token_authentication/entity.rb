@@ -50,5 +50,13 @@ module SimpleTokenAuthentication
       end
       controller.params[token_param_name]
     end
+
+    def get_identifier_from_params_or_headers controller
+      # if the identifier (email) is not present among params, get it from headers
+      if email = controller.params[identifier_param_name].blank? && controller.request.headers[identifier_header_name]
+        controller.params[identifier_param_name] = email
+      end
+      controller.params[identifier_param_name]
+    end
   end
 end

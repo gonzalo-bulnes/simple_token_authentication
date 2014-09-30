@@ -42,6 +42,10 @@ describe SimpleTokenAuthentication::Entity do
     expect(@subject).to respond_to :get_token_from_params_or_headers
   end
 
+  it 'responds to :get_identifier_from_params_or_headers', protected: true do
+    expect(@subject).to respond_to :get_identifier_from_params_or_headers
+  end
+
   describe '#model' do
     it 'is a constant', protected: true do
       expect(@subject.model).to eq SuperUser
@@ -134,6 +138,51 @@ describe SimpleTokenAuthentication::Entity do
 
         it 'returns the headers token' do
           expect(@subject.get_token_from_params_or_headers(@controller)).to eq 'HeAd3rs_ToKeN'
+        end
+      end
+    end
+  end
+
+  describe '#get_identifier_from_params_or_headers', protected: true do
+
+    context 'when an identifier is present in params' do
+
+      before(:each) do
+        @controller = double()
+        @controller.stub(:params).and_return({ super_user_email: 'alice@example.com' })
+      end
+
+      it 'returns that identifier (String)' do
+        expect(@subject.get_identifier_from_params_or_headers(@controller)).to be_instance_of String
+        expect(@subject.get_identifier_from_params_or_headers(@controller)).to eq 'alice@example.com'
+      end
+
+      context 'and another identifier is present in the headers' do
+
+        before(:each) do
+          @controller.stub_chain(:request, :headers)
+                     .and_return({ 'X-SuperUser-Email' => 'bob@example.com' })
+        end
+
+        it 'returns the params identifier' do
+          expect(@subject.get_identifier_from_params_or_headers(@controller)).to eq 'alice@example.com'
+        end
+      end
+    end
+
+    context 'when no identifier is present in params' do
+
+      context 'and an identifier is present in the headers' do
+
+        before(:each) do
+          @controller = double()
+          @controller.stub(:params).and_return({ super_user_email: '' })
+          @controller.stub_chain(:request, :headers)
+                     .and_return({ 'X-SuperUser-Email' => 'bob@example.com' })
+        end
+
+        it 'returns the headers identifier' do
+          expect(@subject.get_identifier_from_params_or_headers(@controller)).to eq 'bob@example.com'
         end
       end
     end
