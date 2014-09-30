@@ -200,9 +200,9 @@ Releases are commented to provide a brief [changelog][changelog].
 Development
 -----------
 
-### Testing
+### Testing (gem use cases)
 
-Since `v1.0.0`, this gem development is test-driven. Each use case should be described with [RSpec][rspec] within an example app. That app will be created and configured automatically by [Aruba][aruba] as a [Cucumber][cucumber] feature.
+Since `v1.0.0`, this gem development is test-driven. The gem use cases are described with [RSpec][rspec] within an example app. That app is generated and configured automatically by [Aruba][aruba] as a [Cucumber][cucumber] feature.
 
 The resulting Cucumber features are a bit verbose, and their output when errors occur is not ideal, but their output when they are passing, on the contrary, provides an easy-to-reproduce recipe to build the example app (see [Executable documentation][exec-doc]). I find that useful enough to be patient with red scenarii for now.
 
@@ -210,6 +210,8 @@ The resulting Cucumber features are a bit verbose, and their output when errors 
   [cucumber]: https://github.com/cucumber/cucumber-rails
   [rspec]: https://www.relishapp.com/rspec/rspec-rails/docs
   [exec-doc]: https://github.com/gonzalo-bulnes/simple_token_authentication#executable-documentation
+
+Beside the gem use cases, the behaviour of each component of the gem-- taken individually --is described using RSpec. That RSpec-only tests suite provides documentation of the public interfaces implemented by the gem components, and a few private ones (for development purpose only).
 
 You can run the full test suite with `cd simple_token_authentication && rake`.
 
