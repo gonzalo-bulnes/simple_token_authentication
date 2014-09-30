@@ -221,6 +221,8 @@ Contributions are welcome! I'm not personally maintaining any [list of contribut
 
   [contributors]: https://github.com/gonzalo-bulnes/simple_token_authentication/graphs/contributors
 
+Please be sure to [review the open issues][open-questions] and contribute with your ideas or code in the issue best suited to the topic. Keeping discussions in a single place makes easier to everyone interested in that topic to keep track of the contributions.
+
 Credits
 -------
 
