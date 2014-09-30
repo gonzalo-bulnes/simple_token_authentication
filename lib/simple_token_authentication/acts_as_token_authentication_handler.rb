@@ -15,7 +15,6 @@ module SimpleTokenAuthentication
       private :fallback_authentication_handler
       private :find_record_from_identifier
 
-      private :get_token_from_params_or_headers
       private :get_identifier_from_params_or_headers
 
       # This is necessary to test which arguments were passed to sign_in
@@ -38,7 +37,7 @@ module SimpleTokenAuthentication
 
     def token_correct?(record, entity, token_comparator)
       record && token_comparator.compare(record.authentication_token,
-                                         get_token_from_params_or_headers(entity))
+                                         entity.get_token_from_params_or_headers(self))
     end
 
     def perform_sign_in!(record, sign_in_handler)
@@ -64,14 +63,6 @@ module SimpleTokenAuthentication
       elsif entity.model.respond_to? "find_by_email"
         record = email && entity.model.find_by_email(email)
       end
-    end
-
-    def get_token_from_params_or_headers entity
-      # if the token is not present among params, get it from headers
-      if token = params[entity.token_param_name].blank? && request.headers[entity.token_header_name]
-        params[entity.token_param_name] = token
-      end
-      params[entity.token_param_name]
     end
 
     def get_identifier_from_params_or_headers entity

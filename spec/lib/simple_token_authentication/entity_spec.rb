@@ -38,6 +38,10 @@ describe SimpleTokenAuthentication::Entity do
     expect(@subject).to respond_to :identifier_param_name
   end
 
+  it 'responds to :get_token_from_params_or_headers', protected: true do
+    expect(@subject).to respond_to :get_token_from_params_or_headers
+  end
+
   describe '#model' do
     it 'is a constant', protected: true do
       expect(@subject.model).to eq SuperUser
@@ -87,6 +91,51 @@ describe SimpleTokenAuthentication::Entity do
   describe '#identifier_param_name', protected: true do
     it 'is a Symbol' do
       expect(@subject.identifier_param_name).to be_instance_of Symbol
+    end
+  end
+
+  describe '#get_token_from_params_or_headers', protected: true do
+
+    context 'when a token is present in params' do
+
+      before(:each) do
+        @controller = double()
+        @controller.stub(:params).and_return({ super_user_token: 'The_ToKeN' })
+      end
+
+      it 'returns that token (String)' do
+        expect(@subject.get_token_from_params_or_headers(@controller)).to be_instance_of String
+        expect(@subject.get_token_from_params_or_headers(@controller)).to eq 'The_ToKeN'
+      end
+
+      context 'and another token is present in the headers' do
+
+        before(:each) do
+          @controller.stub_chain(:request, :headers)
+                     .and_return({ 'X-SuperUser-Token' => 'HeAd3rs_ToKeN' })
+        end
+
+        it 'returns the params token' do
+          expect(@subject.get_token_from_params_or_headers(@controller)).to eq 'The_ToKeN'
+        end
+      end
+    end
+
+    context 'when no token is present in params' do
+
+      context 'and a token is present in the headers' do
+
+        before(:each) do
+          @controller = double()
+          @controller.stub(:params).and_return({ super_user_token: '' })
+          @controller.stub_chain(:request, :headers)
+                     .and_return({ 'X-SuperUser-Token' => 'HeAd3rs_ToKeN' })
+        end
+
+        it 'returns the headers token' do
+          expect(@subject.get_token_from_params_or_headers(@controller)).to eq 'HeAd3rs_ToKeN'
+        end
+      end
     end
   end
 end
