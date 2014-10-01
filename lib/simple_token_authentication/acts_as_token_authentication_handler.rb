@@ -17,8 +17,9 @@ module SimpleTokenAuthentication
     end
 
     def authenticate_entity!(entity_class)
+      entity_underscored = entity_class.name.split("::").last.singularize.underscore
       # Caution: entity should be a singular camel-cased name but could be pluralized or underscored.
-      self.method("authenticate_#{entity_class.name.singularize.underscore}!".to_sym).call
+      self.method("authenticate_#{entity_underscored}!".to_sym).call
     end
 
 
@@ -26,10 +27,12 @@ module SimpleTokenAuthentication
     # via parameters. However, anyone could use Rails's token
     # authentication features to get the token from a header.
     def authenticate_entity_from_token!(entity_class)
+      entity_underscored = entity_class.name.split("::").last.singularize.underscore
+      # Caution: entity should be a singular camel-cased name but could be pluralized or underscored.
       # Set the authentication token params if not already present,
       # see http://stackoverflow.com/questions/11017348/rails-api-authentication-by-headers-token
-      params_token_name = "#{entity_class.name.singularize.underscore}_token".to_sym
-      params_email_name = "#{entity_class.name.singularize.underscore}_email".to_sym
+      params_token_name = "#{entity_underscored}_token".to_sym
+      params_email_name = "#{entity_underscored}_email".to_sym
       if token = params[params_token_name].blank? && request.headers[header_token_name(entity_class)]
         params[params_token_name] = token
       end
@@ -64,8 +67,9 @@ module SimpleTokenAuthentication
 
     # Private: Return the name of the header to watch for the token authentication param
     def header_token_name(entity_class)
-      if SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym][:authentication_token]
+      entity_underscored = entity_class.name.split("::").last.singularize.underscore
+      if SimpleTokenAuthentication.header_names["#{entity_underscored}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{entity_underscored}".to_sym][:authentication_token]
       else
         "X-#{entity_class.name.singularize.camelize}-Token"
       end
@@ -73,10 +77,12 @@ module SimpleTokenAuthentication
 
     # Private: Return the name of the header to watch for the email param
     def header_email_name(entity_class)
-      if SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{entity_class.name.singularize.underscore}".to_sym][:email]
+      entity_underscored = entity_class.name.split("::").last.singularize.underscore
+      entity_camelized = entity_class.name.split("::").last.singularize.camelize
+      if SimpleTokenAuthentication.header_names["#{entity_underscored}".to_sym].presence
+        SimpleTokenAuthentication.header_names["#{entity_underscored}".to_sym][:email]
       else
-        "X-#{entity_class.name.singularize.camelize}-Email"
+        "X-#{entity_camelized}-Email"
       end
     end
   end
@@ -94,6 +100,9 @@ module SimpleTokenAuthentication
 
     module ClassMethods
       def acts_as_token_authentication_handler_for(entity, options = {})
+
+        entity_underscored = entity.name.split("::").last.singularize.underscore
+
         options = { fallback_to_devise: true }.merge(options)
 
         include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods
@@ -101,9 +110,9 @@ module SimpleTokenAuthentication
         define_acts_as_token_authentication_helpers_for(entity)
 
         authenticate_method = if options[:fallback_to_devise]
-          :"authenticate_#{entity.name.singularize.underscore}_from_token!"
+          :"authenticate_#{entity_underscored}_from_token!"
         else
-          :"authenticate_#{entity.name.singularize.underscore}_from_token"
+          :"authenticate_#{entity_underscored}_from_token"
         end
         before_filter authenticate_method, options.slice(:only, :except)
       end
@@ -114,7 +123,7 @@ module SimpleTokenAuthentication
       end
 
       def define_acts_as_token_authentication_helpers_for(entity_class)
-        entity_underscored = entity_class.name.singularize.underscore
+        entity_underscored = entity_class.name.split("::").last.singularize.underscore
 
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
           def authenticate_#{entity_underscored}_from_token
