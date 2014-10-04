@@ -5,7 +5,8 @@
 #    describe SimpleTokenAuthentication::ModuleUnderTest do
 #
 #      after(:each) do
-#       ensure_examples_independence
+#        ensure_examples_independence
+#      end
 #
 #      before(:each) do
 #        define_test_subjects_for(SimpleTokenAuthentication::ModuleUnderTest)
