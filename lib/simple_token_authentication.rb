@@ -9,4 +9,10 @@ require 'simple_token_authentication/configuration'
 
 module SimpleTokenAuthentication
   extend Configuration
+
+  def self.ensure_models_can_act_as_token_authenticatables
+    ActiveRecord::Base.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+  end
+
+  ensure_models_can_act_as_token_authenticatables
 end
