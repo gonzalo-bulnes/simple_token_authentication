@@ -185,13 +185,13 @@ describe 'A token authentication handler class (or one of its children)' do
           end
         end
 
-        it 'do not respond to :authenticate_user_from_token', protected: true do
+        it 'does not respond to :authenticate_user_from_token', protected: true do
           @subjects.each do |subject|
             expect(subject).not_to respond_to :authenticate_user_from_token
           end
         end
 
-        it 'do not respond to :authenticate_user_from_token!', protected: true do
+        it 'does not respond to :authenticate_user_from_token!', protected: true do
           @subjects.each do |subject|
             expect(subject).not_to respond_to :authenticate_user_from_token!
           end

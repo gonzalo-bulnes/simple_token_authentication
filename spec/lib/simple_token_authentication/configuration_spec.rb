@@ -17,57 +17,19 @@ describe SimpleTokenAuthentication::Configuration do
 
     describe 'provides #header_names which' do
 
-      it 'is acessible', private: true do
-        expect(@subject).to respond_to :header_names
-        expect(@subject).to respond_to :header_names=
-      end
+      it_behaves_like 'a configuration option', 'header_names'
 
       it 'defauts to {}', private: true  do
         expect(@subject.header_names).to eq({})
-      end
-
-      context 'once set' do
-
-        before(:each) do
-          @_header_names_original_value = @subject.header_names
-          @subject.header_names = 'custom header'
-        end
-
-        after(:each) do
-          @subject.header_names = @_header_names_original_value
-        end
-
-        it 'can be retrieved', private: true do
-          expect(@subject.header_names).to eq 'custom header'
-        end
       end
     end
 
     describe 'provides #sign_in_token which' do
 
-      it 'is acessible', private: true do
-        expect(@subject).to respond_to :sign_in_token
-        expect(@subject).to respond_to :sign_in_token=
-      end
+      it_behaves_like 'a configuration option', 'sign_in_token'
 
       it 'defauts to false', private: true do
         expect(@subject.sign_in_token).to eq false
-      end
-
-      context 'once set' do
-
-        before(:each) do
-          @_header_names_original_value = @subject.sign_in_token
-          @subject.sign_in_token = 'custom header'
-        end
-
-        after(:each) do
-          @subject.sign_in_token = @_header_names_original_value
-        end
-
-        it 'can be retrieved', private: true do
-          expect(@subject.sign_in_token).to eq 'custom header'
-        end
       end
     end
   end
