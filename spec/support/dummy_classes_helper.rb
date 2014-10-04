@@ -27,6 +27,15 @@ def define_dummy_class_which_includes(module_under_test)
   SimpleTokenAuthentication::SomeClass
 end
 
+# Returns a dummy class which extends the module under test.
+def define_dummy_class_which_extends(module_under_test)
+  unless defined? SimpleTokenAuthentication::SomeClass
+    SimpleTokenAuthentication.const_set(:SomeClass, Class.new)
+  end
+  SimpleTokenAuthentication::SomeClass.send :extend, module_under_test
+  SimpleTokenAuthentication::SomeClass
+end
+
 # Returns a dummy class which inherits from parent_class.
 def define_dummy_class_child_of(parent_class)
   unless defined? SimpleTokenAuthentication::SomeChildClass

@@ -1,3 +1,4 @@
+require 'simple_token_authentication/adapter'
 require 'simple_token_authentication/fallback_authentication_handler'
 require 'simple_token_authentication/token_comparator'
 require 'simple_token_authentication/token_generator'
