@@ -11,6 +11,12 @@ describe SimpleTokenAuthentication do
     before(:each) do
       stub_const('ActiveRecord', Module.new)
       stub_const('ActiveRecord::Base', Class.new)
+
+      # define a dummy ActiveRecord adapter
+      dummy_active_record_adapter = double()
+      dummy_active_record_adapter.stub(:models_base_class).and_return(ActiveRecord::Base)
+      stub_const('SimpleTokenAuthentication::Adapters::DummyActiveRecordAdapter',
+                                                       dummy_active_record_adapter)
     end
 
     describe '#ensure_models_can_act_as_token_authenticatables' do
@@ -30,7 +36,8 @@ describe SimpleTokenAuthentication do
       it 'allows any kind of ActiveRecord::Base to act as token authenticatable', private: true do
         expect(@dummy_model).not_to respond_to :acts_as_token_authenticatable
 
-        subject.ensure_models_can_act_as_token_authenticatables
+        subject.ensure_models_can_act_as_token_authenticatables(
+                SimpleTokenAuthentication::Adapters::DummyActiveRecordAdapter)
 
         expect(@dummy_model).to respond_to :acts_as_token_authenticatable
       end
