@@ -6,9 +6,7 @@ describe SimpleTokenAuthentication::Adapters::ActiveRecordAdapter do
     @subject = SimpleTokenAuthentication::Adapters::ActiveRecordAdapter
   end
 
-  it 'responds to :models_base_class', private: true do
-    expect(@subject).to respond_to :models_base_class
-  end
+  it_behaves_like 'an ORM/ODM/OxM adapter'
 
   describe '.models_base_class' do
 
