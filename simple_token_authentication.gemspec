@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "inch", "~> 0.4"
   s.add_development_dependency "activerecord", ">= 3.2.6", "< 5"
+  s.add_development_dependency 'mongoid', '>= 3.1.0', '< 5'
 end
