@@ -130,6 +130,20 @@ SimpleTokenAuthentication.configure do |config|
   #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
 
+  # Configure the ORM, ODM, OxM to be used to provide token authenticatable models
+  #
+  # ActiveRecord and Neo4j are supported.
+  #
+  # Examples:
+  #
+  # Neo4j only:
+  # config.adapters = ['neo4j']
+  #
+  # ActiveRecord and Neo4j:
+  # config.adapters = ['active_record', 'neo4j']
+  #
+  # Default:
+  # config.adapters = ['active_record']
 end
 ```
 
