@@ -45,7 +45,7 @@ Given /^I have a dummy app with a Devise-enabled (\w+)$/ do |model|
 
   # See http://stackoverflow.com/a/10587853
   steps %Q{
-    And I run `sed -i "1s/^/require 'devise';/" config/application.rb`
+    And I run `sed -i "11s/^/require 'devise';/" config/application.rb`
     And I write to "config/initializers/simple_token_authentication.rb" with:
       """
       require 'simple_token_authentication'
@@ -60,6 +60,12 @@ Given /^I have a dummy app with a Devise-enabled (\w+)$/ do |model|
   # See https://github.com/gonzalo-bulnes/simple_token_authentication#installation
   steps %Q{
     And I run `rails g migration add_authentication_token_to_#{model.underscore.pluralize} authentication_token:string:index`
+  }
+
+  # In order to use respond_with, first you need to declare
+  # the formats your controller responds to in the class level.
+  steps %Q{
+    And I run `sed -i "2s/^/respond_to :html;/" app/controllers/application_controller.rb`
   }
 end
 
@@ -119,6 +125,12 @@ Given /^I have a dummy app with a Devise-enabled (\w+) and (\w+)$/ do |first_mod
     And I run `rails g migration add_authentication_token_to_#{first_model.underscore.pluralize} authentication_token:string:index`
     And I run `rails g migration add_authentication_token_to_#{second_model.underscore.pluralize} authentication_token:string:index`
   }
+
+  # In order to use respond_with, first you need to declare
+  # the formats your controller responds to in the class level.
+  steps %Q{
+    And I run `sed -i "2s/^/respond_to :html;/" app/controllers/application_controller.rb`
+  }
 end
 
 Given /^a scaffolded (\w+)$/ do |model|
@@ -138,6 +150,8 @@ Given /^the `(\w+!?)` method always raises an exception$/ do |method_name|
         # Prevent CSRF attacks by raising an exception.
         # For APIs, you may want to use :null_session instead.
         protect_from_forgery with: :exception
+
+        respond_to :html
 
         # While `acts_as_token_authentication_handler` was not called,
         # neither should be `authenticate_user!`.
@@ -329,6 +343,25 @@ Given /^I silence the (\w+) spec errors$/ do |controller|
             lambda { get :new, {}, valid_session }.should raise_exception(RuntimeError)
           end
         end
+      end
+      """
+  }
+end
+
+Given /^I silence totally the (\w+) spec errors$/ do |controller|
+  puts """
+  Errors should never pass silently.
+  Unless explicitly silenced.
+    -- PEP 20, The Zen of Python
+  """
+
+  steps %Q{
+    And I overwrite "spec/controllers/#{controller.underscore}_spec.rb" with:
+      """
+      require 'spec_helper'
+
+      describe #{controller} do
+        # nop
       end
       """
   }

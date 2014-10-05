@@ -56,6 +56,9 @@ Feature: Any controller which acts as token authentication handler requires auth
       end
       """
 
+    And I silence totally the PrivatePostsController spec errors
+    And I silence totally the PostsController spec errors
+
     When I run `rspec --format documentation`
     Then the exit status should be 0
     And the output should match:
@@ -157,6 +160,8 @@ Feature: Any controller which acts as token authentication handler requires auth
         end
       end
       """
+
+    And I silence totally the PostsController spec errors
 
     When I run `rspec --format documentation`
     Then the exit status should be 0

@@ -176,6 +176,7 @@ Feature: The `acts_as_token_authentication_handler` filter has a fallback_to_dev
       """
 
     And I silence the PrivatePostsController spec errors
+    And I silence totally the ApiPrivatePostsController spec errors
 
     When I run `rspec --format documentation`
     Then the exit status should be 0
