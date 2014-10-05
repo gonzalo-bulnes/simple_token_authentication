@@ -1,8 +1,12 @@
 require 'spec_helper'
+require 'simple_token_authentication/adapters/active_record_adapter'
 
-describe SimpleTokenAuthentication::Adapters::ActiveRecordAdapter do
+describe 'SimpleTokenAuthentication::Adapters::ActiveRecordAdapter' do
 
   before(:each) do
+    stub_const('ActiveRecord', Module.new)
+    stub_const('ActiveRecord::Base', double())
+
     @subject = SimpleTokenAuthentication::Adapters::ActiveRecordAdapter
   end
 
