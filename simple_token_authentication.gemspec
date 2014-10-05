@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency "actionmailer", ">= 3.2.6", "< 5"
   s.add_dependency "devise", "~> 3.2"
 
-  s.add_development_dependency 'activerecord', '>= 3.2.6', '< 4.1.6'
+  s.add_development_dependency 'activerecord', '>= 3.2.6', '< 5'
   s.add_development_dependency "sqlite3", "~> 1.3"
   s.add_development_dependency "rspec-rails", "~> 2.14"
   s.add_development_dependency "factory_girl_rails", "~> 4.3"
