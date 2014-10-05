@@ -36,8 +36,8 @@ describe SimpleTokenAuthentication do
       it 'allows any kind of ActiveRecord::Base to act as token authenticatable', private: true do
         expect(@dummy_model).not_to respond_to :acts_as_token_authenticatable
 
-        subject.ensure_models_can_act_as_token_authenticatables(
-                SimpleTokenAuthentication::Adapters::DummyActiveRecordAdapter)
+        subject.ensure_models_can_act_as_token_authenticatables [
+                SimpleTokenAuthentication::Adapters::DummyActiveRecordAdapter]
 
         expect(@dummy_model).to respond_to :acts_as_token_authenticatable
       end
