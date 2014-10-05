@@ -143,6 +143,7 @@ Feature: Any model can act as token authenticatable
       """
 
     And I silence the PrivatePostsController spec errors
+    And I silence totally the VeryPrivatePostsController spec errors
 
     When I run `rspec --format documentation`
     Then the exit status should be 0
@@ -215,6 +216,7 @@ Feature: Any model can act as token authenticatable
       """
 
     And I silence the PrivatePostsController spec errors
+    And I silence totally the VeryPrivatePostsController spec errors
 
     When I run `rspec --format documentation`
     Then the exit status should be 0

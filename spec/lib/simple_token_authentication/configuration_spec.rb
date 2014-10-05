@@ -15,6 +15,15 @@ describe SimpleTokenAuthentication::Configuration do
       SimpleTokenAuthentication.send(:remove_const, :ConfigurableClass)
     end
 
+    describe 'provides #adapters which' do
+
+      it_behaves_like 'a configuration option', 'adapters'
+
+      it "defauts to ['active_record']", private: true do
+        expect(@subject.adapters).to eq ['active_record']
+      end
+    end
+
     describe 'provides #header_names which' do
 
       it_behaves_like 'a configuration option', 'header_names'
