@@ -19,6 +19,10 @@ module SimpleTokenAuthentication
     end
   end
 
+  def self.ensure_controllers_can_act_as_token_authentication_handlers
+    ActionController::Base.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
+  end
+
   # Private: Load the available adapters.
   #
   # adapters_short_names - Array of names of the adapters to load if available
@@ -40,4 +44,6 @@ module SimpleTokenAuthentication
 
   available_adapters = load_available_adapters SimpleTokenAuthentication.adapters
   ensure_models_can_act_as_token_authenticatables available_adapters
+
+  ensure_controllers_can_act_as_token_authentication_handlers
 end
