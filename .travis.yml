@@ -1,8 +1,19 @@
 language: ruby
 rvm:
-  #- "1.9.2"
   - "1.9.3"
   - "2.0.0"
-  #- jruby-19mode # JRuby in 1.9 mode
-  #- rbx-19mode
 install: bundle install --jobs=3 --retry=3 --no-deployment
+env:
+  - FEATURE=any_controller_which_acts_as_token_authentication_handler_requires_authentication_from_the_correspoding_model.feature
+  - FEATURE=any_model_can_act_as_token_authenticatable.feature
+  - FEATURE=defaults_can_be_modified_via_an_initializer.feature
+  - FEATURE=option_fallback_to_devise_is_configurable.feature
+  - FEATURE=option_header_names_is_configurable.feature
+  - FEATURE=option_sign_in_token_is_configurable.feature
+  - FEATURE=several_scopes_can_be_used_with_the_same_handler.feature
+  - FEATURE=sign_in_statistics_are_tracked_via_devise.feature
+  - FEATURE=smoke.feature
+  - FEATURE=successful_specs.feature
+script:
+  - rake spec:public
+  - cucumber features/$FEATURE
