@@ -43,4 +43,42 @@ describe SimpleTokenAuthentication do
       end
     end
   end
+
+  context 'when Neo4j is available' do
+
+    before(:each) do
+      stub_const('Neo4j', Module.new)
+      stub_const('Neo4j::ActiveNode', Class.new)
+
+      # define a dummy ActiveRecord adapter
+      dummy_active_record_adapter = double()
+      dummy_active_record_adapter.stub(:models_base_class).and_return(Neo4j::ActiveNode)
+      stub_const('SimpleTokenAuthentication::Adapters::DummyActiveRecordAdapter',
+                                                       dummy_active_record_adapter)
+    end
+
+    describe '#ensure_models_can_act_as_token_authenticatables' do
+
+      before(:each) do
+        class SimpleTokenAuthentication::DummyModel < Neo4j::ActiveNode; end
+        @dummy_model = SimpleTokenAuthentication::DummyModel
+
+        expect(@dummy_model.new).to be_instance_of SimpleTokenAuthentication::DummyModel
+        expect(@dummy_model.new).to be_kind_of Neo4j::ActiveNode
+      end
+
+      after(:each) do
+        SimpleTokenAuthentication.send(:remove_const, :DummyModel)
+      end
+
+      it 'allows any kind of Neo4j::ActiveNode to act as token authenticatable', private: true do
+        expect(@dummy_model).not_to respond_to :acts_as_token_authenticatable
+
+        subject.ensure_models_can_act_as_token_authenticatables [
+                SimpleTokenAuthentication::Adapters::DummyActiveRecordAdapter]
+
+        expect(@dummy_model).to respond_to :acts_as_token_authenticatable
+      end
+    end
+  end
 end
