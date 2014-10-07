@@ -5,5 +5,4 @@ rvm:
   - "2.0.0"
   #- jruby-19mode # JRuby in 1.9 mode
   #- rbx-19mode
-before_install:
-  - bundle install --no-deployment
+install: bundle install --jobs=3 --retry=3 --no-deployment
