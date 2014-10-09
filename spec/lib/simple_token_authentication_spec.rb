@@ -76,8 +76,8 @@ describe SimpleTokenAuthentication do
       it 'allows any kind of ActionController::Base to acts as token authentication handler', private: true do
         expect(@dummy_controller).not_to respond_to :acts_as_token_authentication_handler_for
 
-        subject.ensure_controllers_can_act_as_token_authentication_handlers(
-                          SimpleTokenAuthentication::Adapters::DummyRailsAdapter)
+        subject.ensure_controllers_can_act_as_token_authentication_handlers [
+                          SimpleTokenAuthentication::Adapters::DummyRailsAdapter]
 
         expect(@dummy_controller).to respond_to :acts_as_token_authentication_handler_for
       end

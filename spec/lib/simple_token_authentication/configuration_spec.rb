@@ -15,6 +15,15 @@ describe SimpleTokenAuthentication::Configuration do
       SimpleTokenAuthentication.send(:remove_const, :ConfigurableClass)
     end
 
+    describe 'provides #controller_adapters which' do
+
+      it_behaves_like 'a configuration option', 'controller_adapters'
+
+      it "defauts to ['rails']", private: true do
+        expect(@subject.controller_adapters).to eq ['rails']
+      end
+    end
+
     describe 'provides #model_adapters which' do
 
       it_behaves_like 'a configuration option', 'model_adapters'
