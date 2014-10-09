@@ -5,7 +5,7 @@ module SimpleTokenAuthentication
     class ActiveRecordAdapter
       extend SimpleTokenAuthentication::Adapter
 
-      def self.models_base_class
+      def self.base_class
         ::ActiveRecord::Base
       end
     end

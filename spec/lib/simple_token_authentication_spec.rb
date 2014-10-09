@@ -18,7 +18,7 @@ describe SimpleTokenAuthentication do
 
       # define a dummy ActiveRecord adapter
       dummy_active_record_adapter = double()
-      dummy_active_record_adapter.stub(:models_base_class).and_return(ActiveRecord::Base)
+      dummy_active_record_adapter.stub(:base_class).and_return(ActiveRecord::Base)
       stub_const('SimpleTokenAuthentication::Adapters::DummyActiveRecordAdapter',
                                                        dummy_active_record_adapter)
     end

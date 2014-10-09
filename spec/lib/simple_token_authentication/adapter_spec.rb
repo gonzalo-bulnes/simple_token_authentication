@@ -12,10 +12,10 @@ describe 'Any class which extends SimpleTokenAuthentication::Adapter' do
 
   it_behaves_like 'an ORM/ODM/OxM adapter'
 
-  describe '.models_base_class' do
+  describe '.base_class' do
 
     it 'raises an error if not overwritten', public: true do
-      expect{ @subject.models_base_class }.to raise_error NotImplementedError
+      expect{ @subject.base_class }.to raise_error NotImplementedError
     end
   end
 end

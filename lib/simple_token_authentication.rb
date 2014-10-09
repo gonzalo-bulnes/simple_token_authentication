@@ -15,7 +15,7 @@ module SimpleTokenAuthentication
 
   def self.ensure_models_can_act_as_token_authenticatables model_adapters
     model_adapters.each do |model_adapter|
-      model_adapter.models_base_class.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+      model_adapter.base_class.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticatable
     end
   end
 
