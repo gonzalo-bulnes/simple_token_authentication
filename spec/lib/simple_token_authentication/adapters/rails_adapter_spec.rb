@@ -10,7 +10,7 @@ describe 'SimpleTokenAuthentication::Adapters::RailsAdapter' do
     @subject = SimpleTokenAuthentication::Adapters::RailsAdapter
   end
 
-  it_behaves_like 'an ORM/ODM/OxM adapter' # but has nothing to do with ORM/ODM/OxM ;)
+  it_behaves_like 'an adapter'
 
   describe '.base_class' do
 
