@@ -52,6 +52,11 @@ describe SimpleTokenAuthentication do
 
     before(:each) do
       stub_const('ActionController::Base', Class.new)
+
+      # define a dummy ActionController::Base (a.k.a 'Rails') adapter
+      dummy_rails_adapter = double()
+      dummy_rails_adapter.stub(:base_class).and_return(ActionController::Base)
+      stub_const('SimpleTokenAuthentication::Adapters::DummyRailsAdapter', dummy_rails_adapter)
     end
 
     describe '#ensure_controllers_can_act_as_token_authentication_handlers' do
@@ -71,7 +76,8 @@ describe SimpleTokenAuthentication do
       it 'allows any kind of ActionController::Base to acts as token authentication handler', private: true do
         expect(@dummy_controller).not_to respond_to :acts_as_token_authentication_handler_for
 
-        subject.ensure_controllers_can_act_as_token_authentication_handlers
+        subject.ensure_controllers_can_act_as_token_authentication_handlers(
+                          SimpleTokenAuthentication::Adapters::DummyRailsAdapter)
 
         expect(@dummy_controller).to respond_to :acts_as_token_authentication_handler_for
       end
