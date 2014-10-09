@@ -84,7 +84,7 @@ module SimpleTokenAuthentication
     # See https://github.com/gonzalo-bulnes/simple_token_authentication/issues/8#issuecomment-31707201
 
     included do
-      # nop
+      private_class_method :define_acts_as_token_authentication_helpers_for
     end
 
     module ClassMethods
