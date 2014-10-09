@@ -13,9 +13,15 @@ module SimpleTokenAuthentication
 
   private
 
-  def self.ensure_models_can_act_as_token_authenticatables adapters
-    adapters.each do |adapter|
-      adapter.models_base_class.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+  def self.ensure_models_can_act_as_token_authenticatables model_adapters
+    model_adapters.each do |model_adapter|
+      model_adapter.base_class.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+    end
+  end
+
+  def self.ensure_controllers_can_act_as_token_authentication_handlers controller_adapters
+    controller_adapters.each do |controller_adapter|
+      controller_adapter.base_class.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
     end
   end
 
@@ -38,6 +44,9 @@ module SimpleTokenAuthentication
     end
   end
 
-  available_adapters = load_available_adapters SimpleTokenAuthentication.adapters
-  ensure_models_can_act_as_token_authenticatables available_adapters
+  available_model_adapters = load_available_adapters SimpleTokenAuthentication.model_adapters
+  ensure_models_can_act_as_token_authenticatables available_model_adapters
+
+  available_controller_adapters = load_available_adapters SimpleTokenAuthentication.controller_adapters
+  ensure_controllers_can_act_as_token_authentication_handlers available_controller_adapters
 end

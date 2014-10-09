@@ -3,12 +3,14 @@ module SimpleTokenAuthentication
 
     mattr_accessor :header_names
     mattr_accessor :sign_in_token
-    mattr_accessor :adapters
+    mattr_accessor :controller_adapters
+    mattr_accessor :model_adapters
 
     # Default configuration
     @@header_names = {}
     @@sign_in_token = false
-    @@adapters = ['active_record']
+    @@controller_adapters = ['rails']
+    @@model_adapters = ['active_record']
 
     # Allow the default configuration to be overwritten from initializers
     def configure

@@ -1,12 +1,12 @@
-require 'active_record'
+require 'action_controller'
 
 module SimpleTokenAuthentication
   module Adapters
-    class ActiveRecordAdapter
+    class RailsAdapter
       extend SimpleTokenAuthentication::Adapter
 
       def self.base_class
-        ::ActiveRecord::Base
+        ::ActionController::Base
       end
     end
   end
