@@ -64,15 +64,15 @@ module SimpleTokenAuthentication
     end
 
     def token_comparator
-      @token_comparator ||= TokenComparator.new
+      @@token_comparator ||= TokenComparator.new
     end
 
     def sign_in_handler
-      @sign_in_handler ||= SignInHandler.new
+      @@sign_in_handler ||= SignInHandler.new
     end
 
     def fallback_authentication_handler
-      @fallback_authentication_handler ||= FallbackAuthenticationHandler.new
+      @@fallback_authentication_handler ||= FallbackAuthenticationHandler.new
     end
   end
 
