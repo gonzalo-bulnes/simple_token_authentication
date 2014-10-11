@@ -1,3 +1,5 @@
+require 'devise'
+
 module SimpleTokenAuthentication
   class TokenComparator
     def compare(a, b)

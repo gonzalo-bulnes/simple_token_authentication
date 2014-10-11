@@ -1,5 +1,3 @@
-require 'devise/controllers/sign_in_out'
-
 module SimpleTokenAuthentication
   class SignInHandler
     # Devise sign in is performed through a controller

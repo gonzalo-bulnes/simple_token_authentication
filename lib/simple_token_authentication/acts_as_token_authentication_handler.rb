@@ -1,3 +1,10 @@
+require 'active_support'
+
+require 'simple_token_authentication/entities_manager'
+require 'simple_token_authentication/fallback_authentication_handler'
+require 'simple_token_authentication/sign_in_handler'
+require 'simple_token_authentication/token_comparator'
+
 module SimpleTokenAuthentication
   module ActsAsTokenAuthenticationHandlerMethods
     extend ActiveSupport::Concern
