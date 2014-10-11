@@ -1,4 +1,5 @@
 require 'active_record'
+require 'simple_token_authentication/adapter'
 
 module SimpleTokenAuthentication
   module Adapters

@@ -1,3 +1,10 @@
+require 'active_support'
+
+require 'simple_token_authentication/entities_manager'
+require 'simple_token_authentication/fallback_authentication_handler'
+require 'simple_token_authentication/sign_in_handler'
+require 'simple_token_authentication/token_comparator'
+
 module SimpleTokenAuthentication
   module ActsAsTokenAuthenticationHandlerMethods
     extend ActiveSupport::Concern
@@ -12,6 +19,7 @@ module SimpleTokenAuthentication
       private :perform_sign_in!
       private :token_comparator
       private :sign_in_handler
+      private :entities_manager
       private :fallback_authentication_handler
       private :find_record_from_identifier
 
@@ -64,15 +72,19 @@ module SimpleTokenAuthentication
     end
 
     def token_comparator
-      @token_comparator ||= TokenComparator.new
+      @@token_comparator ||= TokenComparator.new
     end
 
     def sign_in_handler
-      @sign_in_handler ||= SignInHandler.new
+      @@sign_in_handler ||= SignInHandler.new
     end
 
     def fallback_authentication_handler
-      @fallback_authentication_handler ||= FallbackAuthenticationHandler.new
+      @@fallback_authentication_handler ||= FallbackAuthenticationHandler.new
+    end
+
+    def entities_manager
+      self.class.entities_manager
     end
   end
 
@@ -89,9 +101,7 @@ module SimpleTokenAuthentication
 
     module ClassMethods
       def acts_as_token_authentication_handler_for(model, options = {})
-        # Avoid creating twice the same entities
-        @entities ||= {}
-        entity = @entities[model.to_s] ||= Entity.new(model)
+        entity = entities_manager.find_or_create_entity(model)
 
         options = { fallback_to_devise: true }.merge(options)
 
@@ -117,8 +127,7 @@ module SimpleTokenAuthentication
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
           # Get an Entity instance by its name
           def get_entity(name)
-            @entities ||= {}
-            @entities[name] ||= Entity.new(name.constantize)
+            entities_manager.find_or_create_entity(name.constantize)
           end
 
           def authenticate_#{entity.name_underscore}_from_token
@@ -130,6 +139,11 @@ module SimpleTokenAuthentication
             authenticate_entity_from_fallback!(get_entity('#{entity.name}'), fallback_authentication_handler)
           end
         METHODS
+      end
+
+      def entities_manager
+        entities_manager ||= EntitiesManager.new
+        class_variable_set :@@entities_manager, entities_manager
       end
     end
   end

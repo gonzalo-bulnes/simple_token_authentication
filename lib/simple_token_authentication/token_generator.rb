@@ -1,3 +1,5 @@
+require 'devise'
+
 module SimpleTokenAuthentication
   class TokenGenerator
     def generate_token
