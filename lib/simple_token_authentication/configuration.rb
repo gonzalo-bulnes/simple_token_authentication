@@ -8,7 +8,7 @@ module SimpleTokenAuthentication
     # Default configuration
     @@header_names = {}
     @@sign_in_token = false
-    @@adapters = ['active_record']
+    @@adapters = ['neo4j']
 
     # Allow the default configuration to be overwritten from initializers
     def configure

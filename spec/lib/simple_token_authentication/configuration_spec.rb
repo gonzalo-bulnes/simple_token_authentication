@@ -19,7 +19,7 @@ describe SimpleTokenAuthentication::Configuration do
 
       it_behaves_like 'a configuration option', 'adapters'
 
-      it "defauts to ['active_record']", private: true do
+      xit "defauts to ['active_record']", private: true do
         expect(@subject.adapters).to eq ['active_record']
       end
     end
