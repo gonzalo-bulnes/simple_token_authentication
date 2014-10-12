@@ -23,11 +23,11 @@ begin
   require 'cucumber/rake/task'
 
   Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = "--format pretty"
+    t.cucumber_opts = "--format pretty --tags ~@replacement_available"
   end
 
   Cucumber::Rake::Task.new(:features_html) do |t|
-    t.cucumber_opts = "--format html --out doc/features.html"
+    t.cucumber_opts = "--format html --tags ~@replacement_available --out doc/features.html"
   end
 
 rescue LoadError
