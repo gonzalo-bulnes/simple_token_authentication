@@ -4,7 +4,7 @@ Feature: Sign in statistics are tracked via Devise
   In order to collect statistics about signins
   I want simple_token_authentication to integrate with Devise trackable strategy
 
-  @rspec
+  @rspec @replacement_available @integration
   Scenario: sign_in_count is updated when signing with SessionsController#create
     Given I have a dummy app with a Devise-enabled User
     And I prepare the test database
@@ -42,7 +42,7 @@ Feature: Sign in statistics are tracked via Devise
       """
 
 
-  @rspec
+  @rspec @replacement_available @integration
   Scenario: sign_in_count is not updated when making token-authenticated request
     Given I have a dummy app with a Devise-enabled User
     And I prepare the test database
