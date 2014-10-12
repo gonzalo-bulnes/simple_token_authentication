@@ -49,10 +49,6 @@ module SimpleTokenAuthentication
     end
 
     def perform_sign_in!(record, sign_in_handler)
-      # Sign in using token should not be tracked by Devise trackable
-      # See https://github.com/plataformatec/devise/issues/953
-      env["devise.skip_trackable"] = true
-
       # Notice the store option defaults to false, so the record
       # identifier is not actually stored in the session and a token
       # is needed for every request. That behaviour can be configured
