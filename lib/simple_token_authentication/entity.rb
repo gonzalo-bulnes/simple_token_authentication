@@ -19,7 +19,7 @@ module SimpleTokenAuthentication
 
     def identifier_field_name
 
-      if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field]
+      if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym] && SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field]
         return SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier].to_sym
       else
         # Fallback for older configurations, when email was the only possible identifier. 
@@ -50,7 +50,7 @@ module SimpleTokenAuthentication
     end
 
     def identifier_param_name
-      "#{name_underscore}_identifier".to_sym
+      "#{name_underscore}_#{identifier_field_name}".to_sym
     end
 
     def get_token_from_params_or_headers controller
