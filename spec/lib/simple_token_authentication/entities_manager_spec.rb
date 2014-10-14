@@ -7,17 +7,17 @@ describe SimpleTokenAuthentication::EntitiesManager do
 
   it_behaves_like 'an entities manager'
 
+  before(:each) do
+    entity = double()
+    allow(entity).to receive(:new).and_return('an Entity instance')
+    stub_const('SimpleTokenAuthentication::Entity', entity)
+
+    super_user = double()
+    allow(super_user).to receive(:name) # any Ruby class has a name
+    stub_const('SuperUser', super_user)
+  end
+
   describe '#find_or_create_entity' do
-
-    before(:each) do
-      entity = double()
-      allow(entity).to receive(:new).and_return('an Entity instance')
-      stub_const('SimpleTokenAuthentication::Entity', entity)
-
-      super_user = double()
-      allow(super_user).to receive(:name) # any Ruby class has a name
-      stub_const('SuperUser', super_user)
-    end
 
     context 'when a model is provided for the first time' do
 
@@ -62,6 +62,26 @@ describe SimpleTokenAuthentication::EntitiesManager do
         expect(SimpleTokenAuthentication::Entity).not_to receive(:new).with(SuperUser)
         subject.find_or_create_entity(SuperUser)
       end
+    end
+  end
+
+  describe '#entities' do
+
+    it 'returns an Array of the available Entities', private: true do
+      # create an entity
+      subject.find_or_create_entity(SuperUser)
+
+      entities = subject.entities
+
+      expect(entities).to be_instance_of Array
+
+      entities.each do |item|
+        # kind of 'be instance_of SimpleTokenAuthentication::Entity' with a double
+        expect(item).to eq 'an Entity instance'
+      end
+
+      # one entity has been created
+      expect(entities.count).to eq 1
     end
   end
 end
