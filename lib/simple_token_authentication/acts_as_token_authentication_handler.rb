@@ -59,15 +59,15 @@ module SimpleTokenAuthentication
     end
 
     def find_record_from_identifier(entity)
-      email = entity.get_identifier_from_params_or_headers(self).presence
+      identifier = entity.get_identifier_from_params_or_headers(self).presence
 
       # Rails 3 and 4 finder methods are supported,
       # see https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
       record = nil
       if entity.model.respond_to? "find_by"
-        record = email && entity.model.find_by(email: email)
-      elsif entity.model.respond_to? "find_by_email"
-        record = email && entity.model.find_by_email(email)
+        record = identifier && entity.model.find_by(entity.identifier_field_name => identifier)
+      else
+        record = identifier && entity.model.where(entity.identifier_field_name => identifier).limit(1).first
       end
     end
 

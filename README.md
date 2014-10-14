@@ -128,7 +128,7 @@ SimpleTokenAuthentication.configure do |config|
   #   And the token authentification handler for SuperAdmin watches the following headers:
   #     `X-Admin-Auth-Token, X-SuperAdmin-Email`
   #
-  # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
+  # config.header_names = { user: { authentication_token: 'X-User-Token', :identifier_field: :email, identifier: 'X-User-Email' } }
 
 end
 ```
