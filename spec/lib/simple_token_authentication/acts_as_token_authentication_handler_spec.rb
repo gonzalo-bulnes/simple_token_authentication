@@ -11,7 +11,7 @@ def skip_rails_test_environment_code
   rails.stub_chain(:env, :test?).and_return(false)
 end
 
-describe 'A class which can act as token authentication handler (or one of its children)' do
+describe 'Any class which includes SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler (or any if its children)' do
 
   after(:each) do
     ensure_examples_independence
@@ -184,6 +184,66 @@ describe 'A class which can act as token authentication handler (or one of its c
             expect(subject).not_to respond_to :authenticate_user_from_token!
           end
         end
+      end
+    end
+  end
+end
+
+describe 'Any class which includes SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler (or any if its children)' do
+
+  after(:each) do
+    ensure_examples_independence
+  end
+
+  before(:each) do
+    define_test_subjects_for(SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
+  end
+
+  describe '.acts_as_token_authentication_handler_for' do
+
+    it 'ensures the receiver class does handle token authentication for a given (token authenticatable) model', public: true do
+      double_user_model
+
+      @subjects.each do |subject|
+        subject.stub(:before_filter)
+
+        expect(subject).to receive(:include).with(SimpleTokenAuthentication::TokenAuthenticationHandler)
+        expect(subject).to receive(:include).with(SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods)
+        expect(subject).to receive(:handle_token_authentication_for).with(User, { option: 'value' })
+
+        subject.acts_as_token_authentication_handler_for User, { option: 'value' }
+      end
+    end
+  end
+
+  describe '.acts_as_token_authentication_handler', deprecated: true do
+
+    it 'issues a deprecation warning', public: true do
+      double_user_model
+
+      @subjects.each do |subject|
+        deprecation_handler = double()
+        stub_const('ActiveSupport::Deprecation', deprecation_handler)
+        subject.stub(:acts_as_token_authentication_handler_for)
+
+        expect(deprecation_handler).to receive(:warn)
+
+        subject.acts_as_token_authentication_handler
+      end
+    end
+
+    it 'is replaced by .acts_as_token_authentication_handler_for', public: true do
+      double_user_model
+
+      @subjects.each do |subject|
+        deprecation_handler = double()
+        allow(deprecation_handler).to receive(:warn)
+        stub_const('ActiveSupport::Deprecation', deprecation_handler)
+        subject.stub(:acts_as_token_authentication_handler_for)
+
+        expect(subject).to receive(:acts_as_token_authentication_handler_for).with(User)
+
+        subject.acts_as_token_authentication_handler
       end
     end
   end
