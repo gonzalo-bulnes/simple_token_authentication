@@ -42,7 +42,6 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
         subject.stub(:before_filter)
 
         expect(subject).to receive(:include).with(SimpleTokenAuthentication::TokenAuthenticationHandler)
-        expect(subject).to receive(:include).with(SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods)
         expect(subject).to receive(:handle_token_authentication_for).with(User, { option: 'value' })
 
         subject.acts_as_token_authentication_handler_for User, { option: 'value' }
