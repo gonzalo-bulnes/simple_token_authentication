@@ -1,4 +1,4 @@
-require 'active_support'
+require 'active_support/concern'
 require 'simple_token_authentication/token_generator'
 
 module SimpleTokenAuthentication

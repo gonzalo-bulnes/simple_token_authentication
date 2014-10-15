@@ -9,7 +9,7 @@
 #      end
 #
 #      before(:each) do
-#        define_test_subjects_for(SimpleTokenAuthentication::ModuleUnderTest)
+#        define_test_subjects_for_inclusion_of(SimpleTokenAuthentication::ModuleUnderTest)
 #      end
 #
 #      # spec examples...
@@ -50,10 +50,31 @@ def ensure_examples_independence
 end
 
 # Must be used in coordination with ensure_examples_independence
-def define_test_subjects_for(module_under_test)
+def define_test_subjects_for_inclusion_of(module_under_test)
   klass       = define_dummy_class_which_includes(module_under_test)
   child_klass = define_dummy_class_child_of(klass)
 
   # all specs must apply to classes which include the module and their children
   @subjects   = [klass, child_klass]
+end
+
+# Must be used in coordination with ensure_examples_independence
+def define_test_subjects_for_extension_of(module_under_test)
+  klass       = define_dummy_class_which_extends(module_under_test)
+  child_klass = define_dummy_class_child_of(klass)
+
+  # all specs must apply to classes which extend the module and their children
+  @subjects   = [klass, child_klass]
+end
+
+def double_user_model
+  user = double()
+  stub_const('User', user)
+  user.stub(:name).and_return('User')
+end
+
+def double_super_admin_model
+  super_admin = double()
+  stub_const('SuperAdmin', super_admin)
+  super_admin.stub(:name).and_return('SuperAdmin')
 end
