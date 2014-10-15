@@ -32,17 +32,6 @@ describe 'Any class which includes SimpleTokenAuthentication::ActsAsTokenAuthent
       expect(subject).to respond_to :acts_as_token_authentication_handler
     end
   end
-end
-
-describe 'Any class which includes SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler (or any if its children)' do
-
-  after(:each) do
-    ensure_examples_independence
-  end
-
-  before(:each) do
-    define_test_subjects_for(SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
-  end
 
   describe '.acts_as_token_authentication_handler_for' do
 
