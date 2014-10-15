@@ -26,6 +26,14 @@ describe SimpleTokenAuthentication::Entity do
     expect(@subject).to respond_to :token_header_name
   end
 
+  it 'responds to :identifier_field_name', protected: true do
+    expect(@subject).to respond_to :identifier_field_name
+  end
+
+  it 'responds to :identifier', protected: true do
+    expect(@subject).to respond_to :identifier
+  end
+
   it 'responds to :identifier_header_name', protected: true do
     expect(@subject).to respond_to :identifier_header_name
   end
@@ -122,6 +130,34 @@ describe SimpleTokenAuthentication::Entity do
 
     it 'defines a non-standard header field' do
       expect(@subject.token_header_name[0..1]).to eq 'X-'
+    end
+  end
+
+  describe '#identifier_field_name', protected: true do
+    default_header_names = SimpleTokenAuthentication.header_names
+    let(:header_names) {{super_user: { authentication_token: 'X-SuperUser-Token', identifier_field: :uuid, identifier: 'X-User-Login' }}}
+    
+    it 'is a Symbol' do
+      expect(@subject.identifier_field_name).to be_instance_of Symbol
+    end
+
+    context "when there is an identifier field name present in :header_names configuration" do
+      
+      before(:each) do
+        SimpleTokenAuthentication.configure do |config|
+          config.header_names = header_names
+        end
+      end
+
+      after(:each) do
+        SimpleTokenAuthentication.configure do |config|
+          config.header_names = default_header_names
+        end
+      end
+      
+      it "returns the field name" do
+        expect(@subject.identifier_field_name).to eq :uuid
+      end
     end
   end
 
