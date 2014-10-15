@@ -11,14 +11,14 @@ def skip_rails_test_environment_code
   rails.stub_chain(:env, :test?).and_return(false)
 end
 
-describe 'Any class which includes SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler (or any if its children)' do
+describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler (or any if its children)' do
 
   after(:each) do
     ensure_examples_independence
   end
 
   before(:each) do
-    define_test_subjects_for_inclusion_of(SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
+    define_test_subjects_for_extension_of(SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
   end
 
   it 'responds to :acts_as_token_authentication_handler_for', public: true do

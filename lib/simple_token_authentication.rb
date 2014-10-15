@@ -15,7 +15,7 @@ module SimpleTokenAuthentication
 
   def self.ensure_controllers_can_act_as_token_authentication_handlers controller_adapters
     controller_adapters.each do |controller_adapter|
-      controller_adapter.base_class.send :include, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
+      controller_adapter.base_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
     end
   end
 
