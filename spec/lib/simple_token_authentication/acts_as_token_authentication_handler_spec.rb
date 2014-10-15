@@ -11,19 +11,7 @@ def skip_rails_test_environment_code
   rails.stub_chain(:env, :test?).and_return(false)
 end
 
-def double_user_model
-  user = double()
-  stub_const('User', user)
-  user.stub(:name).and_return('User')
-end
-
-def double_super_admin_model
-  super_admin = double()
-  stub_const('SuperAdmin', super_admin)
-  super_admin.stub(:name).and_return('SuperAdmin')
-end
-
-describe 'A token authentication handler class (or one of its children)' do
+describe 'A class which can act as token authentication handler (or one of its children)' do
 
   after(:each) do
     ensure_examples_independence

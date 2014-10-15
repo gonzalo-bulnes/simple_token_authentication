@@ -57,3 +57,15 @@ def define_test_subjects_for(module_under_test)
   # all specs must apply to classes which include the module and their children
   @subjects   = [klass, child_klass]
 end
+
+def double_user_model
+  user = double()
+  stub_const('User', user)
+  user.stub(:name).and_return('User')
+end
+
+def double_super_admin_model
+  super_admin = double()
+  stub_const('SuperAdmin', super_admin)
+  super_admin.stub(:name).and_return('SuperAdmin')
+end
