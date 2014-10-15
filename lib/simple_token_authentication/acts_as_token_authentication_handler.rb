@@ -3,6 +3,7 @@ require 'active_support'
 require 'simple_token_authentication/entities_manager'
 require 'simple_token_authentication/fallback_authentication_handler'
 require 'simple_token_authentication/sign_in_handler'
+require 'simple_token_authentication/token_authentication_handler'
 require 'simple_token_authentication/token_comparator'
 
 module SimpleTokenAuthentication
@@ -91,59 +92,26 @@ module SimpleTokenAuthentication
   module ActsAsTokenAuthenticationHandler
     extend ActiveSupport::Concern
 
-    # I have insulated the methods into an additional module to avoid before_filters
-    # to be applied by the `included` block before acts_as_token_authentication_handler_for was called.
+    # This module ensures that no TokenAuthenticationHandler behaviour
+    # is added before the class actually `acts_as_token_authentication_handler_for`
+    # some token authenticatable model.
     # See https://github.com/gonzalo-bulnes/simple_token_authentication/issues/8#issuecomment-31707201
 
     included do
-      private_class_method :define_acts_as_token_authentication_helpers_for
+      # nop
     end
 
     module ClassMethods
       def acts_as_token_authentication_handler_for(model, options = {})
-        entity = entities_manager.find_or_create_entity(model)
-
-        options = { fallback_to_devise: true }.merge(options)
+        include SimpleTokenAuthentication::TokenAuthenticationHandler
+        handle_token_authentication_for(model, options)
 
         include SimpleTokenAuthentication::ActsAsTokenAuthenticationHandlerMethods
-
-        define_acts_as_token_authentication_helpers_for(entity)
-
-        authenticate_method = if options[:fallback_to_devise]
-          :"authenticate_#{entity.name_underscore}_from_token!"
-        else
-          :"authenticate_#{entity.name_underscore}_from_token"
-        end
-        before_filter authenticate_method, options.slice(:only, :except)
       end
 
       def acts_as_token_authentication_handler
         ActiveSupport::Deprecation.warn "`acts_as_token_authentication_handler()` is deprecated and may be removed from future releases, use `acts_as_token_authentication_handler_for(User)` instead.", caller
         acts_as_token_authentication_handler_for User
-      end
-
-      def define_acts_as_token_authentication_helpers_for(entity)
-
-        class_eval <<-METHODS, __FILE__, __LINE__ + 1
-          # Get an Entity instance by its name
-          def get_entity(name)
-            entities_manager.find_or_create_entity(name.constantize)
-          end
-
-          def authenticate_#{entity.name_underscore}_from_token
-            authenticate_entity_from_token!(get_entity('#{entity.name}'))
-          end
-
-          def authenticate_#{entity.name_underscore}_from_token!
-            authenticate_entity_from_token!(get_entity('#{entity.name}'))
-            authenticate_entity_from_fallback!(get_entity('#{entity.name}'), fallback_authentication_handler)
-          end
-        METHODS
-      end
-
-      def entities_manager
-        entities_manager ||= EntitiesManager.new
-        class_variable_set :@@entities_manager, entities_manager
       end
     end
   end
