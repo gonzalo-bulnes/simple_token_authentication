@@ -32,7 +32,7 @@ module SimpleTokenAuthentication
       if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence
         if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:email].presence
           return SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:email]
-        elsif SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field_name].presence && \
+        elsif SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field].presence && \
               SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier].presence
           return SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier]
         else
