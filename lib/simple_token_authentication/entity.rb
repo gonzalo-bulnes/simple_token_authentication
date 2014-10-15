@@ -49,8 +49,17 @@ module SimpleTokenAuthentication
       "#{name_underscore}_token".to_sym
     end
 
+    def identifier
+      if (SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence && \
+         SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field].presence)
+        SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field]
+      else
+        :email
+      end
+    end
+
     def identifier_param_name
-      "#{name_underscore}_#{identifier_field_name}".to_sym
+      "#{name_underscore}_#{identifier}".to_sym
     end
 
     def get_token_from_params_or_headers controller

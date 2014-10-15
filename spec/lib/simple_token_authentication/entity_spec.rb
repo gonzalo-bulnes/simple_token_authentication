@@ -66,6 +66,55 @@ describe SimpleTokenAuthentication::Entity do
     end
   end
 
+  describe '#identifier', protected: true do
+    it 'is a symbol' do
+      expect(@subject.identifier).to be_instance_of Symbol
+      
+    end
+
+    context "when there is a configuration for header_names provided" do
+      default_header_names = SimpleTokenAuthentication.header_names
+
+      after(:each) do
+        SimpleTokenAuthentication.configure do |config|
+          config.header_names = default_header_names
+        end
+      end
+      
+      context "and it still uses the old :email symbol" do
+        let(:header_names) {{super_user: { authentication_token: 'X-SuperUser-Token', email: 'X-SuperUser-Email' }}}
+  
+        it 'is :email' do
+          SimpleTokenAuthentication.configure do |config|
+            config.header_names = header_names
+          end
+          
+          expect(@subject.identifier).to eq :email
+          
+          SimpleTokenAuthentication.configure do |config|
+            config.header_names = default_header_names
+          end
+        end
+      end
+
+      context "and it explicitly sets an :identifier_field different" do
+        let(:header_names) {{ super_user: { authentication_token: 'X-SuperUser-Token', identifier_field: :uuid, identifier: 'X-SuperUser-Login' }}}
+      
+        it 'is :email' do
+          SimpleTokenAuthentication.configure do |config|
+            config.header_names = header_names
+          end
+          
+          expect(@subject.identifier).to eq :uuid
+          
+          SimpleTokenAuthentication.configure do |config|
+            config.header_names = default_header_names
+          end
+        end
+      end
+    end
+  end
+
   describe '#token_header_name', protected: true do
     it 'is a String' do
       expect(@subject.token_header_name).to be_instance_of String
