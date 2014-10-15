@@ -18,7 +18,7 @@ describe 'Any class which includes SimpleTokenAuthentication::ActsAsTokenAuthent
   end
 
   before(:each) do
-    define_test_subjects_for(SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
+    define_test_subjects_for_inclusion_of(SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler)
   end
 
   it 'responds to :acts_as_token_authentication_handler_for', public: true do

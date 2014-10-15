@@ -22,7 +22,7 @@ describe 'A token authenticatable class (or one of its children)' do
   end
 
   before(:each) do
-    define_test_subjects_for(SimpleTokenAuthentication::ActsAsTokenAuthenticatable)
+    define_test_subjects_for_inclusion_of(SimpleTokenAuthentication::ActsAsTokenAuthenticatable)
   end
 
   it 'responds to :acts_as_token_authenticatable', public: true do
