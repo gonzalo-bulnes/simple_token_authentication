@@ -17,16 +17,6 @@ module SimpleTokenAuthentication
       name.underscore
     end
 
-    def identifier_field_name
-
-      if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym] && SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field]
-        return SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field].to_sym
-      else
-        # Fallback for older configurations, when email was the only possible identifier. 
-        return :email
-      end
-    end
-
     # Private: Return the name of the header to watch for the token authentication param
     def token_header_name
       if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence
@@ -38,10 +28,18 @@ module SimpleTokenAuthentication
 
     # Private: Return the name of the header to watch for the email param
     def identifier_header_name
+      default_header_name = "X-#{name}-Email"
       if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence
-        SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][identifier_field_name]
+        if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:email].presence
+          return SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:email]
+        elsif SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field_name].presence && \
+              SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier].presence
+          return SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier]
+        else
+          return default_header_name
+        end
       else
-        "X-#{name}-Email"
+        return default_header_name
       end
     end
 
@@ -49,7 +47,7 @@ module SimpleTokenAuthentication
       "#{name_underscore}_token".to_sym
     end
 
-    def identifier
+    def identifier_field_name
       if (SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence && \
          SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field].presence)
         SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:identifier_field]
@@ -59,7 +57,7 @@ module SimpleTokenAuthentication
     end
 
     def identifier_param_name
-      "#{name_underscore}_#{identifier}".to_sym
+      "#{name_underscore}_#{identifier_field_name}".to_sym
     end
 
     def get_token_from_params_or_headers controller
