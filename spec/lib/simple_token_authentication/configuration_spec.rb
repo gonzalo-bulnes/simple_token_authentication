@@ -42,11 +42,11 @@ describe SimpleTokenAuthentication::Configuration do
       end
     end
 
-    describe 'provides #sign_in_token which' do
+    describe 'provides #sign_in_token which', sign_in_token_option: true do
 
       it_behaves_like 'a configuration option', 'sign_in_token'
 
-      it 'defauts to false', private: true do
+      it 'defauts to false', public: true do
         expect(@subject.sign_in_token).to eq false
       end
     end
