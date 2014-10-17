@@ -4,7 +4,7 @@ Feature: The header_names option can be configured via an initializer
   In order to be able to use any HTTP headers that make sense for a given API
   I want an the header_names option to be available and configurable
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Using default header names
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost
@@ -94,7 +94,7 @@ Feature: The header_names option can be configured via an initializer
             does not perform token authentication
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Using custom header names
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost

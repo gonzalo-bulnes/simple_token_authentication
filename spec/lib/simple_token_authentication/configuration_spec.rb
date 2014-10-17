@@ -33,11 +33,11 @@ describe SimpleTokenAuthentication::Configuration do
       end
     end
 
-    describe 'provides #header_names which' do
+    describe 'provides #header_names which', header_names_option: true do
 
       it_behaves_like 'a configuration option', 'header_names'
 
-      it 'defauts to {}', private: true  do
+      it 'defauts to {}', public: true  do
         expect(@subject.header_names).to eq({})
       end
     end
