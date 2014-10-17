@@ -123,7 +123,7 @@ module SimpleTokenAuthentication
       end
 
       def set_token_authentication_hooks(entity, options)
-        options = { fallback_to_devise: true }.merge(options)
+        options = { fallback_to_devise: (SimpleTokenAuthentication.fallback == :devise) }.merge(options)
 
         authenticate_method = if options[:fallback_to_devise]
           :"authenticate_#{entity.name_underscore}_from_token!"

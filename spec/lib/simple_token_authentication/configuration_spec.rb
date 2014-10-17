@@ -50,5 +50,20 @@ describe SimpleTokenAuthentication::Configuration do
         expect(@subject.sign_in_token).to eq false
       end
     end
+
+    describe 'does provide #fallback which', fallback_option: true do
+
+      it 'is readable', private: true do
+        expect(@subject).to respond_to :fallback
+      end
+
+      it 'can\'t be written', private: true do
+        expect(@subject).not_to respond_to :fallback=
+      end
+
+      it 'defaults to :devise', private: true do
+        expect(@subject.fallback).to eq :devise
+      end
+    end
   end
 end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'Simple Token Authentication' do
 
-  describe ':fallback_to_devise option', fallback_to_devise_option: true do
+  describe ':fallback_to_devise option', fallback_to_devise_option: true, fallback_option: true do
 
     describe 'determines what to do if token authentication fails' do
 
