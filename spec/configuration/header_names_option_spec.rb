@@ -186,6 +186,109 @@ describe 'Simple Token Authentication' do
                 @controller.authenticate_user_from_token
               end
             end
+
+            context 'when { user: { email: \'X-CustomEmail\' }, admin: { authentication_token: \'X-Custom_Token\' } }' do
+
+              before(:each) do
+                # and credentials in the default header fields lead to the wrong record
+                allow(@controller.request.headers).to receive(:[]).with(nil)
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Email')
+                                                          .and_return('waldo@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
+                                                          .and_return('w4LdO_toKeN')
+                # while credential in the custom header fields lead to the correct record
+                allow(@controller.request.headers).to receive(:[]).with('X-CustomEmail')
+                                                          .and_return('charles@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
+                                                          .and_return('ch4rlEs_toKeN')
+
+                SimpleTokenAuthentication.stub(:header_names)
+                  .and_return({ user:  { email: 'X-CustomEmail' },
+                                admin: { authentication_token: 'X-Custom_Token' } })
+              end
+
+              it 'does look for credentials in \'X-CustomEmail\' and \'X-User-Token\'', public: true do
+                #pending 'Not yet fixed'
+                expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
+                @controller.authenticate_user_from_token
+              end
+
+              it 'ignores credentials in \'X-User-Email\' and the :admin header fields', public: true do
+                expect(@controller).not_to receive(:perform_sign_in!).with(@waldo_record, :sign_in_handler)
+                @controller.authenticate_user_from_token
+              end
+            end
+
+            context 'when { admin: { email: \'X-CustomEmail\' }, user: { authentication_token: \'X-Custom_Token\' } }' do
+
+              before(:each) do
+                # and credentials in the default header fields lead to the wrong record
+                allow(@controller.request.headers).to receive(:[]).with(nil)
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-CustomEmail')
+                                                          .and_return('waldo@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Email')
+                                                          .and_return('waldo@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
+                                                          .and_return('w4LdO_toKeN')
+                # while credential in the custom header fields lead to the correct record
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Email')
+                                                          .and_return('charles@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
+                                                          .and_return('ch4rlEs_toKeN')
+
+                SimpleTokenAuthentication.stub(:header_names)
+                  .and_return({ admin:  { email: 'X-CustomEmail' },
+                                user: { authentication_token: 'X-Custom_Token' } })
+              end
+
+              it 'does look for credentials in \'X-User-Email\' and \'X-Custom_Token\'', public: true do
+                #pending 'Not yet fixed'
+                expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
+                @controller.authenticate_user_from_token
+              end
+
+              it 'ignores credentials in \'X-User-Token\' and the :admin header fields', public: true do
+                expect(@controller).not_to receive(:perform_sign_in!).with(@waldo_record, :sign_in_handler)
+                @controller.authenticate_user_from_token
+              end
+            end
+
+            context 'when { user: { email: \'X-CustomEmail\' } }' do
+
+              before(:each) do
+                # and credentials in the default header fields lead to the wrong record
+                @controller.stub_chain(:request, :headers).and_return(double())
+                allow(@controller.request.headers).to receive(:[]).with(nil)
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Email')
+                                                          .and_return('waldo@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Email')
+                                                          .and_return('waldo@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Token')
+                                                          .and_return('w4LdO_toKeN')
+                # while credential in the custom header fields lead to the correct record
+                allow(@controller.request.headers).to receive(:[]).with('X-CustomEmail')
+                                                          .and_return('charles@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
+                                                          .and_return('ch4rlEs_toKeN')
+
+                SimpleTokenAuthentication.stub(:header_names)
+                  .and_return({ user:  { email: 'X-CustomEmail' } })
+              end
+
+              it 'does look for credentials in \'X-CustomEmail\' and \'X-User-Token\'', public: true do
+                #pending 'Not yet fixed'
+                expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
+                @controller.authenticate_user_from_token
+              end
+
+              it 'ignores credentials in \'X-User-Email\' and the :admin header fields', public: true do
+                expect(@controller).not_to receive(:perform_sign_in!).with(@waldo_record, :sign_in_handler)
+                @controller.authenticate_user_from_token
+              end
+            end
           end
         end
       end
@@ -245,6 +348,41 @@ describe 'Simple Token Authentication' do
               end
 
               it 'ignores credentials in \'X-Admin-Email\', \'X-Admin-Token\' and the :user header fields', public: true do
+                expect(@controller).not_to receive(:perform_sign_in!).with(@waldo_record, :sign_in_handler)
+                @controller.authenticate_admin_from_token
+              end
+            end
+
+            context 'when { admin: { email: \'X-CustomEmail\' } }' do
+
+              before(:each) do
+                # and credentials in the default header fields lead to the wrong record
+                @controller.stub_chain(:request, :headers).and_return(double())
+                allow(@controller.request.headers).to receive(:[]).with(nil)
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Email')
+                                                          .and_return('waldo@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Email')
+                                                          .and_return('waldo@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
+                                                          .and_return('w4LdO_toKeN')
+                # while credential in the custom header fields lead to the correct record
+                allow(@controller.request.headers).to receive(:[]).with('X-CustomEmail')
+                                                          .and_return('charles@example.com')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Token')
+                                                          .and_return('ch4rlEs_toKeN')
+
+                SimpleTokenAuthentication.stub(:header_names)
+                  .and_return({ admin:  { email: 'X-CustomEmail' } })
+              end
+
+              it 'does look for credentials in \'X-CustomEmail\' and \'X-Admin-Token\'', public: true do
+                #pending 'Not yet fixed'
+                expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
+                @controller.authenticate_admin_from_token
+              end
+
+              it 'ignores credentials in \'X-Admin-Email\' and the :user header fields', public: true do
                 expect(@controller).not_to receive(:perform_sign_in!).with(@waldo_record, :sign_in_handler)
                 @controller.authenticate_admin_from_token
               end
