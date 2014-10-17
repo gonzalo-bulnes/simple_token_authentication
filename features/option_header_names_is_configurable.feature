@@ -218,7 +218,7 @@ Feature: The header_names option can be configured via an initializer
                 does not perform token authentication
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Using only one custom header name (part 1)
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost
@@ -342,7 +342,7 @@ Feature: The header_names option can be configured via an initializer
                 does not perform token authentication
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Using only one custom header name (Part 2)
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost
