@@ -26,11 +26,12 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       allow(entities_manager).to receive(:find_or_create_entity).and_return('entity')
 
       # skip steps which are not relevant in this example
+      SimpleTokenAuthentication.stub(:fallback).and_return('default')
       subject.stub(:entities_manager).and_return(entities_manager)
       subject.stub(:set_token_authentication_hooks)
       subject.stub(:define_token_authentication_helpers_for)
 
-      expect(subject).to receive(:set_token_authentication_hooks).with('entity', {option: 'value'})
+      expect(subject).to receive(:set_token_authentication_hooks).with('entity', {option: 'value', fallback: 'default'})
       subject.handle_token_authentication_for(User, {option: 'value'})
     end
   end

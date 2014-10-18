@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe SimpleTokenAuthentication::Configuration do
 
+
   context 'when included in any class' do
 
     before(:each) do
@@ -63,6 +64,57 @@ describe SimpleTokenAuthentication::Configuration do
 
       it 'defaults to :devise', private: true do
         expect(@subject.fallback).to eq :devise
+      end
+    end
+
+    describe 'provides #parse_options which' do
+
+      describe 'replaces :fallback_to_devise by :fallback' do
+
+        context 'when :fallback option is set' do
+
+          it 'removes :fallback_to_devise', private: true do
+            options = { fallback: 'anything', fallback_to_devise: true }
+            expect(@subject.parse_options(options)).to eq({ fallback: 'anything' })
+          end
+        end
+
+        context 'when :fallback option is omitted' do
+          context 'and :fallback_to_devise is true' do
+
+            it 'replaces it by fallback: :devise', private: true do
+              options = { fallback_to_devise: true }
+              expect(@subject.parse_options(options)).to eq({ fallback: :devise })
+            end
+          end
+
+          context 'and :fallback_to_devise is false' do
+
+            context 'when :fallback default is :devise' do
+              it 'replaces :fallback_to_devise by fallback: :none', private: true do
+                SimpleTokenAuthentication.stub(:fallback).and_return(:devise)
+                options = { fallback_to_devise: false }
+                expect(@subject.parse_options(options)).to eq({ fallback: :none })
+              end
+            end
+
+            context 'when :fallback default is not :devise' do
+              it 'replaces :fallback_to_devise by :fallback default', private: true do
+                SimpleTokenAuthentication.stub(:fallback).and_return('anything_but_devise')
+                options = { fallback_to_devise: false }
+                expect(@subject.parse_options(options)).to eq({ fallback: 'anything_but_devise' })
+              end
+            end
+          end
+
+          context 'and :fallback_to_devise is omitted' do
+            it 'sets :fallback to its default value', private: true do
+              SimpleTokenAuthentication.stub(:fallback).and_return('any_value')
+              options = {}
+              expect(@subject.parse_options(options)).to eq({ fallback: 'any_value' })
+            end
+          end
+        end
       end
     end
   end

@@ -18,5 +18,23 @@ module SimpleTokenAuthentication
     def configure
       yield self if block_given?
     end
+
+    def parse_options(options)
+      unless options[:fallback].presence
+        if options[:fallback_to_devise]
+          options[:fallback] = :devise
+        elsif options[:fallback_to_devise] == false
+          if SimpleTokenAuthentication.fallback == :devise
+              options[:fallback] = :none
+          else
+            options[:fallback] = SimpleTokenAuthentication.fallback
+          end
+        else
+          options[:fallback] = SimpleTokenAuthentication.fallback
+        end
+      end
+      options.reject! { |k,v| k == :fallback_to_devise }
+      options
+    end
   end
 end

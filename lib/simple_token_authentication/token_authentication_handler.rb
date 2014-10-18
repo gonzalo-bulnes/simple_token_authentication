@@ -94,6 +94,7 @@ module SimpleTokenAuthentication
       # Returns nothing.
       def handle_token_authentication_for(model, options = {})
         entity = entities_manager.find_or_create_entity(model)
+        options = SimpleTokenAuthentication.parse_options(options)
         define_token_authentication_helpers_for(entity)
         set_token_authentication_hooks(entity, options)
       end
@@ -123,9 +124,7 @@ module SimpleTokenAuthentication
       end
 
       def set_token_authentication_hooks(entity, options)
-        options = { fallback_to_devise: (SimpleTokenAuthentication.fallback == :devise) }.merge(options)
-
-        authenticate_method = if options[:fallback_to_devise]
+        authenticate_method = unless options[:fallback] == :none
           :"authenticate_#{entity.name_underscore}_from_token!"
         else
           :"authenticate_#{entity.name_underscore}_from_token"
