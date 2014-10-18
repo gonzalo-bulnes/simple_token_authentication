@@ -14,6 +14,7 @@ module SimpleTokenAuthentication
     included do
       private_class_method :define_token_authentication_helpers_for
       private_class_method :set_token_authentication_hooks
+      private_class_method :fallback_authentication_handler
 
       private :authenticate_entity_from_token!
       private :authenticate_entity_from_fallback!
@@ -78,7 +79,7 @@ module SimpleTokenAuthentication
     end
 
     def fallback_authentication_handler
-      @@fallback_authentication_handler ||= FallbackAuthenticationHandler.new
+      self.class.fallback_authentication_handler
     end
 
     def entities_manager
@@ -95,7 +96,7 @@ module SimpleTokenAuthentication
       def handle_token_authentication_for(model, options = {})
         entity = entities_manager.find_or_create_entity(model)
         options = SimpleTokenAuthentication.parse_options(options)
-        define_token_authentication_helpers_for(entity)
+        define_token_authentication_helpers_for(entity, fallback_authentication_handler)
         set_token_authentication_hooks(entity, options)
       end
 
@@ -104,7 +105,12 @@ module SimpleTokenAuthentication
         class_variable_set :@@entities_manager, entities_manager
       end
 
-      def define_token_authentication_helpers_for(entity)
+      def fallback_authentication_handler
+        fallback_authentication_handler ||= FallbackAuthenticationHandler.new
+        class_variable_set :@@fallback_authentication_handler, fallback_authentication_handler
+      end
+
+      def define_token_authentication_helpers_for(entity, fallback_authentication_handler)
 
         method_name = "authenticate_#{entity.name_underscore}_from_token"
         method_name_bang = method_name + '!'
