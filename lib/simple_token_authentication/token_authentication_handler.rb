@@ -104,21 +104,22 @@ module SimpleTokenAuthentication
       end
 
       def define_token_authentication_helpers_for(entity)
-        class_eval <<-METHODS, __FILE__, __LINE__ + 1
-          # Get an Entity instance by its name
-          def get_entity(name)
-            entities_manager.find_or_create_entity(name.constantize)
+
+        method_name = "authenticate_#{entity.name_underscore}_from_token"
+        method_name_bang = method_name + '!'
+
+        class_eval do
+          define_method method_name.to_sym do
+            lambda { |entity| authenticate_entity_from_token!(entity) }.call(entity)
           end
 
-          def authenticate_#{entity.name_underscore}_from_token
-            authenticate_entity_from_token!(get_entity('#{entity.name}'))
+          define_method method_name_bang.to_sym do
+            lambda do |entity|
+              authenticate_entity_from_token!(entity)
+              authenticate_entity_from_fallback!(entity, fallback_authentication_handler)
+            end.call(entity)
           end
-
-          def authenticate_#{entity.name_underscore}_from_token!
-            authenticate_entity_from_token!(get_entity('#{entity.name}'))
-            authenticate_entity_from_fallback!(get_entity('#{entity.name}'), fallback_authentication_handler)
-          end
-        METHODS
+        end
       end
 
       def set_token_authentication_hooks(entity, options)
