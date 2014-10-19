@@ -56,6 +56,24 @@ describe 'Simple Token Authentication' do
           @controller.authenticate_user_from_token! # bang
         end
       end
+
+      context 'when :exception' do
+
+        it 'throws an exception', protected: true do
+          fallback_authentication_handler = SimpleTokenAuthentication::FailedAuthenticationHandler.new
+          SimpleTokenAuthentication::FailedAuthenticationHandler.stub(:new).and_return(fallback_authentication_handler)
+
+          # sets :authenticate_user_from_token! (bang) in the before_filter
+          expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token!, {})
+
+          # when falling back to Devise is enabled
+          @controller_class.acts_as_token_authentication_handler_for User, fallback: :exception
+
+          # when the hook is triggered
+          # since token authentication fails, an exception is thrown
+          expect { @controller.authenticate_user_from_token! }.to throw_symbol(:warden, scope: :user)
+        end
+      end
     end
   end
 end

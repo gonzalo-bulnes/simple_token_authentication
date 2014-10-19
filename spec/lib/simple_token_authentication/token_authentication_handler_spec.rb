@@ -84,32 +84,75 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
       SimpleTokenAuthentication::DeviseAuthenticationHandler.stub(:new)
         .and_return('a DeviseAuthenticationHandler instance')
+      SimpleTokenAuthentication::FailedAuthenticationHandler.stub(:new)
+        .and_return('a FailedAuthenticationHandler instance')
     end
 
-    context 'when called for the first time' do
+    context 'when :fallback option is :devise' do
+
+      before(:each) do
+        @options = { fallback: :devise }
+      end
+
+    context 'and called for the first time' do
 
       it 'creates a new DeviseAuthenticationHandler instance', private: true do
         expect(SimpleTokenAuthentication::DeviseAuthenticationHandler).to receive(:new)
-        expect(subject.fallback_authentication_handler({})).to eq 'a DeviseAuthenticationHandler instance'
+        expect(subject.fallback_authentication_handler(@options)).to eq 'a DeviseAuthenticationHandler instance'
       end
     end
 
     context 'when a DeviseAuthenticationHandler instance was already created' do
 
       before(:each) do
-        subject.fallback_authentication_handler({})
+        subject.fallback_authentication_handler(@options)
         # let's make any new DeviseAuthenticationHandler distinct from the first
         SimpleTokenAuthentication::DeviseAuthenticationHandler.stub(:new)
         .and_return('another DeviseAuthenticationHandler instance')
       end
 
       it 'returns that instance', private: true do
-        expect(subject.fallback_authentication_handler({})).to eq 'a DeviseAuthenticationHandler instance'
+        expect(subject.fallback_authentication_handler(@options)).to eq 'a DeviseAuthenticationHandler instance'
       end
 
       it 'does not create a new DeviseAuthenticationHandler instance', private: true do
         expect(SimpleTokenAuthentication::DeviseAuthenticationHandler).not_to receive(:new)
-        expect(subject.fallback_authentication_handler({})).not_to eq 'another DeviseAuthenticationHandler instance'
+        expect(subject.fallback_authentication_handler(@options)).not_to eq 'another DeviseAuthenticationHandler instance'
+      end
+    end
+    end
+
+    context 'when :fallback option is :exception' do
+
+      before(:each) do
+        @options = { fallback: :exception }
+      end
+
+      context 'and called for the first time' do
+
+        it 'creates a new FailedAuthenticationHandler instance', private: true do
+          expect(SimpleTokenAuthentication::FailedAuthenticationHandler).to receive(:new)
+          expect(subject.fallback_authentication_handler(@options)).to eq 'a FailedAuthenticationHandler instance'
+        end
+      end
+
+      context 'when a FailedAuthenticationHandler instance was already created' do
+
+        before(:each) do
+          subject.fallback_authentication_handler(@options)
+          # let's make any new FailedAuthenticationHandler distinct from the first
+          SimpleTokenAuthentication::FailedAuthenticationHandler.stub(:new)
+          .and_return('another DeviseAuthenticationHandler instance')
+        end
+
+        it 'returns that instance', private: true do
+          expect(subject.fallback_authentication_handler(@options)).to eq 'a FailedAuthenticationHandler instance'
+        end
+
+        it 'does not create a new FailedAuthenticationHandler instance', private: true do
+          expect(SimpleTokenAuthentication::FailedAuthenticationHandler).not_to receive(:new)
+          expect(subject.fallback_authentication_handler(@options)).not_to eq 'another FailedAuthenticationHandler instance'
+        end
       end
     end
   end
