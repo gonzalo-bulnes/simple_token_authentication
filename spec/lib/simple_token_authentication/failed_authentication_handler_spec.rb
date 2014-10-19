@@ -14,5 +14,12 @@ describe SimpleTokenAuthentication::FailedAuthenticationHandler do
       expect { subject.authenticate_entity!(controller, entity) }.to \
         throw_symbol(:warden, scope: :user)
     end
+
+    it 'does something else', private: true do
+      # Throwing a symbol is not an end in itself, and the thrown :warden
+      # must be catched somewhere so a failure app can do that "something else",
+      # which, of course, must be previously to be defined and described here.
+      fail 'Missing feature definition.'
+    end
   end
 end
