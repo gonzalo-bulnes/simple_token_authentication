@@ -22,8 +22,6 @@ module SimpleTokenAuthentication
       private :perform_sign_in!
       private :token_comparator
       private :sign_in_handler
-      private :entities_manager
-      private :fallback_authentication_handler
       private :find_record_from_identifier
 
       # This is necessary to test which arguments were passed to sign_in
@@ -76,14 +74,6 @@ module SimpleTokenAuthentication
 
     def sign_in_handler
       @@sign_in_handler ||= SignInHandler.new
-    end
-
-    def fallback_authentication_handler
-      self.class.fallback_authentication_handler
-    end
-
-    def entities_manager
-      self.class.entities_manager
     end
 
     module ClassMethods
