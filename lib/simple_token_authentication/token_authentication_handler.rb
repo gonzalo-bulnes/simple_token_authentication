@@ -3,6 +3,7 @@ require 'active_support/concern'
 
 require 'simple_token_authentication/devise_authentication_handler'
 require 'simple_token_authentication/entities_manager'
+require 'simple_token_authentication/failed_authentication_handler'
 require 'simple_token_authentication/sign_in_handler'
 require 'simple_token_authentication/token_authentication_handler'
 require 'simple_token_authentication/token_comparator'
