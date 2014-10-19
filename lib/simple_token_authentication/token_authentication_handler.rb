@@ -96,7 +96,7 @@ module SimpleTokenAuthentication
       def handle_token_authentication_for(model, options = {})
         entity = entities_manager.find_or_create_entity(model)
         options = SimpleTokenAuthentication.parse_options(options)
-        define_token_authentication_helpers_for(entity, fallback_authentication_handler)
+        define_token_authentication_helpers_for(entity, fallback_authentication_handler(options))
         set_token_authentication_hooks(entity, options)
       end
 
@@ -108,7 +108,7 @@ module SimpleTokenAuthentication
         end
       end
 
-      def fallback_authentication_handler
+      def fallback_authentication_handler(options)
         if class_variable_defined?(:@@fallback_authentication_handler)
           class_variable_get(:@@fallback_authentication_handler)
         else

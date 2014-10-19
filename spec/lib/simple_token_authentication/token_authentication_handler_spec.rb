@@ -90,26 +90,26 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
       it 'creates a new FallbackAuthenticationHandler instance', private: true do
         expect(SimpleTokenAuthentication::FallbackAuthenticationHandler).to receive(:new)
-        expect(subject.fallback_authentication_handler).to eq 'a FallbackAuthenticationHandler instance'
+        expect(subject.fallback_authentication_handler({})).to eq 'a FallbackAuthenticationHandler instance'
       end
     end
 
     context 'when a FallbackAuthenticationHandler instance was already created' do
 
       before(:each) do
-        subject.fallback_authentication_handler
+        subject.fallback_authentication_handler({})
         # let's make any new FallbackAuthenticationHandler distinct from the first
         SimpleTokenAuthentication::FallbackAuthenticationHandler.stub(:new)
         .and_return('another FallbackAuthenticationHandler instance')
       end
 
       it 'returns that instance', private: true do
-        expect(subject.fallback_authentication_handler).to eq 'a FallbackAuthenticationHandler instance'
+        expect(subject.fallback_authentication_handler({})).to eq 'a FallbackAuthenticationHandler instance'
       end
 
       it 'does not create a new FallbackAuthenticationHandler instance', private: true do
         expect(SimpleTokenAuthentication::FallbackAuthenticationHandler).not_to receive(:new)
-        expect(subject.fallback_authentication_handler).not_to eq 'another FallbackAuthenticationHandler instance'
+        expect(subject.fallback_authentication_handler({})).not_to eq 'another FallbackAuthenticationHandler instance'
       end
     end
   end
