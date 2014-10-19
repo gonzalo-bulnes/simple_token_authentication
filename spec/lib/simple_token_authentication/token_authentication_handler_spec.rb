@@ -36,6 +36,84 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
     end
   end
 
+  describe '.entities_manager' do
+
+    before(:each) do
+      # The private tag is here to keep the following examples out of
+      # the public documentation.
+      subject.send :public_class_method, :entities_manager
+
+      SimpleTokenAuthentication::EntitiesManager.stub(:new)
+        .and_return('a EntitiesManager instance')
+    end
+
+    context 'when called for the first time' do
+
+      it 'creates a new EntitiesManager instance', private: true do
+        expect(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
+        expect(subject.entities_manager).to eq 'a EntitiesManager instance'
+      end
+    end
+
+    context 'when a EntitiesManager instance was already created' do
+
+      before(:each) do
+        subject.entities_manager
+        # let's make any new EntitiesManager distinct from the first
+        SimpleTokenAuthentication::EntitiesManager.stub(:new)
+        .and_return('another EntitiesManager instance')
+      end
+
+      it 'returns that instance', private: true do
+        expect(subject.entities_manager).to eq 'a EntitiesManager instance'
+      end
+
+      it 'does not create a new EntitiesManager instance', private: true do
+        expect(SimpleTokenAuthentication::EntitiesManager).not_to receive(:new)
+        expect(subject.entities_manager).not_to eq 'another EntitiesManager instance'
+      end
+    end
+  end
+
+  describe '.fallback_authentication_handler' do
+
+    before(:each) do
+      # The private tag is here to keep the following examples out of
+      # the public documentation.
+      subject.send :public_class_method, :fallback_authentication_handler
+
+      SimpleTokenAuthentication::FallbackAuthenticationHandler.stub(:new)
+        .and_return('a FallbackAuthenticationHandler instance')
+    end
+
+    context 'when called for the first time' do
+
+      it 'creates a new FallbackAuthenticationHandler instance', private: true do
+        expect(SimpleTokenAuthentication::FallbackAuthenticationHandler).to receive(:new)
+        expect(subject.fallback_authentication_handler).to eq 'a FallbackAuthenticationHandler instance'
+      end
+    end
+
+    context 'when a FallbackAuthenticationHandler instance was already created' do
+
+      before(:each) do
+        subject.fallback_authentication_handler
+        # let's make any new FallbackAuthenticationHandler distinct from the first
+        SimpleTokenAuthentication::FallbackAuthenticationHandler.stub(:new)
+        .and_return('another FallbackAuthenticationHandler instance')
+      end
+
+      it 'returns that instance', private: true do
+        expect(subject.fallback_authentication_handler).to eq 'a FallbackAuthenticationHandler instance'
+      end
+
+      it 'does not create a new FallbackAuthenticationHandler instance', private: true do
+        expect(SimpleTokenAuthentication::FallbackAuthenticationHandler).not_to receive(:new)
+        expect(subject.fallback_authentication_handler).not_to eq 'another FallbackAuthenticationHandler instance'
+      end
+    end
+  end
+
   describe 'and which supports the :before_filter hook' do
 
     before(:each) do

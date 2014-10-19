@@ -101,13 +101,19 @@ module SimpleTokenAuthentication
       end
 
       def entities_manager
-        entities_manager ||= EntitiesManager.new
-        class_variable_set :@@entities_manager, entities_manager
+        if class_variable_defined?(:@@entities_manager)
+          class_variable_get(:@@entities_manager)
+        else
+          class_variable_set(:@@entities_manager, EntitiesManager.new)
+        end
       end
 
       def fallback_authentication_handler
-        fallback_authentication_handler ||= FallbackAuthenticationHandler.new
-        class_variable_set :@@fallback_authentication_handler, fallback_authentication_handler
+        if class_variable_defined?(:@@fallback_authentication_handler)
+          class_variable_get(:@@fallback_authentication_handler)
+        else
+          class_variable_set(:@@fallback_authentication_handler, FallbackAuthenticationHandler.new)
+        end
       end
 
       def define_token_authentication_helpers_for(entity, fallback_authentication_handler)
