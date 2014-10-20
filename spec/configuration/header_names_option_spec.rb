@@ -209,7 +209,6 @@ describe 'Simple Token Authentication' do
               end
 
               it 'does look for credentials in \'X-CustomEmail\' and \'X-User-Token\'', public: true do
-                pending 'Known bug, not yet fixed (see #120)'
                 expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
                 @controller.authenticate_user_from_token
               end
@@ -244,7 +243,6 @@ describe 'Simple Token Authentication' do
               end
 
               it 'does look for credentials in \'X-User-Email\' and \'X-Custom_Token\'', public: true do
-                pending 'Known bug, not yet fixed (see #120)'
                 expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
                 @controller.authenticate_user_from_token
               end
@@ -279,7 +277,6 @@ describe 'Simple Token Authentication' do
               end
 
               it 'does look for credentials in \'X-CustomEmail\' and \'X-User-Token\'', public: true do
-                pending 'Known bug, not yet fixed (see #120)'
                 expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
                 @controller.authenticate_user_from_token
               end
@@ -342,7 +339,6 @@ describe 'Simple Token Authentication' do
               end
 
               it 'does look for credentials in \'X-CustomEmail\' and \'X-Custom_Token\'', public: true do
-                pending 'Known bug, not yet fixed (see #120)'
                 expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
                 @controller.authenticate_admin_from_token
               end
@@ -377,7 +373,6 @@ describe 'Simple Token Authentication' do
               end
 
               it 'does look for credentials in \'X-CustomEmail\' and \'X-Admin-Token\'', public: true do
-                pending 'Known bug, not yet fixed (see #120)'
                 expect(@controller).to receive(:perform_sign_in!).with(@charles_record, :sign_in_handler)
                 @controller.authenticate_admin_from_token
               end
