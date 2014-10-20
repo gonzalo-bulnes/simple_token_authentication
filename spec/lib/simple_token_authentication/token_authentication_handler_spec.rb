@@ -34,6 +34,27 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       expect(subject).to receive(:set_token_authentication_hooks).with('entity', {option: 'value', fallback: 'default'})
       subject.handle_token_authentication_for(User, {option: 'value'})
     end
+
+    context 'when called multiple times' do
+
+      it 'ensures token authentication is handled for the given (token authenticatable) models', public: true do
+        double_super_admin_model
+        entities_manager = double()
+        allow(entities_manager).to receive(:find_or_create_entity).with(User).and_return('User entity')
+        allow(entities_manager).to receive(:find_or_create_entity).with(SuperAdmin).and_return('SuperAdmin entity')
+
+        # skip steps which are not relevant in this example
+        SimpleTokenAuthentication.stub(:fallback).and_return('default')
+        subject.stub(:entities_manager).and_return(entities_manager)
+        subject.stub(:set_token_authentication_hooks)
+        subject.stub(:define_token_authentication_helpers_for)
+
+        expect(subject).to receive(:set_token_authentication_hooks).with('User entity', {option: 'value', fallback: 'default'})
+        expect(subject).to receive(:set_token_authentication_hooks).with('SuperAdmin entity', {option: 'some specific value', fallback: 'default'})
+        subject.handle_token_authentication_for(User, {option: 'value'})
+        subject.handle_token_authentication_for(SuperAdmin, {option: 'some specific value'})
+      end
+    end
   end
 
   describe '.entities_manager' do

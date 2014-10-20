@@ -92,7 +92,7 @@ Feature: Any model can act as token authenticatable
             does call `authenticate_api_admin!`
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: `User` and `Admin` both act as token authenticatable (Part 1)
     Given I have a dummy app with a Devise-enabled User and Admin
     And a scaffolded PrivatePost
@@ -165,7 +165,7 @@ Feature: Any model can act as token authenticatable
               does not call `authenticate_admin!`
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: `User` and `Admin` both act as token authenticatable (Part 2)
     Given I have a dummy app with a Devise-enabled User and Admin
     And a scaffolded PrivatePost
