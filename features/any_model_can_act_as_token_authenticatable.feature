@@ -4,7 +4,7 @@ Feature: Any model can act as token authenticatable
   In order to protect some resources (e.g. `PrivatePost`) with token authentication
   I want any Devise-enabled model (not only User) to be able to act as token authenticatable
 
-  @rspec
+  @rspec @replacement_available
   Scenario: `User` acts as the only token authenticatable model
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost
@@ -48,7 +48,7 @@ Feature: Any model can act as token authenticatable
             does call `authenticate_user!`
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: `ApiAdmin` acts as the only token authenticatable model
     Given I have a dummy app with a Devise-enabled ApiAdmin
     And a scaffolded PrivatePost
@@ -92,7 +92,7 @@ Feature: Any model can act as token authenticatable
             does call `authenticate_api_admin!`
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: `User` and `Admin` both act as token authenticatable (Part 1)
     Given I have a dummy app with a Devise-enabled User and Admin
     And a scaffolded PrivatePost
@@ -165,7 +165,7 @@ Feature: Any model can act as token authenticatable
               does not call `authenticate_admin!`
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: `User` and `Admin` both act as token authenticatable (Part 2)
     Given I have a dummy app with a Devise-enabled User and Admin
     And a scaffolded PrivatePost

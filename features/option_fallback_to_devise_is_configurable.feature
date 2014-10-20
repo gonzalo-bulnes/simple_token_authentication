@@ -5,7 +5,7 @@ Feature: The `acts_as_token_authentication_handler` filter has a fallback_to_dev
   And to keep being able to use token authentication with CSRF protection enabled (e.g. in non-API scnearii)
   I want the fallback_to_devise option to be available at a controller level
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Fallback to Devise is enabled by default
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost
@@ -73,7 +73,7 @@ Feature: The `acts_as_token_authentication_handler` filter has a fallback_to_dev
             does fallback to Devise authentication
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Fallback to Devise can be disabled for a specific controller
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost

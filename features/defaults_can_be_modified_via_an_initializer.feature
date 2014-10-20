@@ -5,7 +5,7 @@ Feature: Defaults can be modifed via an initializer
   And to do it in the way I use to
   I want a configuration mecanism to be avaiable which allow me to override the gem defaults from an initializer file
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Without intializer, the sign_in_token option defaults to false
     Given I have a dummy app with a Devise-enabled User
     And I prepare the test database
@@ -33,7 +33,7 @@ Feature: Defaults can be modifed via an initializer
           defaults to false
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Overriding the sign_in_token option value with an initalizer
     Given I have a dummy app with a Devise-enabled User
     And I prepare the test database

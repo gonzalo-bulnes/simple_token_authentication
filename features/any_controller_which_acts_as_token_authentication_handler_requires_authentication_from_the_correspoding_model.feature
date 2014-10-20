@@ -5,7 +5,7 @@ Feature: Any controller which acts as token authentication handler requires auth
   In order to protect some resources (e.g. `PrivatePost`) with token authentication
   I want any controller which acts as token authentication handler (e.g. `PrivatePostsController`) to require authentication from the corresponding token authenticatable model (e.g. `User`)
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Even if others do, controllers which don't act as token authentication handlers do not require authentication
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded Post
@@ -76,7 +76,7 @@ Feature: Any controller which acts as token authentication handler requires auth
             does not require authentication
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Any controller which acts as token authentication handler requires authentication from the corresponding model
     Given I have a dummy app with a Devise-enabled User
 
@@ -191,7 +191,7 @@ Feature: Any controller which acts as token authentication handler requires auth
       DEPRECATION WARNING: `acts_as_token_authentication_handler()` is deprecated and may be removed from future releases, use `acts_as_token_authentication_handler_for(User)` instead.
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Optionally, only explicitely named controller actions require authentication
     Given I have a dummy app with a Devise-enabled User
 
@@ -320,7 +320,7 @@ Feature: Any controller which acts as token authentication handler requires auth
             requires auhentication
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Optionally, explicitely excluded controller actions do not require authentication
     Given I have a dummy app with a Devise-enabled User
 

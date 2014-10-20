@@ -5,7 +5,7 @@ RSpec.shared_examples 'a configuration option' do |option_name|
     @set_option = option_name.+('=').to_sym # e.g. :sign_in_token=
   end
 
-  it 'is acessible', private: true do
+  it 'is accessible', private: true do
     expect(@subject).to respond_to @get_option
     expect(@subject).to respond_to @set_option
   end

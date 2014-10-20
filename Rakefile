@@ -19,25 +19,6 @@ Bundler::GemHelper.install_tasks
 
 
 begin
-  require 'cucumber'
-  require 'cucumber/rake/task'
-
-  Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = "--format pretty"
-  end
-
-  Cucumber::Rake::Task.new(:features_html) do |t|
-    t.cucumber_opts = "--format html --out doc/features.html"
-  end
-
-rescue LoadError
-  desc 'Cucumber rake task not available'
-  task :features do
-    abort 'Cucumber rake task is not available. Be sure to install cucumber as a gem or plugin'
-  end
-end
-
-begin
   require 'inch/rake'
 
   Inch::Rake::Suggest.new(:inch) do |suggest|
@@ -63,6 +44,13 @@ begin
       t.rspec_opts = "--tag public"
     end
   end
+
+  namespace :spec do
+    desc 'Provide private interfaces documentation for development purpose'
+    RSpec::Core::RakeTask.new(:development) do |t|
+      t.rspec_opts = "--tag protected --tag private"
+    end
+  end
 rescue LoadError
   desc 'RSpec rake task not available'
   task :spec do
@@ -70,4 +58,4 @@ rescue LoadError
   end
 end
 
-task default: ['spec:public', :features, :inch]
+task default: ['spec:public', 'spec:development', :inch]

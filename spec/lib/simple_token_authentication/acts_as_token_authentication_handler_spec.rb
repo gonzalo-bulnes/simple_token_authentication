@@ -33,6 +33,29 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
     end
   end
 
+  it 'doesn\'t behave like a token authentication handler', public: true do
+    stub_const('SimpleTokenAuthentication::TokenAuthenticationHandler', Module.new)
+
+    @subjects.each do |subject|
+      expect(subject).not_to be_include SimpleTokenAuthentication::TokenAuthenticationHandler
+    end
+  end
+
+  context 'when it explicitely acts as a token authentication handler' do
+
+    it 'behaves like a token authentication handler', public: true do
+      double_user_model
+      stub_const('SimpleTokenAuthentication::TokenAuthenticationHandler', Module.new)
+
+      @subjects.each do |subject|
+        subject.stub(:handle_token_authentication_for)
+
+        subject.acts_as_token_authentication_handler_for User
+        expect(subject).to be_include SimpleTokenAuthentication::TokenAuthenticationHandler
+      end
+    end
+  end
+
   describe '.acts_as_token_authentication_handler_for' do
 
     it 'ensures the receiver class does handle token authentication for a given (token authenticatable) model', public: true do

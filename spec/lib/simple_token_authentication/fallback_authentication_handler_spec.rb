@@ -4,18 +4,21 @@ describe SimpleTokenAuthentication::FallbackAuthenticationHandler do
 
   it_behaves_like 'an authentication handler'
 
-  it 'delegates authentication to Devise::Controllers::Helpers through a controller', private: true do
-    controller = double()
-    allow(controller).to receive(:authenticate_user!).and_return('Devise response.')
+  describe '#authenticate_entity!' do
 
-    entity = double()
-    entity.stub_chain(:name_underscore).and_return('user')
+    it 'delegates authentication to Devise::Controllers::Helpers through a controller', private: true do
+      controller = double()
+      allow(controller).to receive(:authenticate_user!).and_return('Devise response.')
 
-    # delegating consists in sending the message
-    expect(controller).to receive(:authenticate_user!)
-    response = subject.authenticate_entity!(controller, entity)
+      entity = double()
+      entity.stub_chain(:name_underscore).and_return('user')
 
-    # and returning the response
-    expect(response).to eq 'Devise response.'
+      # delegating consists in sending the message
+      expect(controller).to receive(:authenticate_user!)
+      response = subject.authenticate_entity!(controller, entity)
+
+      # and returning the response
+      expect(response).to eq 'Devise response.'
+    end
   end
 end

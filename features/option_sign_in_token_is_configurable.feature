@@ -4,7 +4,7 @@ Feature: The sign_in_token option can be configured via an initializer
   In order to allow the authentication token to act as a sign in token
   I want an the sign_in_token option to be available and configurable
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Without intializer, the user is not stored in the session after authentication
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost
@@ -69,7 +69,7 @@ Feature: The sign_in_token option can be configured via an initializer
             does not store the user in the session by default
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Override the sign_in_token option value with an initalizer
     Given I have a dummy app with a Devise-enabled User
     And a scaffolded PrivatePost

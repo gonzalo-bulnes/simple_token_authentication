@@ -14,6 +14,7 @@ module SimpleTokenAuthentication
     included do
       private_class_method :define_token_authentication_helpers_for
       private_class_method :set_token_authentication_hooks
+      private_class_method :fallback_authentication_handler
 
       private :authenticate_entity_from_token!
       private :authenticate_entity_from_fallback!
@@ -21,8 +22,6 @@ module SimpleTokenAuthentication
       private :perform_sign_in!
       private :token_comparator
       private :sign_in_handler
-      private :entities_manager
-      private :fallback_authentication_handler
       private :find_record_from_identifier
 
       # This is necessary to test which arguments were passed to sign_in
@@ -49,10 +48,6 @@ module SimpleTokenAuthentication
     end
 
     def perform_sign_in!(record, sign_in_handler)
-      # Sign in using token should not be tracked by Devise trackable
-      # See https://github.com/plataformatec/devise/issues/953
-      env["devise.skip_trackable"] = true
-
       # Notice the store option defaults to false, so the record
       # identifier is not actually stored in the session and a token
       # is needed for every request. That behaviour can be configured
@@ -81,14 +76,6 @@ module SimpleTokenAuthentication
       @@sign_in_handler ||= SignInHandler.new
     end
 
-    def fallback_authentication_handler
-      @@fallback_authentication_handler ||= FallbackAuthenticationHandler.new
-    end
-
-    def entities_manager
-      self.class.entities_manager
-    end
-
     module ClassMethods
 
       # Provide token authentication handling for a token authenticatable class
@@ -98,37 +85,48 @@ module SimpleTokenAuthentication
       # Returns nothing.
       def handle_token_authentication_for(model, options = {})
         entity = entities_manager.find_or_create_entity(model)
-        define_token_authentication_helpers_for(entity)
+        options = SimpleTokenAuthentication.parse_options(options)
+        define_token_authentication_helpers_for(entity, fallback_authentication_handler)
         set_token_authentication_hooks(entity, options)
       end
 
       def entities_manager
-        entities_manager ||= EntitiesManager.new
-        class_variable_set :@@entities_manager, entities_manager
+        if class_variable_defined?(:@@entities_manager)
+          class_variable_get(:@@entities_manager)
+        else
+          class_variable_set(:@@entities_manager, EntitiesManager.new)
+        end
       end
 
-      def define_token_authentication_helpers_for(entity)
-        class_eval <<-METHODS, __FILE__, __LINE__ + 1
-          # Get an Entity instance by its name
-          def get_entity(name)
-            entities_manager.find_or_create_entity(name.constantize)
+      def fallback_authentication_handler
+        if class_variable_defined?(:@@fallback_authentication_handler)
+          class_variable_get(:@@fallback_authentication_handler)
+        else
+          class_variable_set(:@@fallback_authentication_handler, FallbackAuthenticationHandler.new)
+        end
+      end
+
+      def define_token_authentication_helpers_for(entity, fallback_authentication_handler)
+
+        method_name = "authenticate_#{entity.name_underscore}_from_token"
+        method_name_bang = method_name + '!'
+
+        class_eval do
+          define_method method_name.to_sym do
+            lambda { |entity| authenticate_entity_from_token!(entity) }.call(entity)
           end
 
-          def authenticate_#{entity.name_underscore}_from_token
-            authenticate_entity_from_token!(get_entity('#{entity.name}'))
+          define_method method_name_bang.to_sym do
+            lambda do |entity|
+              authenticate_entity_from_token!(entity)
+              authenticate_entity_from_fallback!(entity, fallback_authentication_handler)
+            end.call(entity)
           end
-
-          def authenticate_#{entity.name_underscore}_from_token!
-            authenticate_entity_from_token!(get_entity('#{entity.name}'))
-            authenticate_entity_from_fallback!(get_entity('#{entity.name}'), fallback_authentication_handler)
-          end
-        METHODS
+        end
       end
 
       def set_token_authentication_hooks(entity, options)
-        options = { fallback_to_devise: true }.merge(options)
-
-        authenticate_method = if options[:fallback_to_devise]
+        authenticate_method = unless options[:fallback] == :none
           :"authenticate_#{entity.name_underscore}_from_token!"
         else
           :"authenticate_#{entity.name_underscore}_from_token"
