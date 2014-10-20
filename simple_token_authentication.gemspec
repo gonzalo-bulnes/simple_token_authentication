@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency "devise", "~> 3.2"
 
   s.add_development_dependency "rspec", "~> 2.14"
-  s.add_development_dependency "inch", "~> 0.4.6"
+  s.add_development_dependency "inch", "~> 0.4"
 end
