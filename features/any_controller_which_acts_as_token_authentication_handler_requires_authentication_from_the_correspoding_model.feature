@@ -191,7 +191,7 @@ Feature: Any controller which acts as token authentication handler requires auth
       DEPRECATION WARNING: `acts_as_token_authentication_handler()` is deprecated and may be removed from future releases, use `acts_as_token_authentication_handler_for(User)` instead.
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Optionally, only explicitely named controller actions require authentication
     Given I have a dummy app with a Devise-enabled User
 
@@ -320,7 +320,7 @@ Feature: Any controller which acts as token authentication handler requires auth
             requires auhentication
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Optionally, explicitely excluded controller actions do not require authentication
     Given I have a dummy app with a Devise-enabled User
 
