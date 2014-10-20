@@ -33,7 +33,7 @@ Feature: Defaults can be modifed via an initializer
           defaults to false
       """
 
-  @rspec
+  @rspec @replacement_available
   Scenario: Overriding the sign_in_token option value with an initalizer
     Given I have a dummy app with a Devise-enabled User
     And I prepare the test database
