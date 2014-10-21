@@ -34,11 +34,18 @@ describe 'A token authenticatable class (or one of its children)' do
   describe 'which supports the :before_save hook' do
 
     context 'when it acts as token authenticatable' do
-      it 'ensures its instances have an authentication token before being saved', public: true do
-        @subjects.each do |subject|
-          expect(subject).to receive(:before_save).with(:ensure_authentication_token)
-          subject.acts_as_token_authenticatable
-        end
+      it 'ensures its instances have an authentication token before being saved (1)', rspec_3_error: true, public: true do
+        some_class = @subjects.first
+
+        expect(some_class).to receive(:before_save).with(:ensure_authentication_token)
+        some_class.acts_as_token_authenticatable
+      end
+
+      it 'ensures its instances have an authentication token before being saved (2)', rspec_3_error: true, public: true do
+        some_child_class = @subjects.last
+
+        expect(some_child_class).to receive(:before_save).with(:ensure_authentication_token)
+        some_child_class.acts_as_token_authenticatable
       end
     end
   end
