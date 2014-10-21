@@ -70,11 +70,11 @@ end
 def double_user_model
   user = double()
   stub_const('User', user)
-  user.stub(:name).and_return('User')
+  allow(user).to receive(:name).and_return('User')
 end
 
 def double_super_admin_model
   super_admin = double()
   stub_const('SuperAdmin', super_admin)
-  super_admin.stub(:name).and_return('SuperAdmin')
+  allow(super_admin).to receive(:name).and_return('SuperAdmin')
 end

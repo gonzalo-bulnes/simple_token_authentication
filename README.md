@@ -1,9 +1,9 @@
 Simple Token Authentication
 ===========================
 
-[![Gem Version](https://badge.fury.io/rb/simple_token_authentication.png)](http://badge.fury.io/rb/simple_token_authentication)
-[![Build Status](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication.png?branch=master)](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication)
-[![Code Climate](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication.png)](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication)
+[![Gem Version](https://badge.fury.io/rb/simple_token_authentication.svg)](http://badge.fury.io/rb/simple_token_authentication)
+[![Build Status](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication.svg?branch=master)](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication)
+[![Code Climate](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication.svg)](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication)
 [![Dependency Status](https://gemnasium.com/gonzalo-bulnes/simple_token_authentication.svg)](https://gemnasium.com/gonzalo-bulnes/simple_token_authentication)
 [![security](https://hakiri.io/github/gonzalo-bulnes/simple_token_authentication/master.svg)](https://hakiri.io/github/gonzalo-bulnes/simple_token_authentication/master)
 [![Inline docs](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication.svg?branch=master)](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication)
@@ -217,13 +217,16 @@ Please be sure to [review the open issues][open-questions] and contribute with y
 Credits
 -------
 
-It may sound a bit redundant, but this gem wouldn't exist without [this gist][original-gist].
+It may sound a bit redundant, but this gem wouldn't exist without [this gist][original-gist], nor without the [comments][issues] and [contributions][pulls] of many people. Thank them if you see them!
+
+  [issues]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues
+  [pulls]: https://github.com/gonzalo-bulnes/simple_token_authentication/pulls
 
 License
 -------
 
     Simple Token Authentication
-    Copyright (C) 2013 Gonzalo Bulnes Guilpain
+    Copyright (C) 2013, 2014 Gonzalo Bulnes Guilpain
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

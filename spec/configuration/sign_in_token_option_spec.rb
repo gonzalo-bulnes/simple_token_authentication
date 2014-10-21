@@ -9,31 +9,31 @@ describe 'Simple Token Authentication' do
       before(:each) do
         user = double()
         stub_const('User', user)
-        user.stub(:name).and_return('User')
+        allow(user).to receive(:name).and_return('User')
         @record = double()
-        user.stub(:find_by).and_return(@record)
+        allow(user).to receive(:find_by).and_return(@record)
 
         # given a controller class which acts as token authentication handler
         controller_class = Class.new
-        controller_class.stub(:before_filter)
+        allow(controller_class).to receive(:before_filter)
         controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
         # and handles authentication for a given model
         controller_class.acts_as_token_authentication_handler_for User
 
         @controller = controller_class.new
-        @controller.stub(:params)
+        allow(@controller).to receive(:params)
         # and there are credentials for a record of that model in params or headers
-        @controller.stub(:get_identifier_from_params_or_headers)
+        allow(@controller).to receive(:get_identifier_from_params_or_headers)
         # and both identifier and authentication token are correct
-        @controller.stub(:find_record_from_identifier).and_return(@record)
-        @controller.stub(:token_correct?).and_return(true)
-        @controller.stub(:env).and_return({})
+        allow(@controller).to receive(:find_record_from_identifier).and_return(@record)
+        allow(@controller).to receive(:token_correct?).and_return(true)
+        allow(@controller).to receive(:env).and_return({})
       end
 
       context 'when false' do
 
         it 'does instruct Devise not to store the session', public: true do
-          SimpleTokenAuthentication.stub(:sign_in_token).and_return(false)
+          allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return(false)
 
           expect(@controller).to receive(:sign_in).with(@record, store: false)
           @controller.authenticate_user_from_token
@@ -43,7 +43,7 @@ describe 'Simple Token Authentication' do
       context 'when true' do
 
         it 'does instruct Devise to store the session', public: true do
-          SimpleTokenAuthentication.stub(:sign_in_token).and_return(true)
+          allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return(true)
 
           expect(@controller).to receive(:sign_in).with(@record, store: true)
           @controller.authenticate_user_from_token
@@ -54,16 +54,16 @@ describe 'Simple Token Authentication' do
     it 'can be modified from an initializer file', public: true do
       user = double()
       stub_const('User', user)
-      user.stub(:name).and_return('User')
+      allow(user).to receive(:name).and_return('User')
       @record = double()
-      user.stub(:find_by).and_return(@record)
+      allow(user).to receive(:find_by).and_return(@record)
 
       # given a controller class which acts as token authentication handler
       controller_class = Class.new
-      controller_class.stub(:before_filter)
+      allow(controller_class).to receive(:before_filter)
       controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
-      SimpleTokenAuthentication.stub(:sign_in_token).and_return('initial value')
+      allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return('initial value')
       # INITIALIZATION
       # this step occurs when 'simple_token_authentication' is required
       #
@@ -72,16 +72,16 @@ describe 'Simple Token Authentication' do
 
       # RUNTIME
       @controller = controller_class.new
-      @controller.stub(:params)
+      allow(@controller).to receive(:params)
       # and there are credentials for a record of that model in params or headers
-      @controller.stub(:get_identifier_from_params_or_headers)
+      allow(@controller).to receive(:get_identifier_from_params_or_headers)
       # and both identifier and authentication token are correct
-      @controller.stub(:find_record_from_identifier).and_return(@record)
-      @controller.stub(:token_correct?).and_return(true)
-      @controller.stub(:env).and_return({})
+      allow(@controller).to receive(:find_record_from_identifier).and_return(@record)
+      allow(@controller).to receive(:token_correct?).and_return(true)
+      allow(@controller).to receive(:env).and_return({})
 
       # even if modified *after* the class was loaded
-      SimpleTokenAuthentication.stub(:sign_in_token).and_return('updated value')
+      allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return('updated value')
 
       # the option updated value is taken into account
       # when token authentication is performed

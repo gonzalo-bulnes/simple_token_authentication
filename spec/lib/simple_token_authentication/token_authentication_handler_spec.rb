@@ -26,10 +26,10 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       allow(entities_manager).to receive(:find_or_create_entity).and_return('entity')
 
       # skip steps which are not relevant in this example
-      SimpleTokenAuthentication.stub(:fallback).and_return('default')
-      subject.stub(:entities_manager).and_return(entities_manager)
-      subject.stub(:set_token_authentication_hooks)
-      subject.stub(:define_token_authentication_helpers_for)
+      allow(SimpleTokenAuthentication).to receive(:fallback).and_return('default')
+      allow(subject).to receive(:entities_manager).and_return(entities_manager)
+      allow(subject).to receive(:set_token_authentication_hooks)
+      allow(subject).to receive(:define_token_authentication_helpers_for)
 
       expect(subject).to receive(:set_token_authentication_hooks).with('entity', {option: 'value', fallback: 'default'})
       subject.handle_token_authentication_for(User, {option: 'value'})
@@ -44,10 +44,10 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         allow(entities_manager).to receive(:find_or_create_entity).with(SuperAdmin).and_return('SuperAdmin entity')
 
         # skip steps which are not relevant in this example
-        SimpleTokenAuthentication.stub(:fallback).and_return('default')
-        subject.stub(:entities_manager).and_return(entities_manager)
-        subject.stub(:set_token_authentication_hooks)
-        subject.stub(:define_token_authentication_helpers_for)
+        allow(SimpleTokenAuthentication).to receive(:fallback).and_return('default')
+        allow(subject).to receive(:entities_manager).and_return(entities_manager)
+        allow(subject).to receive(:set_token_authentication_hooks)
+        allow(subject).to receive(:define_token_authentication_helpers_for)
 
         expect(subject).to receive(:set_token_authentication_hooks).with('User entity', {option: 'value', fallback: 'default'})
         expect(subject).to receive(:set_token_authentication_hooks).with('SuperAdmin entity', {option: 'some specific value', fallback: 'default'})
@@ -64,7 +64,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       # the public documentation.
       subject.send :public_class_method, :entities_manager
 
-      SimpleTokenAuthentication::EntitiesManager.stub(:new)
+      allow(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
         .and_return('a EntitiesManager instance')
     end
 
@@ -81,7 +81,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       before(:each) do
         subject.entities_manager
         # let's make any new EntitiesManager distinct from the first
-        SimpleTokenAuthentication::EntitiesManager.stub(:new)
+        allow(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
         .and_return('another EntitiesManager instance')
       end
 
@@ -103,7 +103,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       # the public documentation.
       subject.send :public_class_method, :fallback_authentication_handler
 
-      SimpleTokenAuthentication::FallbackAuthenticationHandler.stub(:new)
+      allow(SimpleTokenAuthentication::FallbackAuthenticationHandler).to receive(:new)
         .and_return('a FallbackAuthenticationHandler instance')
     end
 
@@ -120,7 +120,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       before(:each) do
         subject.fallback_authentication_handler
         # let's make any new FallbackAuthenticationHandler distinct from the first
-        SimpleTokenAuthentication::FallbackAuthenticationHandler.stub(:new)
+        allow(SimpleTokenAuthentication::FallbackAuthenticationHandler).to receive(:new)
         .and_return('another FallbackAuthenticationHandler instance')
       end
 
@@ -138,7 +138,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
   describe 'and which supports the :before_filter hook' do
 
     before(:each) do
-      subject.stub(:before_filter)
+      allow(subject).to receive(:before_filter)
     end
 
     # User

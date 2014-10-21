@@ -11,7 +11,7 @@ describe SimpleTokenAuthentication::FallbackAuthenticationHandler do
       allow(controller).to receive(:authenticate_user!).and_return('Devise response.')
 
       entity = double()
-      entity.stub_chain(:name_underscore).and_return('user')
+      allow(entity).to receive_message_chain(:name_underscore).and_return('user')
 
       # delegating consists in sending the message
       expect(controller).to receive(:authenticate_user!)
