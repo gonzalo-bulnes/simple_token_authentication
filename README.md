@@ -217,7 +217,10 @@ Please be sure to [review the open issues][open-questions] and contribute with y
 Credits
 -------
 
-It may sound a bit redundant, but this gem wouldn't exist without [this gist][original-gist].
+It may sound a bit redundant, but this gem wouldn't exist without [this gist][original-gist], nor without the [comments][issues] and [contributions][pulls] of many people. Thank them if you see them!
+
+  [issues]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues
+  [pulls]: https://github.com/gonzalo-bulnes/simple_token_authentication/pulls
 
 License
 -------
