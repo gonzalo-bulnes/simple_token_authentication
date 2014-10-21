@@ -4,7 +4,7 @@ describe SimpleTokenAuthentication::Entity do
 
   before(:each) do
     user = double()
-    user.stub(:name).and_return('SuperUser')
+    allow(user).to receive(:name).and_return('SuperUser')
     stub_const('SuperUser', user)
 
     @subject = SimpleTokenAuthentication::Entity.new(SuperUser)
@@ -104,7 +104,7 @@ describe SimpleTokenAuthentication::Entity do
 
       before(:each) do
         @controller = double()
-        @controller.stub(:params).and_return({ super_user_token: 'The_ToKeN' })
+        allow(@controller).to receive(:params).and_return({ super_user_token: 'The_ToKeN' })
       end
 
       it 'returns that token (String)' do
@@ -115,7 +115,7 @@ describe SimpleTokenAuthentication::Entity do
       context 'and another token is present in the headers' do
 
         before(:each) do
-          @controller.stub_chain(:request, :headers)
+          allow(@controller).to receive_message_chain(:request, :headers)
                      .and_return({ 'X-SuperUser-Token' => 'HeAd3rs_ToKeN' })
         end
 
@@ -131,8 +131,8 @@ describe SimpleTokenAuthentication::Entity do
 
         before(:each) do
           @controller = double()
-          @controller.stub(:params).and_return({ super_user_token: '' })
-          @controller.stub_chain(:request, :headers)
+          allow(@controller).to receive(:params).and_return({ super_user_token: '' })
+          allow(@controller).to receive_message_chain(:request, :headers)
                      .and_return({ 'X-SuperUser-Token' => 'HeAd3rs_ToKeN' })
         end
 
@@ -149,7 +149,7 @@ describe SimpleTokenAuthentication::Entity do
 
       before(:each) do
         @controller = double()
-        @controller.stub(:params).and_return({ super_user_email: 'alice@example.com' })
+        allow(@controller).to receive(:params).and_return({ super_user_email: 'alice@example.com' })
       end
 
       it 'returns that identifier (String)' do
@@ -160,7 +160,7 @@ describe SimpleTokenAuthentication::Entity do
       context 'and another identifier is present in the headers' do
 
         before(:each) do
-          @controller.stub_chain(:request, :headers)
+          allow(@controller).to receive_message_chain(:request, :headers)
                      .and_return({ 'X-SuperUser-Email' => 'bob@example.com' })
         end
 
@@ -176,8 +176,8 @@ describe SimpleTokenAuthentication::Entity do
 
         before(:each) do
           @controller = double()
-          @controller.stub(:params).and_return({ super_user_email: '' })
-          @controller.stub_chain(:request, :headers)
+          allow(@controller).to receive(:params).and_return({ super_user_email: '' })
+          allow(@controller).to receive_message_chain(:request, :headers)
                      .and_return({ 'X-SuperUser-Email' => 'bob@example.com' })
         end
 

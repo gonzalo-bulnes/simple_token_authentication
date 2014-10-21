@@ -9,33 +9,33 @@ describe 'Simple Token Authentication' do
       before(:each) do
         user = double()
         stub_const('User', user)
-        user.stub(:name).and_return('User')
+        allow(user).to receive(:name).and_return('User')
 
         admin = double()
         stub_const('Admin', admin)
-        admin.stub(:name).and_return('Admin')
+        allow(admin).to receive(:name).and_return('Admin')
 
         # given one *c*orrect record (which is supposed to get signed in)
         @charles_record = double()
         [user, admin].each do |model|
-          model.stub(:find_by).with(email: 'charles@example.com').and_return(@charles_record)
+          allow(model).to receive(:find_by).with(email: 'charles@example.com').and_return(@charles_record)
         end
-        @charles_record.stub(:authentication_token).and_return('ch4rlEs_toKeN')
+        allow(@charles_record).to receive(:authentication_token).and_return('ch4rlEs_toKeN')
 
         # and one *w*rong record (which should not be signed in)
         @waldo_record = double()
         [user, admin].each do |model|
-          model.stub(:find_by).with(email: 'waldo@example.com').and_return(@waldo_record)
+          allow(model).to receive(:find_by).with(email: 'waldo@example.com').and_return(@waldo_record)
         end
-        @waldo_record.stub(:authentication_token).and_return('w4LdO_toKeN')
+        allow(@waldo_record).to receive(:authentication_token).and_return('w4LdO_toKeN')
 
         # given a controller class which acts as token authentication handler
         @controller_class = Class.new
-        @controller_class.stub(:before_filter)
+        allow(@controller_class).to receive(:before_filter)
         @controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
         @controller = @controller_class.new
-        @controller.stub(:sign_in_handler).and_return(:sign_in_handler)
+        allow(@controller).to receive(:sign_in_handler).and_return(:sign_in_handler)
       end
 
 
@@ -50,15 +50,15 @@ describe 'Simple Token Authentication' do
 
           before(:each) do
             # and there are no credentials in params
-            @controller.stub(:params).and_return({})
+            allow(@controller).to receive(:params).and_return({})
           end
 
           context 'and request headers contain credentials in the custom and default fields' do
 
             before(:each) do
               # request headers are set in the nested contexts, these are minor settings
-              @controller.stub_chain(:request, :headers).and_return(double())
-              @controller.stub(:sign_in_handler).and_return(:sign_in_handler)
+              allow(@controller).to receive_message_chain(:request, :headers).and_return(double())
+              allow(@controller).to receive(:sign_in_handler).and_return(:sign_in_handler)
             end
 
             context 'when {}' do
@@ -79,7 +79,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({})
               end
 
@@ -112,7 +112,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ user: {} })
               end
 
@@ -141,7 +141,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ user: { email: 'X-CustomEmail',
                                         authentication_token: 'X-Custom_Token' } })
               end
@@ -171,7 +171,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ admin: { email: 'X-CustomEmail',
                                         authentication_token: 'X-Custom_Token' } })
               end
@@ -203,7 +203,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ user:  { email: 'X-CustomEmail' },
                                 admin: { authentication_token: 'X-Custom_Token' } })
               end
@@ -237,7 +237,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ admin:  { email: 'X-CustomEmail' },
                                 user: { authentication_token: 'X-Custom_Token' } })
               end
@@ -257,7 +257,7 @@ describe 'Simple Token Authentication' do
 
               before(:each) do
                 # and credentials in the default header fields lead to the wrong record
-                @controller.stub_chain(:request, :headers).and_return(double())
+                allow(@controller).to receive_message_chain(:request, :headers).and_return(double())
                 allow(@controller.request.headers).to receive(:[]).with(nil)
                                                           .and_return(nil)
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Email')
@@ -272,7 +272,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ user:  { email: 'X-CustomEmail' } })
               end
 
@@ -301,22 +301,22 @@ describe 'Simple Token Authentication' do
 
           before(:each) do
             # and there are no credentials in params
-            @controller.stub(:params).and_return({})
+            allow(@controller).to receive(:params).and_return({})
           end
 
           context 'and request headers contain credentials in the custom and default fields' do
 
             before(:each) do
               # request headers are set in the nested contexts, these are minor settings
-              @controller.stub_chain(:request, :headers).and_return(double())
-              @controller.stub(:sign_in_handler).and_return(:sign_in_handler)
+              allow(@controller).to receive_message_chain(:request, :headers).and_return(double())
+              allow(@controller).to receive(:sign_in_handler).and_return(:sign_in_handler)
             end
 
             context 'when { admin: { email: \'X-CustomEmail\', authentication_token: \'X-Custom_Token\' } }' do
 
               before(:each) do
                 # and credentials in the default header fields lead to the wrong record
-                @controller.stub_chain(:request, :headers).and_return(double())
+                allow(@controller).to receive_message_chain(:request, :headers).and_return(double())
                 allow(@controller.request.headers).to receive(:[]).with(nil)
                                                           .and_return(nil)
                 allow(@controller.request.headers).to receive(:[]).with('X-Admin-Email')
@@ -334,7 +334,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ admin:  { email: 'X-CustomEmail', authentication_token: 'X-Custom_Token' } })
               end
 
@@ -353,7 +353,7 @@ describe 'Simple Token Authentication' do
 
               before(:each) do
                 # and credentials in the default header fields lead to the wrong record
-                @controller.stub_chain(:request, :headers).and_return(double())
+                allow(@controller).to receive_message_chain(:request, :headers).and_return(double())
                 allow(@controller.request.headers).to receive(:[]).with(nil)
                                                           .and_return(nil)
                 allow(@controller.request.headers).to receive(:[]).with('X-Admin-Email')
@@ -368,7 +368,7 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-Admin-Token')
                                                           .and_return('ch4rlEs_toKeN')
 
-                SimpleTokenAuthentication.stub(:header_names)
+                allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ admin:  { email: 'X-CustomEmail' } })
               end
 
@@ -390,21 +390,21 @@ describe 'Simple Token Authentication' do
     it 'can be modified from an initializer file', public: true do
       user = double()
       stub_const('User', user)
-      user.stub(:name).and_return('User')
+      allow(user).to receive(:name).and_return('User')
 
       # given one *c*orrect record (which is supposed to get signed in)
       @charles_record = double()
-      user.stub(:find_by).with(email: 'charles@example.com').and_return(@charles_record)
-      @charles_record.stub(:authentication_token).and_return('ch4rlEs_toKeN')
+      allow(user).to receive(:find_by).with(email: 'charles@example.com').and_return(@charles_record)
+      allow(@charles_record).to receive(:authentication_token).and_return('ch4rlEs_toKeN')
 
       # and one *w*rong record (which should not be signed in)
       @waldo_record = double()
-      user.stub(:find_by).with(email: 'waldo@example.com').and_return(@waldo_record)
-      @waldo_record.stub(:authentication_token).and_return('w4LdO_toKeN')
+      allow(user).to receive(:find_by).with(email: 'waldo@example.com').and_return(@waldo_record)
+      allow(@waldo_record).to receive(:authentication_token).and_return('w4LdO_toKeN')
 
       # given a controller class which acts as token authentication handler
       @controller_class = Class.new
-      @controller_class.stub(:before_filter)
+      allow(@controller_class).to receive(:before_filter)
       @controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
       # INITIALIZATION
@@ -416,15 +416,15 @@ describe 'Simple Token Authentication' do
       # RUNTIME
       @controller = @controller_class.new
       # and there are no credentials in params
-      @controller.stub(:params).and_return({})
+      allow(@controller).to receive(:params).and_return({})
       # (those are minor settings)
-      @controller.stub_chain(:request, :headers).and_return(double())
-      @controller.stub(:sign_in_handler).and_return(:sign_in_handler)
+      allow(@controller).to receive_message_chain(:request, :headers).and_return(double())
+      allow(@controller).to receive(:sign_in_handler).and_return(:sign_in_handler)
       allow(@controller).to receive(:perform_sign_in!)
 
       # and credentials in the header fields which match
       # the initial `header_names` option value
-      @controller.stub_chain(:request, :headers).and_return(double())
+      allow(@controller).to receive_message_chain(:request, :headers).and_return(double())
       allow(@controller.request.headers).to receive(:[]).with('X-User-Email')
                                                 .and_return('waldo@example.com')
       allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
@@ -439,7 +439,7 @@ describe 'Simple Token Authentication' do
 
 
       # even if modified *after* the class was loaded
-      SimpleTokenAuthentication.stub(:header_names)
+      allow(SimpleTokenAuthentication).to receive(:header_names)
         .and_return({ user: { email: 'X-UpdatedName-User-Email', authentication_token: 'X-UpdatedName-User-Token' }})
 
       # the option updated value is taken into account

@@ -8,7 +8,7 @@ end
 def skip_rails_test_environment_code
   rails = double()
   stub_const('Rails', rails)
-  rails.stub_chain(:env, :test?).and_return(false)
+  allow(rails).to receive_message_chain(:env, :test?).and_return(false)
 end
 
 describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler (or any if its children)' do
@@ -48,7 +48,7 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
       stub_const('SimpleTokenAuthentication::TokenAuthenticationHandler', Module.new)
 
       @subjects.each do |subject|
-        subject.stub(:handle_token_authentication_for)
+        allow(subject).to receive(:handle_token_authentication_for)
 
         subject.acts_as_token_authentication_handler_for User
         expect(subject).to be_include SimpleTokenAuthentication::TokenAuthenticationHandler
@@ -62,7 +62,7 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
       double_user_model
 
       @subjects.each do |subject|
-        subject.stub(:before_filter)
+        allow(subject).to receive(:before_filter)
 
         expect(subject).to receive(:include).with(SimpleTokenAuthentication::TokenAuthenticationHandler)
         expect(subject).to receive(:handle_token_authentication_for).with(User, { option: 'value' })
@@ -80,7 +80,7 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
       @subjects.each do |subject|
         deprecation_handler = double()
         stub_const('ActiveSupport::Deprecation', deprecation_handler)
-        subject.stub(:acts_as_token_authentication_handler_for)
+        allow(subject).to receive(:acts_as_token_authentication_handler_for)
 
         expect(deprecation_handler).to receive(:warn)
 
@@ -95,7 +95,7 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
         deprecation_handler = double()
         allow(deprecation_handler).to receive(:warn)
         stub_const('ActiveSupport::Deprecation', deprecation_handler)
-        subject.stub(:acts_as_token_authentication_handler_for)
+        allow(subject).to receive(:acts_as_token_authentication_handler_for)
 
         expect(subject).to receive(:acts_as_token_authentication_handler_for).with(User)
 

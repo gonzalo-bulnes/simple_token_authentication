@@ -9,11 +9,11 @@ describe 'Simple Token Authentication' do
       before(:each) do
         user = double()
         stub_const('User', user)
-        user.stub(:name).and_return('User')
+        allow(user).to receive(:name).and_return('User')
 
         # given a controller class which acts as token authentication handler
         @controller_class = Class.new
-        @controller_class.stub(:before_filter)
+        allow(@controller_class).to receive(:before_filter)
         @controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
       end
 
@@ -21,8 +21,8 @@ describe 'Simple Token Authentication' do
 
         it 'delegates authentication to Devise strategies', protected: true do
           @controller = @controller_class.new
-          @controller.stub(:params)
-          @controller.stub(:find_record_from_identifier)
+          allow(@controller).to receive(:params)
+          allow(@controller).to receive(:find_record_from_identifier)
 
           # sets :authenticate_user_from_token! (bang) in the before_filter
           expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token!, {})
@@ -41,8 +41,8 @@ describe 'Simple Token Authentication' do
 
         it 'does nothing after token authentication fails', protected: true do
           @controller = @controller_class.new
-          @controller.stub(:params)
-          @controller.stub(:find_record_from_identifier)
+          allow(@controller).to receive(:params)
+          allow(@controller).to receive(:find_record_from_identifier)
 
           # sets :authenticate_user_from_token (non-bang) in the before_filter
           expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token, {})
@@ -61,8 +61,8 @@ describe 'Simple Token Authentication' do
 
         it 'delegates authentication to Devise strategies', protected: true do
           @controller = @controller_class.new
-          @controller.stub(:params)
-          @controller.stub(:find_record_from_identifier)
+          allow(@controller).to receive(:params)
+          allow(@controller).to receive(:find_record_from_identifier)
 
           # sets :authenticate_user_from_token! (bang) in the before_filter
           expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token!, {})
@@ -82,15 +82,15 @@ describe 'Simple Token Authentication' do
         before(:each) do
           admin = double()
           stub_const('Admin', admin)
-          admin.stub(:name).and_return('Admin')
+          allow(admin).to receive(:name).and_return('Admin')
         end
 
         context 'when false for User and true for Admin' do
 
           before(:each) do
             @controller = @controller_class.new
-            @controller.stub(:params)
-            @controller.stub(:find_record_from_identifier)
+            allow(@controller).to receive(:params)
+            allow(@controller).to receive(:find_record_from_identifier)
 
             # sets :authenticate_user_from_token (non-bang) in the before_filter
             expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token, {})
