@@ -3,6 +3,7 @@ PATH
   specs:
     simple_token_authentication (1.5.2)
       actionmailer (>= 3.2.6, < 5)
+      actionpack (>= 3.2.6, < 5)
       activerecord (>= 3.2.6, < 5)
       devise (~> 3.2)
 
