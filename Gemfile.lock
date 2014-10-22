@@ -4,7 +4,6 @@ PATH
     simple_token_authentication (1.5.2)
       actionmailer (>= 3.2.6, < 5)
       actionpack (>= 3.2.6, < 5)
-      activerecord (>= 3.2.6, < 5)
       devise (~> 3.2)
 
 GEM
@@ -106,6 +105,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord (>= 3.2.6, < 5)
   inch (~> 0.4)
   rspec (~> 3.0)
   simple_token_authentication!

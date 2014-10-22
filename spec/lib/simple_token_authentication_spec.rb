@@ -48,6 +48,26 @@ describe SimpleTokenAuthentication do
     end
   end
 
+  context 'when no ORM, ODM or OxM is available' do
+
+    before(:each) do
+      stub_const('ActiveRecord', Module.new)
+    end
+
+    describe '#load_available_adapters' do
+
+      it 'raises NoAdapterAvailableError', private: true do
+        allow(subject).to receive(:require).and_return(true)
+        hide_const('ActiveRecord')
+        hide_const('Mongoid')
+
+        expect do
+          subject.load_available_adapters SimpleTokenAuthentication.model_adapters
+        end.to raise_error SimpleTokenAuthentication::NoAdapterAvailableError
+      end
+    end
+  end
+
   context 'when ActionController::Base is available' do
 
     before(:each) do
