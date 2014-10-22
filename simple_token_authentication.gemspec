@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
   s.summary     = "Simple (but safe) token authentication for Rails apps or API with Devise."
   s.license     = "GPLv3"
 
-  s.files = Dir["{app,config,doc,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["lib/simple_token_authentication/simple_token_authentication.rb",
+                "doc/**/*", "LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "activerecord", ">= 3.2.6", "< 5"

@@ -32,7 +32,7 @@ module SimpleTokenAuthentication
   def self.load_available_adapters adapters_short_names
     adapters_short_names.collect do |short_name|
       adapter_name = "simple_token_authentication/adapters/#{short_name}_adapter"
-      if require adapter_name
+      if const_defined?(short_name.camelize) && require(adapter_name)
         adapter_name.camelize.constantize
       end
     end
