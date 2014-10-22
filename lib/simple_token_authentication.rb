@@ -5,6 +5,8 @@ require 'simple_token_authentication/configuration'
 module SimpleTokenAuthentication
   extend Configuration
 
+  NoAdapterAvailableError = Class.new(LoadError)
+
   private
 
   def self.ensure_models_can_act_as_token_authenticatables model_adapters
@@ -30,12 +32,18 @@ module SimpleTokenAuthentication
   #
   # Returns an Array of available adapters
   def self.load_available_adapters adapters_short_names
-    adapters_short_names.collect do |short_name|
+    available_adapters = adapters_short_names.collect do |short_name|
       adapter_name = "simple_token_authentication/adapters/#{short_name}_adapter"
       if const_defined?(short_name.camelize) && require(adapter_name)
         adapter_name.camelize.constantize
       end
     end
+    available_adapters.compact!
+
+    # stop here if no constants are defined or no adequate adapters are present
+    raise SimpleTokenAuthentication::NoAdapterAvailableError if available_adapters.empty?
+
+    available_adapters
   end
 
   available_model_adapters = load_available_adapters SimpleTokenAuthentication.model_adapters
