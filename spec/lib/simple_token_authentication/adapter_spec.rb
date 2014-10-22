@@ -10,8 +10,6 @@ describe 'Any class which extends SimpleTokenAuthentication::Adapter' do
     @subject = define_dummy_class_which_extends(SimpleTokenAuthentication::Adapter)
   end
 
-  it_behaves_like 'an adapter'
-
   describe '.base_class' do
 
     it 'raises an error if not overwritten', public: true do
