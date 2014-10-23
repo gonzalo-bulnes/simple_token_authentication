@@ -4,7 +4,6 @@ require 'active_support/concern'
 require 'simple_token_authentication/entities_manager'
 require 'simple_token_authentication/fallback_authentication_handler'
 require 'simple_token_authentication/sign_in_handler'
-require 'simple_token_authentication/token_authentication_handler'
 require 'simple_token_authentication/token_comparator'
 
 module SimpleTokenAuthentication
@@ -23,11 +22,6 @@ module SimpleTokenAuthentication
       private :token_comparator
       private :sign_in_handler
       private :find_record_from_identifier
-
-      # This is necessary to test which arguments were passed to sign_in
-      # from authenticate_entity_from_token!
-      # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/32
-      ::ActionController::Base.send :include, Devise::Controllers::SignInOut if Rails.env.test?
     end
 
     def authenticate_entity_from_token!(entity)
@@ -113,13 +107,13 @@ module SimpleTokenAuthentication
 
         class_eval do
           define_method method_name.to_sym do
-            lambda { |entity| authenticate_entity_from_token!(entity) }.call(entity)
+            lambda { |_entity| authenticate_entity_from_token!(_entity) }.call(entity)
           end
 
           define_method method_name_bang.to_sym do
-            lambda do |entity|
-              authenticate_entity_from_token!(entity)
-              authenticate_entity_from_fallback!(entity, fallback_authentication_handler)
+            lambda do |_entity|
+              authenticate_entity_from_token!(_entity)
+              authenticate_entity_from_fallback!(_entity, fallback_authentication_handler)
             end.call(entity)
           end
         end
