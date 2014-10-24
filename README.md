@@ -32,6 +32,10 @@ Install [Devise][devise] with any modules you want, then add the gem to your `Ge
 gem 'simple_token_authentication'
 ```
 
+### Make models token authenticatable
+
+#### ActiveRecord
+
 First define which model or models will be token authenticatable (typ. `User`):
 
 ```ruby
@@ -61,7 +65,31 @@ rails g migration add_authentication_token_to_users authentication_token:string:
 rake db:migrate
 ```
 
-Finally define which controller will handle authentication (typ. `ApplicationController`) for which _token authenticatable_ model:
+#### Mongoid
+
+Define which model or models will be token authenticatable (typ. `User`):
+
+```ruby
+# app/models/user.rb
+
+class User
+  include Mongoid::Document
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
+
+  ## Token Authenticatable
+  acts_as_token_authenticatable
+  field :authentication_token
+
+  # ...
+end
+```
+
+### Allow controllers to handle token authentication
+
+Finally define which controllers will handle token authentication (typ. `ApplicationController`) for which _token authenticatable_ models:
 
 ```ruby
 # app/controllers/application_controller.rb
