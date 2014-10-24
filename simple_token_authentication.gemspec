@@ -16,10 +16,12 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,doc,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "activerecord", ">= 3.2.6", "< 5"
   s.add_dependency "actionmailer", ">= 3.2.6", "< 5"
+  s.add_dependency "actionpack", ">= 3.2.6", "< 5"
   s.add_dependency "devise", "~> 3.2"
 
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "inch", "~> 0.4"
+  s.add_development_dependency "activerecord", ">= 3.2.6", "< 5"
+  s.add_development_dependency 'mongoid', '>= 3.1.0', '< 5'
 end

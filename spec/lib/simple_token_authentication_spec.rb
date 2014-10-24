@@ -48,6 +48,65 @@ describe SimpleTokenAuthentication do
     end
   end
 
+  context 'when Mongoid is available' do
+
+    before(:each) do
+      stub_const('Mongoid', Module.new)
+      stub_const('Mongoid::Document', Class.new)
+
+      # define a dummy Mongoid adapter
+      dummy_mongoid_adapter = double()
+      allow(dummy_mongoid_adapter).to receive(:base_class).and_return(Mongoid::Document)
+      stub_const('SimpleTokenAuthentication::Adapters::DummyMongoidAdapter',
+                                                       dummy_mongoid_adapter)
+    end
+
+    describe '#ensure_models_can_act_as_token_authenticatables' do
+
+      before(:each) do
+        class SimpleTokenAuthentication::DummyModel < Mongoid::Document; end
+        @dummy_model = SimpleTokenAuthentication::DummyModel
+
+        expect(@dummy_model.new).to be_instance_of SimpleTokenAuthentication::DummyModel
+        expect(@dummy_model.new).to be_kind_of Mongoid::Document
+      end
+
+      after(:each) do
+        SimpleTokenAuthentication.send(:remove_const, :DummyModel)
+      end
+
+      it 'allows any kind of Mongoid::Document to act as token authenticatable', private: true do
+        expect(@dummy_model).not_to respond_to :acts_as_token_authenticatable
+
+        subject.ensure_models_can_act_as_token_authenticatables [
+                SimpleTokenAuthentication::Adapters::DummyMongoidAdapter]
+
+        expect(@dummy_model).to respond_to :acts_as_token_authenticatable
+      end
+    end
+  end
+
+  context 'when no ORM, ODM or OxM is available' do
+
+    before(:each) do
+      stub_const('ActiveRecord', Module.new)
+      stub_const('Mongoid', Module.new)
+    end
+
+    describe '#load_available_adapters' do
+
+      it 'raises NoAdapterAvailableError', private: true do
+        allow(subject).to receive(:require).and_return(true)
+        hide_const('ActiveRecord')
+        hide_const('Mongoid')
+
+        expect do
+          subject.load_available_adapters SimpleTokenAuthentication.model_adapters
+        end.to raise_error SimpleTokenAuthentication::NoAdapterAvailableError
+      end
+    end
+  end
+
   context 'when ActionController::Base is available' do
 
     before(:each) do
