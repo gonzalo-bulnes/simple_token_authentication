@@ -11,7 +11,7 @@ module SimpleTokenAuthentication
     @@fallback = :devise
     @@header_names = {}
     @@sign_in_token = false
-    @@controller_adapters = ['rails']
+    @@controller_adapters = ['rails', 'rails_api']
     @@model_adapters = ['active_record', 'mongoid']
 
     # Allow the default configuration to be overwritten from initializers

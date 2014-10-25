@@ -142,4 +142,40 @@ describe SimpleTokenAuthentication do
       end
     end
   end
+
+  context 'when ActionController::API is available' do
+
+    before(:each) do
+      stub_const('ActionController::API', Class.new)
+
+      # define a dummy ActionController::API (a.k.a 'Rails API') adapter
+      dummy_rails_adapter = double()
+      allow(dummy_rails_adapter).to receive(:base_class).and_return(ActionController::API)
+      stub_const('SimpleTokenAuthentication::Adapters::DummyRailsAPIAdapter', dummy_rails_adapter)
+    end
+
+    describe '#ensure_controllers_can_act_as_token_authentication_handlers' do
+
+      before(:each) do
+        class SimpleTokenAuthentication::DummyController < ActionController::API; end
+        @dummy_controller = SimpleTokenAuthentication::DummyController
+
+        expect(@dummy_controller.new).to be_instance_of SimpleTokenAuthentication::DummyController
+        expect(@dummy_controller.new).to be_kind_of ActionController::API
+      end
+
+      after(:each) do
+        SimpleTokenAuthentication.send(:remove_const, :DummyController)
+      end
+
+      it 'allows any kind of ActionController::API to acts as token authentication handler', private: true do
+        expect(@dummy_controller).not_to respond_to :acts_as_token_authentication_handler_for
+
+        subject.ensure_controllers_can_act_as_token_authentication_handlers [
+                          SimpleTokenAuthentication::Adapters::DummyRailsAPIAdapter]
+
+        expect(@dummy_controller).to respond_to :acts_as_token_authentication_handler_for
+      end
+    end
+  end
 end
