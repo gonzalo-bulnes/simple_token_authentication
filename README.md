@@ -29,7 +29,7 @@ Install [Devise][devise] with any modules you want, then add the gem to your `Ge
 ```ruby
 # Gemfile
 
-gem 'simple_token_authentication'
+gem 'simple_token_authentication', '~> 1.0' # see semver.org
 ```
 
 ### Make models token authenticatable
