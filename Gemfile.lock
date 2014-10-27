@@ -51,11 +51,11 @@ GEM
     diff-lcs (1.2.5)
     erubis (2.7.0)
     i18n (0.6.11)
-    inch (0.5.4)
+    inch (0.5.5)
       pry
       sparkr (>= 0.2.0)
       term-ansicolor
-      yard (~> 0.8.7)
+      yard (~> 0.8.7.5)
     json (1.8.1)
     mail (2.6.1)
       mime-types (>= 1.16, < 3)
@@ -112,7 +112,7 @@ GEM
       thread_safe (~> 0.1)
     warden (1.2.3)
       rack (>= 1.0)
-    yard (0.8.7.4)
+    yard (0.8.7.6)
 
 PLATFORMS
   ruby
