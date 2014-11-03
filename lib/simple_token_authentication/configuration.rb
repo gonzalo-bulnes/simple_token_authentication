@@ -12,7 +12,7 @@ module SimpleTokenAuthentication
     @@header_names = {}
     @@sign_in_token = false
     @@controller_adapters = ['rails']
-    @@model_adapters = ['active_record', 'mongoid']
+    @@model_adapters = ['active_record', 'mongoid', 'neo4j']
 
     # Allow the default configuration to be overwritten from initializers
     def configure
