@@ -7,9 +7,9 @@ require "simple_token_authentication/version"
 Gem::Specification.new do |s|
   s.name        = "simple_token_authentication"
   s.version     = SimpleTokenAuthentication::VERSION
-  s.authors     = ["Gonzalo Bulnes Guilpain"]
-  s.email       = ["gon.bulnes@gmail.com"]
-  s.homepage    = "https://github.com/gonzalo-bulnes/simple_token_authentication"
+  s.authors     = ["Paolo Di Pietro"]
+  s.email       = ["paolodipietro58@gmail.com"]
+  s.homepage    = "https://github.com/pdipietro/simple_token_authentication"
   s.summary     = "Simple (but safe) token authentication for Rails apps or API with Devise."
   s.license     = "GPLv3"
 
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "inch", "~> 0.4"
-  s.add_development_dependency "activerecord", ">= 3.2.6", "< 5"
-  s.add_development_dependency 'mongoid', '>= 3.1.0', '< 5'
+  s.add_development_dependency "neo4j", :git => 'https://github.com/neo4jrb/neo4j.git'
+  s.add_development_dependency 'devise-neo4j', :git => 'git://github.com/andreasronge/devise-neo4j.git'
 end
+
