@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "inch", "~> 0.4"
-  s.add_development_dependency "neo4j",  :git => 'https://github.com/neo4jrb/neo4j.git'
+  s.add_development_dependency "neo4j", :git => 'https://github.com/neo4jrb/neo4j.git'
   s.add_development_dependency 'devise-neo4j', :git => 'git://github.com/andreasronge/devise-neo4j.git'
 end
 
