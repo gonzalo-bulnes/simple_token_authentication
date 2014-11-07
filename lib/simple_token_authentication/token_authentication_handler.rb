@@ -13,6 +13,7 @@ module SimpleTokenAuthentication
     included do
       private_class_method :define_token_authentication_helpers_for
       private_class_method :set_token_authentication_hooks
+      private_class_method :entities_manager
       private_class_method :fallback_authentication_handler
 
       private :authenticate_entity_from_token!
@@ -58,10 +59,12 @@ module SimpleTokenAuthentication
       record = email && entity.model.where(email: email).first
     end
 
+    # Private: Get one (always the same) object which behaves as a token comprator
     def token_comparator
       @@token_comparator ||= TokenComparator.new
     end
 
+    # Private: Get one (always the same) object which behaves as a sign in handler
     def sign_in_handler
       @@sign_in_handler ||= SignInHandler.new
     end
@@ -80,6 +83,7 @@ module SimpleTokenAuthentication
         set_token_authentication_hooks(entity, options)
       end
 
+      # Private: Get one (always the same) object which behaves as an entities manager
       def entities_manager
         if class_variable_defined?(:@@entities_manager)
           class_variable_get(:@@entities_manager)
@@ -88,6 +92,7 @@ module SimpleTokenAuthentication
         end
       end
 
+      # Private: Get one (always the same) object which behaves as a fallback authentication handler
       def fallback_authentication_handler
         if class_variable_defined?(:@@fallback_authentication_handler)
           class_variable_get(:@@fallback_authentication_handler)
