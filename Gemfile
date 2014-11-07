@@ -10,5 +10,9 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
+gem 'neo4j',  :git => 'https://github.com/neo4jrb/neo4j.git'
+gem 'devise-neo4j', :git => 'git://github.com/andreasronge/devise-neo4j.git'
+
+
 # To use debugger
 # gem 'debugger'
