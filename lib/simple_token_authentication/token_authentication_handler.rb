@@ -1,4 +1,3 @@
-require 'action_controller/base'
 require 'active_support/concern'
 
 require 'simple_token_authentication/entities_manager'
