@@ -53,8 +53,8 @@ module SimpleTokenAuthentication
     def find_record_from_identifier(entity)
       email = entity.get_identifier_from_params_or_headers(self).presence
 
-      # Rails 3 and 4 finder methods are supported,
-      # see https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
+      # The finder method should be compatible with all the model adapters,
+      # namely ActiveRecord and Mongoid in all their supported versions.
       record = nil
       record = email && entity.model.where(email: email).first
     end
