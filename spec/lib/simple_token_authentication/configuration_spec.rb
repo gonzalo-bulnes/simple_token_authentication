@@ -30,7 +30,7 @@ describe SimpleTokenAuthentication::Configuration do
       it_behaves_like 'a configuration option', 'model_adapters'
 
       it "defauts to ['active_record', 'mongoid']", private: true do
-        expect(@subject.model_adapters).to eq ['active_record', 'mongoid']
+        expect(@subject.model_adapters).to eq ['active_record', 'mongoid', 'neo4j']
       end
     end
 
