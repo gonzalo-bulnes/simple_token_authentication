@@ -7,9 +7,9 @@ require "simple_token_authentication/version"
 Gem::Specification.new do |s|
   s.name        = "simple_token_authentication"
   s.version     = SimpleTokenAuthentication::VERSION
-  s.authors     = ["Paolo Di Pietro"]
-  s.email       = ["paolodipietro58@gmail.com"]
-  s.homepage    = "https://github.com/pdipietro/simple_token_authentication"
+  s.authors     = ["Gonzalo Bulnes Guilpain"]
+  s.email       = ["gon.bulnes@gmail.com"]
+  s.homepage    = "https://github.com/gonzalo-bulnes/simple_token_authentication"
   s.summary     = "Simple (but safe) token authentication for Rails apps or API with Devise."
   s.license     = "GPLv3"
 
