@@ -10,5 +10,9 @@ module SimpleTokenAuthentication
         ::ActionController::API
       end
     end
+
+    # make the adpater available even if the 'API' acronym is not defined
+    RailsApiAdapter = RailsAPIAdapter
   end
 end
+
