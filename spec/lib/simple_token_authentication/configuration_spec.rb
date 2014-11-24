@@ -39,10 +39,10 @@ describe SimpleTokenAuthentication::Configuration do
       it_behaves_like 'a configuration option', 'adapters_dependencies'
 
       it 'lists the supported adapters dependencies by default', private: true do
-        expect(@subject.adapters_dependencies['active_record']).to eq '::ActiveRecord::Base'
-        expect(@subject.adapters_dependencies['mongoid']).to eq '::Mongoid::Document'
-        expect(@subject.adapters_dependencies['rails']).to eq '::ActionController::Base'
-        expect(@subject.adapters_dependencies['rails_api']).to eq '::ActionController::API'
+        expect(@subject.adapters_dependencies['active_record']).to eq 'ActiveRecord::Base'
+        expect(@subject.adapters_dependencies['mongoid']).to eq 'Mongoid::Document'
+        expect(@subject.adapters_dependencies['rails']).to eq 'ActionController::Base'
+        expect(@subject.adapters_dependencies['rails_api']).to eq 'ActionController::API'
       end
     end
 
