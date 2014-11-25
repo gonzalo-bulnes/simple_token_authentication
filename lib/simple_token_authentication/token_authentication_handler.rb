@@ -54,8 +54,8 @@ module SimpleTokenAuthentication
 
       # Rails 3 and 4 finder methods are supported,
       # see https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
-      record = nil
-      record = email && entity.model.where(email: email).first
+      email.downcase! if email && Devise.case_insensitive_keys.include?(:email)
+      email && entity.model.where(email: email).first
     end
 
     def token_comparator
