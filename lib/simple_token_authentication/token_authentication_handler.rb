@@ -1,4 +1,5 @@
 require 'active_support/concern'
+require 'devise'
 
 require 'simple_token_authentication/entities_manager'
 require 'simple_token_authentication/fallback_authentication_handler'
@@ -51,6 +52,10 @@ module SimpleTokenAuthentication
 
     def find_record_from_identifier(entity)
       email = entity.get_identifier_from_params_or_headers(self).presence
+
+      # Take benefit from Devise case-insensitive keys,
+      # see https://github.com/plataformatec/devise/blob/v3.4.1/lib/generators/templates/devise.rb#L45-L48
+      email.downcase! if email && Devise.case_insensitive_keys.include?(:email)
 
       # The finder method should be compatible with all the model adapters,
       # namely ActiveRecord and Mongoid in all their supported versions.
