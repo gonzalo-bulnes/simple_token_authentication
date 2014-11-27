@@ -135,6 +135,107 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
     end
   end
 
+  describe '#find_record_from_identifier', private: true do
+
+    before(:each) do
+      @entity = double()
+    end
+
+    context 'when the Devise config. does not defines the identifier as a case-insentitive key' do
+
+      before(:each) do
+        allow(Devise).to receive_message_chain(:case_insensitive_keys, :include?)
+        .with(:email).and_return(false)
+      end
+
+      context 'when a downcased identifier was provided' do
+
+        before(:each) do
+          allow(@entity).to receive(:get_identifier_from_params_or_headers)
+          .and_return('alice@example.com')
+        end
+
+        it 'returns the proper record if any' do
+          # let's say there is a record
+          record = double()
+          allow(@entity).to receive_message_chain(:model, :where).with(email: 'alice@example.com')
+          .and_return([record])
+
+          expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+        end
+      end
+
+      context 'when a upcased identifier was provided' do
+
+        before(:each) do
+          allow(@entity).to receive(:get_identifier_from_params_or_headers)
+          .and_return('AliCe@ExampLe.Com')
+        end
+
+        it 'does not return any record' do
+          # let's say there is a record...
+          record = double()
+          # ...whose identifier is downcased...
+          allow(@entity).to receive_message_chain(:model, :where).with(email: 'alice@example.com')
+          .and_return([record])
+          # ...not upcased
+          allow(@entity).to receive_message_chain(:model, :where).with(email: 'AliCe@ExampLe.Com')
+          .and_return([])
+
+          expect(subject.new.send(:find_record_from_identifier, @entity)).to be_nil
+        end
+      end
+    end
+
+
+    context 'when the Devise config. defines the identifier as a case-insentitive key' do
+
+      before(:each) do
+        allow(Devise).to receive_message_chain(:case_insensitive_keys, :include?)
+        .with(:email).and_return(true)
+      end
+
+      context 'and a downcased identifier was provided' do
+
+        before(:each) do
+          allow(@entity).to receive(:get_identifier_from_params_or_headers)
+          .and_return('alice@example.com')
+        end
+
+        it 'returns the proper record if any' do
+          # let's say there is a record
+          record = double()
+          allow(@entity).to receive_message_chain(:model, :where).with(email: 'alice@example.com')
+          .and_return([record])
+
+          expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+        end
+      end
+
+      context 'and a upcased identifier was provided' do
+
+        before(:each) do
+          allow(@entity).to receive(:get_identifier_from_params_or_headers)
+          .and_return('AliCe@ExampLe.Com')
+        end
+
+        it 'returns the proper record if any' do
+          # let's say there is a record...
+          record = double()
+          # ...whose identifier is downcased...
+          allow(@entity).to receive_message_chain(:model, :where)
+          allow(@entity).to receive_message_chain(:model, :where).with(email: 'alice@example.com')
+          .and_return([record])
+          # ...not upcased
+          allow(@entity).to receive_message_chain(:model, :where).with(email: 'AliCe@ExampLe.Com')
+          .and_return([])
+
+          expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+        end
+      end
+    end
+  end
+
   describe 'and which supports the :before_filter hook' do
 
     before(:each) do
