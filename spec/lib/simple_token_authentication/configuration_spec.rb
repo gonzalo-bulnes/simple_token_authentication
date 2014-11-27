@@ -34,6 +34,17 @@ describe SimpleTokenAuthentication::Configuration do
       end
     end
 
+    describe 'provides #adapters_dependencies which' do
+
+      it_behaves_like 'a configuration option', 'adapters_dependencies'
+
+      it 'lists the supported adapters dependencies by default', private: true do
+        expect(@subject.adapters_dependencies['active_record']).to eq 'ActiveRecord::Base'
+        expect(@subject.adapters_dependencies['mongoid']).to eq 'Mongoid::Document'
+        expect(@subject.adapters_dependencies['rails']).to eq 'ActionController::Base'
+      end
+    end
+
     describe 'provides #header_names which', header_names_option: true do
 
       it_behaves_like 'a configuration option', 'header_names'

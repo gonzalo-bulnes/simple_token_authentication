@@ -47,7 +47,7 @@ module SimpleTokenAuthentication
   end
 
   def self.adapter_dependency_fulfilled? adapter_short_name
-    const_defined?(adapter_short_name.camelize)
+    qualified_const_defined?(SimpleTokenAuthentication.adapters_dependencies[adapter_short_name])
   end
 
   available_model_adapters = load_available_adapters SimpleTokenAuthentication.model_adapters
