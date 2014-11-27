@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+def skip_devise_case_insensitive_keys_integration!(controller)
+  allow(controller).to receive(:integrate_with_devise_case_insensitive_keys) do |email|
+    email # return the email without modification
+  end
+end
+
 describe 'Simple Token Authentication' do
 
   describe ':header_names option', header_names_option: true do
@@ -36,6 +42,7 @@ describe 'Simple Token Authentication' do
 
         @controller = @controller_class.new
         allow(@controller).to receive(:sign_in_handler).and_return(:sign_in_handler)
+        skip_devise_case_insensitive_keys_integration!(@controller)
       end
 
 
@@ -441,6 +448,8 @@ describe 'Simple Token Authentication' do
       # even if modified *after* the class was loaded
       allow(SimpleTokenAuthentication).to receive(:header_names)
         .and_return({ user: { email: 'X-UpdatedName-User-Email', authentication_token: 'X-UpdatedName-User-Token' }})
+
+      skip_devise_case_insensitive_keys_integration!(@controller)
 
       # the option updated value is taken into account
       # when token authentication is performed
