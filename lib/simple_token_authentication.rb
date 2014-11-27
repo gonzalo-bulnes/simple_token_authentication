@@ -34,16 +34,20 @@ module SimpleTokenAuthentication
   def self.load_available_adapters adapters_short_names
     available_adapters = adapters_short_names.collect do |short_name|
       adapter_name = "simple_token_authentication/adapters/#{short_name}_adapter"
-      if const_defined?(short_name.camelize) && require(adapter_name)
+      if adapter_dependency_fulfilled?(short_name) && require(adapter_name)
         adapter_name.camelize.constantize
       end
     end
     available_adapters.compact!
 
-    # stop here if no constants are defined or no adequate adapters are present
+    # stop here if dependencies are missing or no adequate adapters are present
     raise SimpleTokenAuthentication::NoAdapterAvailableError if available_adapters.empty?
 
     available_adapters
+  end
+
+  def self.adapter_dependency_fulfilled? adapter_short_name
+    const_defined?(adapter_short_name.camelize)
   end
 
   available_model_adapters = load_available_adapters SimpleTokenAuthentication.model_adapters
