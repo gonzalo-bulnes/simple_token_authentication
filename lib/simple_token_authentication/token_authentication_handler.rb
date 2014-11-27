@@ -1,4 +1,3 @@
-require 'action_controller/base'
 require 'active_support/concern'
 
 require 'simple_token_authentication/entities_manager'
@@ -13,6 +12,7 @@ module SimpleTokenAuthentication
     included do
       private_class_method :define_token_authentication_helpers_for
       private_class_method :set_token_authentication_hooks
+      private_class_method :entities_manager
       private_class_method :fallback_authentication_handler
 
       private :authenticate_entity_from_token!
@@ -52,16 +52,18 @@ module SimpleTokenAuthentication
     def find_record_from_identifier(entity)
       email = entity.get_identifier_from_params_or_headers(self).presence
 
-      # Rails 3 and 4 finder methods are supported,
-      # see https://github.com/ryanb/cancan/blob/1.6.10/lib/cancan/controller_resource.rb#L108-L111
+      # The finder method should be compatible with all the model adapters,
+      # namely ActiveRecord and Mongoid in all their supported versions.
       record = nil
       record = email && entity.model.where(email: email).first
     end
 
+    # Private: Get one (always the same) object which behaves as a token comprator
     def token_comparator
       @@token_comparator ||= TokenComparator.new
     end
 
+    # Private: Get one (always the same) object which behaves as a sign in handler
     def sign_in_handler
       @@sign_in_handler ||= SignInHandler.new
     end
@@ -80,6 +82,7 @@ module SimpleTokenAuthentication
         set_token_authentication_hooks(entity, options)
       end
 
+      # Private: Get one (always the same) object which behaves as an entities manager
       def entities_manager
         if class_variable_defined?(:@@entities_manager)
           class_variable_get(:@@entities_manager)
@@ -88,6 +91,7 @@ module SimpleTokenAuthentication
         end
       end
 
+      # Private: Get one (always the same) object which behaves as a fallback authentication handler
       def fallback_authentication_handler
         if class_variable_defined?(:@@fallback_authentication_handler)
           class_variable_get(:@@fallback_authentication_handler)
