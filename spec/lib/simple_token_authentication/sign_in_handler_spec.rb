@@ -31,13 +31,38 @@ describe SimpleTokenAuthentication::SignInHandler do
 
   describe '#integrate_with_devise_trackable!' do
 
-    it 'ensures Devise trackable statistics are kept clean', private: true do
-      controller = double()
-      env = double()
-      allow(controller).to receive(:env).and_return(env)
-      expect(env).to receive(:[]=).with('devise.skip_trackable', true)
+    context 'when the :skip_devise_trackable option is true', skip_devise_trackable_option: true do
 
-      subject.send :integrate_with_devise_trackable!, controller
+      before(:each) do
+        allow(SimpleTokenAuthentication).to receive(:skip_devise_trackable).and_return(true)
+      end
+
+      it 'ensures Devise trackable statistics are kept untouched', private: true do
+        controller = double()
+        env = double()
+        allow(controller).to receive(:env).and_return(env)
+        expect(env).to receive(:[]=).with('devise.skip_trackable', true)
+
+        subject.send :integrate_with_devise_trackable!, controller
+      end
+    end
+
+
+    context 'when the :skip_devise_trackable option is false', skip_devise_trackable_option: true do
+
+      before(:each) do
+        allow(SimpleTokenAuthentication).to receive(:skip_devise_trackable).and_return(false)
+      end
+
+      it 'ensures Devise trackable statistics are updated', private: true do
+        controller = double()
+        env = double()
+        allow(controller).to receive(:env).and_return(env)
+        expect(env).to receive(:[]=).with('devise.skip_trackable', false)
+
+        subject.send :integrate_with_devise_trackable!, controller
+      end
     end
   end
 end
+

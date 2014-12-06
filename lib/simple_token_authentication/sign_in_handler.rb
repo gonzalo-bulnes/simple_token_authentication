@@ -13,7 +13,7 @@ module SimpleTokenAuthentication
     def integrate_with_devise_trackable!(controller)
       # Sign in using token should not be tracked by Devise trackable
       # See https://github.com/plataformatec/devise/issues/953
-      controller.env["devise.skip_trackable"] = true
+      controller.env["devise.skip_trackable"] = SimpleTokenAuthentication.skip_devise_trackable
     end
   end
 end

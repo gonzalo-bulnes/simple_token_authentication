@@ -7,6 +7,7 @@ module SimpleTokenAuthentication
     mattr_accessor :controller_adapters
     mattr_accessor :model_adapters
     mattr_accessor :adapters_dependencies
+    mattr_accessor :skip_devise_trackable
 
     # Default configuration
     @@fallback = :devise
@@ -18,6 +19,7 @@ module SimpleTokenAuthentication
                                 'mongoid'       => 'Mongoid::Document',
                                 'rails'         => 'ActionController::Base',
                                 'rails_api'     => 'ActionController::API' }
+    @@skip_devise_trackable = true
 
     # Allow the default configuration to be overwritten from initializers
     def configure

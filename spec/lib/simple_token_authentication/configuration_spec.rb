@@ -79,6 +79,15 @@ describe SimpleTokenAuthentication::Configuration do
       end
     end
 
+    describe 'provides #skip_devise_trackable which', skip_devise_trackable_option: true do
+
+      it_behaves_like 'a configuration option', 'skip_devise_trackable'
+
+      it "defaults to true", public: true do
+        expect(@subject.skip_devise_trackable).to eq true
+      end
+    end
+
     describe 'provides #parse_options which' do
 
       describe 'replaces :fallback_to_devise by :fallback' do
