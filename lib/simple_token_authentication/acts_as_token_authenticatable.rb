@@ -24,6 +24,10 @@ module SimpleTokenAuthentication
       end
     end
 
+    def reset_authentication_token
+      self.authentication_token = generate_authentication_token(token_generator)
+    end
+
     def generate_authentication_token(token_generator)
       loop do
         token = token_generator.generate_token

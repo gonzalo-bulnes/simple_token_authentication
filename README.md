@@ -20,7 +20,7 @@ This gem packages the content of the gist.
 
   [josevalim]: https://github.com/josevalim
   [gonzalo-bulnes]: https://github.com/gonzalo-bulnes
-
+  
 Installation
 ------------
 
@@ -135,9 +135,21 @@ SimpleTokenAuthentication.configure do |config|
   # in other words, if the authentication token acts as a signin token.
   # If true, user is stored in the session and the authentication token and
   # email may be provided only once.
-  # If false, users must provide their authentication token and email at every request.
+  # If false, users must provide their authentication token and email or record_key (Eg: username) at every request.
   # config.sign_in_token = false
-
+  #
+  #
+  # Set the record key to find a user. Default is :email
+  # config.record_key = :email
+  #
+  #
+  # Set if the value for record key is case insensitive or not. Default is false.
+  # Example: abc@example.com != Abc@example.com
+  #           when case_insensitive_key is set to false
+  # config.case_insensitive_key = false
+  #
+  # 
+  # 
   # Configure the name of the HTTP headers watched for authentication.
   #
   # Default header names for a given token authenticatable entity follow the pattern:
@@ -157,7 +169,14 @@ SimpleTokenAuthentication.configure do |config|
   #     `X-Admin-Auth-Token, X-SuperAdmin-Email`
   #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
-
+  #
+  # You can change header names the user key from email to username for example.
+  # Example: 
+  #    config.header_names = { user: { authentication_token: 'X-User-Token', username: 'X-User-Username' } }
+  #
+  #
+  #
+  #
   # Configure the Devise trackable strategy integration.
   #
   # If true, tracking is disabled for token authentication: signing in through
@@ -167,6 +186,7 @@ SimpleTokenAuthentication.configure do |config|
   # then signing in through token authentication will be tracked as any other sign in.
   #
   # config.skip_devise_trackable = true
+  #
 end
 ```
 
@@ -176,6 +196,11 @@ Usage
 ### Tokens Generation
 
 Assuming `user` is an instance of `User`, which is _token authenticatable_: each time `user` will be saved, and `user.authentication_token.blank?` it receives a new and unique authentication token (via `Devise.friendly_token`).
+
+NOTE:
+The gem adds a before_filter :ensure_authentication_token to ensure each record has a authentication token.
+
+You can also use "reset_authentication_token" method for a user object if you wish to regenerate the token in some specific scenario.
 
 ### Authentication Method 1: Query Params
 

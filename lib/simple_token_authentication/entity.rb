@@ -3,6 +3,7 @@ module SimpleTokenAuthentication
     def initialize model
       @model = model
       @name = model.name
+      @model_key = SimpleTokenAuthentication.record_key || :email
     end
 
     def model
@@ -30,7 +31,7 @@ module SimpleTokenAuthentication
     # Private: Return the name of the header to watch for the email param
     def identifier_header_name
       if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence \
-        && identifier_header_name = SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:email]
+        && identifier_header_name = SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][@model_key]
         identifier_header_name
       else
         "X-#{name}-Email"
@@ -42,7 +43,7 @@ module SimpleTokenAuthentication
     end
 
     def identifier_param_name
-      "#{name_underscore}_email".to_sym
+      "#{name_underscore}_#{@model_key.to_s}".to_sym
     end
 
     def get_token_from_params_or_headers controller
@@ -54,9 +55,9 @@ module SimpleTokenAuthentication
     end
 
     def get_identifier_from_params_or_headers controller
-      # if the identifier (email) is not present among params, get it from headers
-      if email = controller.params[identifier_param_name].blank? && controller.request.headers[identifier_header_name]
-        controller.params[identifier_param_name] = email
+      # if the identifier (email | model key) is not present among params, get it from headers
+      if model_key = controller.params[identifier_param_name].blank? && controller.request.headers[identifier_header_name]
+        controller.params[identifier_param_name] = model_key
       end
       controller.params[identifier_param_name]
     end
