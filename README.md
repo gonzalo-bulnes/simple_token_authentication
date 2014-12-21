@@ -197,6 +197,11 @@ Usage
 
 Assuming `user` is an instance of `User`, which is _token authenticatable_: each time `user` will be saved, and `user.authentication_token.blank?` it receives a new and unique authentication token (via `Devise.friendly_token`).
 
+NOTE:
+The gem adds a before_filter :ensure_authentication_token to ensure each record has a authentication token.
+
+You can also use "reset_authentication_token" method for a user object if you wish to regenerate the token in some specific scenario.
+
 ### Authentication Method 1: Query Params
 
 You can authenticate passing the `user_email` and `user_token` params as query params:
