@@ -8,6 +8,8 @@ module SimpleTokenAuthentication
     mattr_accessor :model_adapters
     mattr_accessor :adapters_dependencies
     mattr_accessor :skip_devise_trackable
+    mattr_accessor :record_key
+    mattr_accessor :case_insensitive_key
 
     # Default configuration
     @@fallback = :devise
@@ -20,6 +22,8 @@ module SimpleTokenAuthentication
                                 'rails'         => 'ActionController::Base',
                                 'rails_api'     => 'ActionController::API' }
     @@skip_devise_trackable = true
+    @@record_key = :email
+    @@case_insensitive_key = :false
 
     # Allow the default configuration to be overwritten from initializers
     def configure

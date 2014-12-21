@@ -138,6 +138,22 @@ SimpleTokenAuthentication.configure do |config|
   # If false, users must provide their authentication token and email at every request.
   # config.sign_in_token = false
 
+
+
+  #
+  # Set the record key to find a user. Default is :email
+  # config.record_key = :email
+  config.record_key = :username
+  #
+  #
+  # Set if the value for record key is case insensitive or not. Default is false.
+  # Example: abc@example.com != Abc@example.com
+  # when case_insensitive_key is set to false
+  #
+  # config.case_insensitive_key = false
+
+
+
   # Configure the name of the HTTP headers watched for authentication.
   #
   # Default header names for a given token authenticatable entity follow the pattern:
@@ -157,7 +173,15 @@ SimpleTokenAuthentication.configure do |config|
   #     `X-Admin-Auth-Token, X-SuperAdmin-Email`
   #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
-
+  #
+  #
+  #
+  # You can change header names the user key from email to username for example.
+  # Example: config.header_names = { user: { authentication_token: 'X-User-Token', username: 'X-User-Username' } }
+  #
+  #
+  #
+  #
   # Configure the Devise trackable strategy integration.
   #
   # If true, tracking is disabled for token authentication: signing in through
@@ -167,6 +191,7 @@ SimpleTokenAuthentication.configure do |config|
   # then signing in through token authentication will be tracked as any other sign in.
   #
   # config.skip_devise_trackable = true
+  #
 end
 ```
 
