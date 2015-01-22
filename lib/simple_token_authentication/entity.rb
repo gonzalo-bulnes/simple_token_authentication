@@ -14,7 +14,7 @@ module SimpleTokenAuthentication
     end
 
     def name_underscore
-      name.underscore
+      name.underscore.gsub("/", "_")
     end
 
     # Private: Return the name of the header to watch for the token authentication param

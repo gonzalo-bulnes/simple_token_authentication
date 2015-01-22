@@ -78,3 +78,9 @@ def double_super_admin_model
   stub_const('SuperAdmin', super_admin)
   allow(super_admin).to receive(:name).and_return('SuperAdmin')
 end
+
+def double_namespaced_user_model
+  namespaced_user = double()
+  stub_const('Namespaced::User', namespaced_user)
+  allow(namespaced_user).to receive(:name).and_return('Namespaced::User')
+end
