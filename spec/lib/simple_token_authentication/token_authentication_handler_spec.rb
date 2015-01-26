@@ -146,6 +146,8 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       before(:each) do
         allow(Devise).to receive_message_chain(:case_insensitive_keys, :include?)
         .with(:email).and_return(false)
+        allow(@entity).to receive(:identifier)
+        .and_return(:email)
       end
 
       context 'when a downcased identifier was provided' do
@@ -193,6 +195,8 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       before(:each) do
         allow(Devise).to receive_message_chain(:case_insensitive_keys, :include?)
         .with(:email).and_return(true)
+        allow(@entity).to receive(:identifier)
+        .and_return(:email)
       end
 
       context 'and a downcased identifier was provided' do
@@ -229,6 +233,27 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           # ...not upcased
           allow(@entity).to receive_message_chain(:model, :where).with(email: 'AliCe@ExampLe.Com')
           .and_return([])
+
+          expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+        end
+      end
+    end
+
+    context 'when using a key that is not the default email key' do
+
+      before(:each) do
+        allow(@entity).to receive(:get_identifier_from_params_or_headers)
+        .and_return('15558381234')
+        allow(@entity).to receive(:identifier)
+        .and_return(:phone_number)
+      end
+
+      context 'record exists' do
+        it 'returns the proper record' do
+          # let's say there is a record
+          record = double()
+          allow(@entity).to receive_message_chain(:model, :where).with(phone_number: '15558381234')
+          .and_return([record])
 
           expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
         end

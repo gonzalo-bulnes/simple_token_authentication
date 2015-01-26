@@ -158,6 +158,17 @@ SimpleTokenAuthentication.configure do |config|
   #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
 
+  # Configure the name of the attribute used to identify the user for authentication.
+  # This attribute should exist in your model
+  #
+  # Default parameter follows the following pattern:
+  # { entity: 'email' }
+  #
+  # This parameter should match the main parameter you set up in your Devise configuration.
+  # Check: https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address#tell-devise-to-use-username-in-the-authentication_keys
+  #
+  # config.identifier = { user: 'email' }
+
   # Configure the Devise trackable strategy integration.
   #
   # If true, tracking is disabled for token authentication: signing in through

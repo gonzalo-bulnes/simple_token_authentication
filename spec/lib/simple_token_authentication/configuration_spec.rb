@@ -55,6 +55,15 @@ describe SimpleTokenAuthentication::Configuration do
       end
     end
 
+    describe 'provides #identifier which', header_names_option: true do
+
+      it_behaves_like 'a configuration option', 'identifier'
+
+      it 'defauts to {}', public: true  do
+        expect(@subject.identifier).to eq({})
+      end
+    end
+
     describe 'provides #sign_in_token which', sign_in_token_option: true do
 
       it_behaves_like 'a configuration option', 'sign_in_token'

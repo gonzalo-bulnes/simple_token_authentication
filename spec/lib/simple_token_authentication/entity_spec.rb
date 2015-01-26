@@ -81,8 +81,65 @@ describe SimpleTokenAuthentication::Entity do
       expect(@subject.identifier_header_name).to be_instance_of String
     end
 
-    it 'defines a non-standard header field' do
-      expect(@subject.identifier_header_name[0..1]).to eq 'X-'
+    context "custom header name for identifier" do
+      context "for default identifier" do
+        it 'returns the custom header name' do
+          allow(SimpleTokenAuthentication).to receive(:header_names)
+                  .and_return({ super_user: { email: 'X-CustomEmail',
+                                        authentication_token: 'X-Custom_Token' } })
+          expect(@subject.identifier_header_name).to eq 'X-CustomEmail'
+        end
+      end
+
+      context "for custom identifier" do
+        it 'returns the custom header name' do
+          allow(SimpleTokenAuthentication).to receive(:identifier).
+          and_return({ super_user: 'phone_number' })
+          allow(SimpleTokenAuthentication).to receive(:header_names)
+                  .and_return({ super_user: { phone_number: 'X-Custom-phone_num',
+                                        authentication_token: 'X-Custom_Token' } })
+          expect(@subject.identifier_header_name).to eq 'X-Custom-phone_num'
+        end
+      end
+    end
+
+    context "no custom header name for identifier" do
+       context "for default identifier" do
+        it 'returns the default header for default identifier' do
+          expect(@subject.identifier_header_name).to eq 'X-SuperUser-Email'
+        end
+      end
+
+      context "for custom identifier" do
+        it 'returns the defautl header for customer identifier' do
+          allow(SimpleTokenAuthentication).to receive(:identifier).
+          and_return({ super_user: 'phone_number' })
+          expect(@subject.identifier_header_name).to eq 'X-SuperUser-PhoneNumber'
+        end
+      end
+    end
+
+
+    
+  end
+
+  describe '#identifier', protected: true do
+    it 'is a Symbol' do
+      expect(@subject.identifier).to be_instance_of Symbol
+    end
+
+    context "custom identifier is set" do
+      it 'returns the custom identifier' do
+        allow(SimpleTokenAuthentication).to receive(:identifier).
+          and_return({ super_user: 'phone_number' })
+        expect(@subject.identifier).to eq :phone_number
+      end
+    end
+
+    context "custom identifier is not set" do
+      it 'returns email' do
+        expect(@subject.identifier).to eq :email
+      end
     end
   end
 
