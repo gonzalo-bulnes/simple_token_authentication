@@ -30,10 +30,10 @@ module SimpleTokenAuthentication
     # Private: Return the name of the header to watch for the email param
     def identifier_header_name
       if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence \
-        && identifier_header_name = SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:email]
+        && identifier_header_name = SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][identifier]
         identifier_header_name
       else
-        "X-#{name}-Email"
+        "X-#{name}-#{identifier.to_s.camelize}"
       end
     end
 
@@ -42,7 +42,15 @@ module SimpleTokenAuthentication
     end
 
     def identifier_param_name
-      "#{name_underscore}_email".to_sym
+      "#{name_underscore}_#{identifier}".to_sym
+    end
+
+    def identifier
+      if custom_identifier = SimpleTokenAuthentication.identifiers["#{name_underscore}".to_sym]
+        custom_identifier.to_sym
+      else
+        :email
+      end
     end
 
     def get_token_from_params_or_headers controller
@@ -54,9 +62,9 @@ module SimpleTokenAuthentication
     end
 
     def get_identifier_from_params_or_headers controller
-      # if the identifier (email) is not present among params, get it from headers
-      if email = controller.params[identifier_param_name].blank? && controller.request.headers[identifier_header_name]
-        controller.params[identifier_param_name] = email
+      # if the identifier is not present among params, get it from headers
+      if identifer_param = controller.params[identifier_param_name].blank? && controller.request.headers[identifier_header_name]
+        controller.params[identifier_param_name] = identifer_param
       end
       controller.params[identifier_param_name]
     end

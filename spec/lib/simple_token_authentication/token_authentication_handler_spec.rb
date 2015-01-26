@@ -139,6 +139,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
     before(:each) do
       @entity = double()
+      allow(@entity).to receive(:identifier).and_return(:email)
     end
 
     context 'when the Devise config. does not defines the identifier as a case-insentitive key' do

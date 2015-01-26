@@ -146,6 +146,9 @@ SimpleTokenAuthentication.configure do |config|
   # When several token authenticatable models are defined, custom header names
   # can be specified for none, any, or all of them.
   #
+  # Note: when using the identifiers options, this option behaviour is modified.
+  # Please see the example below.
+  #
   # Examples
   #
   #   Given User and SuperAdmin are token authenticatable,
@@ -156,7 +159,30 @@ SimpleTokenAuthentication.configure do |config|
   #   And the token authentification handler for SuperAdmin watches the following headers:
   #     `X-Admin-Auth-Token, X-SuperAdmin-Email`
   #
+  #   When the identifiers option is set:
+  #     `config.identifiers = { super_admin: :phone_number }`
+  #   Then both the header names identifier key and default value are modified accordingly:
+  #     `config.header_names = { super_admin: { phone_number: 'X-SuperAdmin-PhoneNumber' } }`
+  #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
+
+  # Configure the name of the attribute used to identify the user for authentication.
+  # That attribute must exist in your model.
+  #
+  # The default identifiers follow the pattern:
+  # { entity: 'email' }
+  #
+  # Note: the identifer must match your Devise configuration,
+  # see https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address#tell-devise-to-use-username-in-the-authentication_keys
+  #
+  # Note: setting this option does modify the header_names behaviour,
+  # see the header_names section above.
+  #
+  # Example:
+  #
+  #   `config.identifiers = { super_admin: 'phone_number', user: 'uuid' }`
+  #
+  # config.identifiers = { user: 'email' }
 
   # Configure the Devise trackable strategy integration.
   #
