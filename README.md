@@ -1,10 +1,12 @@
 Simple Token Authentication
 ===========================
 
-[![Gem Version](https://badge.fury.io/rb/simple_token_authentication.png)](http://badge.fury.io/rb/simple_token_authentication)
-[![Build Status](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication.png?branch=master)](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication)
-[![Code Climate](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication.png)](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication)
+[![Gem Version](https://badge.fury.io/rb/simple_token_authentication.svg)](http://badge.fury.io/rb/simple_token_authentication)
+[![Build Status](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication.svg?branch=master)](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication)
+[![Code Climate](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication.svg)](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication)
 [![Dependency Status](https://gemnasium.com/gonzalo-bulnes/simple_token_authentication.svg)](https://gemnasium.com/gonzalo-bulnes/simple_token_authentication)
+[![security](https://hakiri.io/github/gonzalo-bulnes/simple_token_authentication/master.svg)](https://hakiri.io/github/gonzalo-bulnes/simple_token_authentication/master)
+[![Inline docs](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication.svg?branch=master)](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication)
 
 Token authentication support has been removed from [Devise][devise] for security reasons. In [this gist][original-gist], Devise's [José Valim][josevalim] explains how token authentication should be performed in order to remain safe.
 
@@ -27,8 +29,12 @@ Install [Devise][devise] with any modules you want, then add the gem to your `Ge
 ```ruby
 # Gemfile
 
-gem 'simple_token_authentication'
+gem 'simple_token_authentication', '~> 1.0' # see semver.org
 ```
+
+### Make models token authenticatable
+
+#### ActiveRecord
 
 First define which model or models will be token authenticatable (typ. `User`):
 
@@ -59,12 +65,36 @@ rails g migration add_authentication_token_to_users authentication_token:string:
 rake db:migrate
 ```
 
-Finally define which controller will handle authentication (typ. `ApplicationController`) for which _token authenticatable_ model:
+#### Mongoid
+
+Define which model or models will be token authenticatable (typ. `User`):
+
+```ruby
+# app/models/user.rb
+
+class User
+  include Mongoid::Document
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
+
+  ## Token Authenticatable
+  acts_as_token_authenticatable
+  field :authentication_token
+
+  # ...
+end
+```
+
+### Allow controllers to handle token authentication
+
+Finally define which controllers will handle token authentication (typ. `ApplicationController`) for which _token authenticatable_ models:
 
 ```ruby
 # app/controllers/application_controller.rb
 
-class ApplicationController < ActionController::Base
+class ApplicationController < ActionController::Base # or ActionController::API
   # ...
 
   acts_as_token_authentication_handler_for User
@@ -128,6 +158,15 @@ SimpleTokenAuthentication.configure do |config|
   #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
 
+  # Configure the Devise trackable strategy integration.
+  #
+  # If true, tracking is disabled for token authentication: signing in through
+  # token authentication won't modify the Devise trackable statistics.
+  #
+  # If false, given Devise trackable is configured for the relevant model,
+  # then signing in through token authentication will be tracked as any other sign in.
+  #
+  # config.skip_devise_trackable = true
 end
 ```
 
@@ -170,19 +209,6 @@ If sign-in is successful, no other authentication method will be run, but if it 
 Documentation
 -------------
 
-### Executable documentation
-
-The Cucumber scenarii describe how to setup demonstration applications for different use cases. While you can read the `rake` output, you may prefer to read it in HTML format: see `doc/features.html`. The file is generated automatically by Cucumber, if necessary, you can update it by yourself:
-
-```bash
-cd simple_token_authentication
-rake features_html # generate the features documentation
-
-# Open doc/features.html in your preferred web browser.
-```
-
-I find that HTML output quite enjoyable, I hope you'll do so!
-
 ### Frequently Asked Questions
 
 Any question? Please don't hesitate to open a new issue to get help. I keep questions tagged to make possible to [review the open questions][open-questions], while closed questions are organized as a sort of [FAQ][faq].
@@ -199,18 +225,23 @@ Releases are commented to provide a brief [changelog][changelog].
 Development
 -----------
 
-### Testing
+### Testing and documentation
 
-Since `v1.0.0`, this gem development is test-driven. Each use case should be described with [RSpec][rspec] within an example app. That app will be created and configured automatically by [Aruba][aruba] as a [Cucumber][cucumber] feature.
+This gem development has been test-driven since `v1.0.0`. Until `v1.5.1`, the gem behaviour was described using [Cucumber][cucumber] and [RSpec][rspec] in a dummy app generated by [Aruba][aruba]. Since `v1.5.2` it is described using Rspec alone.
 
-The resulting Cucumber features are a bit verbose, and their output when errors occur is not ideal, but their output when they are passing, on the contrary, provides an easy-to-reproduce recipe to build the example app (see [Executable documentation][exec-doc]). I find that useful enough to be patient with red scenarii for now.
+RSpec [tags][tags] are used to categorize the spec examples.
+
+Spec examples that are tagged as `public` describe aspects of the gem public API, and MAY be considered as the gem documentation.
+
+The `private` or `protected` specs are written for development purpose only. Because they describe internal behaviour which may change at any moment without notice, they are only executed as a secondary task by the [continuous integration service][travis] and SHOULD be ignored.
+
+Run `rake spec:public` to print the gem public documentation.
 
   [aruba]: https://github.com/cucumber/aruba
   [cucumber]: https://github.com/cucumber/cucumber-rails
   [rspec]: https://www.relishapp.com/rspec/rspec-rails/docs
-  [exec-doc]: https://github.com/gonzalo-bulnes/simple_token_authentication#executable-documentation
-
-You can run the full test suite with `cd simple_token_authentication && rake`.
+  [tags]: https://www.relishapp.com/rspec/rspec-core/v/3-1/docs/command-line/tag-option
+  [travis]: https://travis-ci.org/gonzalo-bulnes/simple_token_authentication/builds
 
 ### Contributions
 
@@ -218,16 +249,21 @@ Contributions are welcome! I'm not personally maintaining any [list of contribut
 
   [contributors]: https://github.com/gonzalo-bulnes/simple_token_authentication/graphs/contributors
 
+Please be sure to [review the open issues][open-questions] and contribute with your ideas or code in the issue best suited to the topic. Keeping discussions in a single place makes easier to everyone interested in that topic to keep track of the contributions.
+
 Credits
 -------
 
-It may sound a bit redundant, but this gem wouldn't exist without [this gist][original-gist].
+It may sound a bit redundant, but this gem wouldn't exist without [this gist][original-gist], nor without the [comments][issues] and [contributions][pulls] of many people. Thank them if you see them!
+
+  [issues]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues
+  [pulls]: https://github.com/gonzalo-bulnes/simple_token_authentication/pulls
 
 License
 -------
 
     Simple Token Authentication
-    Copyright (C) 2013 Gonzalo Bulnes Guilpain
+    Copyright (C) 2013, 2014 Gonzalo Bulnes Guilpain
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
