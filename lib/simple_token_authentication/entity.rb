@@ -46,7 +46,7 @@ module SimpleTokenAuthentication
     end
 
     def identifier
-      if custom_identifier = SimpleTokenAuthentication.identifier["#{name_underscore}".to_sym]
+      if custom_identifier = SimpleTokenAuthentication.identifiers["#{name_underscore}".to_sym]
         custom_identifier.to_sym
       else
         :email

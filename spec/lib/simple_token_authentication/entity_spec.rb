@@ -81,6 +81,10 @@ describe SimpleTokenAuthentication::Entity do
       expect(@subject.identifier_header_name).to be_instance_of String
     end
 
+    it 'defines a non-standard header field' do
+      expect(@subject.identifier_header_name[0..1]).to eq 'X-'
+    end
+
     context "custom header name for identifier" do
       context "for default identifier" do
         it 'returns the custom header name' do
@@ -93,7 +97,7 @@ describe SimpleTokenAuthentication::Entity do
 
       context "for custom identifier" do
         it 'returns the custom header name' do
-          allow(SimpleTokenAuthentication).to receive(:identifier).
+          allow(SimpleTokenAuthentication).to receive(:identifiers).
           and_return({ super_user: 'phone_number' })
           allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ super_user: { phone_number: 'X-Custom-phone_num',
@@ -112,7 +116,7 @@ describe SimpleTokenAuthentication::Entity do
 
       context "for custom identifier" do
         it 'returns the defautl header for customer identifier' do
-          allow(SimpleTokenAuthentication).to receive(:identifier).
+          allow(SimpleTokenAuthentication).to receive(:identifiers).
           and_return({ super_user: 'phone_number' })
           expect(@subject.identifier_header_name).to eq 'X-SuperUser-PhoneNumber'
         end
@@ -130,7 +134,7 @@ describe SimpleTokenAuthentication::Entity do
 
     context "custom identifier is set" do
       it 'returns the custom identifier' do
-        allow(SimpleTokenAuthentication).to receive(:identifier).
+        allow(SimpleTokenAuthentication).to receive(:identifiers).
           and_return({ super_user: 'phone_number' })
         expect(@subject.identifier).to eq :phone_number
       end

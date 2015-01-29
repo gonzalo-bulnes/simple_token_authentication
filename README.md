@@ -167,7 +167,11 @@ SimpleTokenAuthentication.configure do |config|
   # This parameter should match the main parameter you set up in your Devise configuration.
   # Check: https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address#tell-devise-to-use-username-in-the-authentication_keys
   #
-  # config.identifier = { user: 'email' }
+  # Here is an example if you'd like use a users uid instead of email:
+  # config.identifiers = { user: 'uid' }
+  # 
+  # *Note this would also change the default header_names as follows
+  # config.header_names = { user: { authentication_token: 'X-User-Token', uid: 'X-User-Uid' } }
 
   # Configure the Devise trackable strategy integration.
   #
