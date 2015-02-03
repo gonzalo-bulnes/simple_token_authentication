@@ -70,7 +70,7 @@ module SimpleTokenAuthentication
     #
     # Returns an identifier String value which case follows the Devise case-insensitive keys policy
     def integrate_with_devise_case_insensitive_keys(identifier_value, entity)
-      identifier_value.downcase! if identifier_value && Devise.case_insensitive_keys.include?(:email)
+      identifier_value.downcase! if identifier_value && Devise.case_insensitive_keys.include?(entity.identifier)
       identifier_value
     end
 
