@@ -146,6 +146,9 @@ SimpleTokenAuthentication.configure do |config|
   # When several token authenticatable models are defined, custom header names
   # can be specified for none, any, or all of them.
   #
+  # Note: when using the identifiers options, this option behaviour is modified.
+  # Please see the example below.
+  #
   # Examples
   #
   #   Given User and SuperAdmin are token authenticatable,
@@ -156,7 +159,30 @@ SimpleTokenAuthentication.configure do |config|
   #   And the token authentification handler for SuperAdmin watches the following headers:
   #     `X-Admin-Auth-Token, X-SuperAdmin-Email`
   #
+  #   When the identifiers option is set:
+  #     `config.identifiers = { super_admin: :phone_number }`
+  #   Then both the header names identifier key and default value are modified accordingly:
+  #     `config.header_names = { super_admin: { phone_number: 'X-SuperAdmin-PhoneNumber' } }`
+  #
   # config.header_names = { user: { authentication_token: 'X-User-Token', email: 'X-User-Email' } }
+
+  # Configure the name of the attribute used to identify the user for authentication.
+  # That attribute must exist in your model.
+  #
+  # The default identifiers follow the pattern:
+  # { entity: 'email' }
+  #
+  # Note: the identifer must match your Devise configuration,
+  # see https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address#tell-devise-to-use-username-in-the-authentication_keys
+  #
+  # Note: setting this option does modify the header_names behaviour,
+  # see the header_names section above.
+  #
+  # Example:
+  #
+  #   `config.identifiers = { super_admin: 'phone_number', user: 'uuid' }`
+  #
+  # config.identifiers = { user: 'email' }
 
   # Configure the Devise trackable strategy integration.
   #
@@ -202,7 +228,7 @@ In fact, you can mix both methods and provide the `user_email` with one and the 
 
 If sign-in is successful, no other authentication method will be run, but if it doesn't (the authentication params were missing, or incorrect) then Devise takes control and tries to `authenticate_user!` with its own modules. That behaviour can however be modified for any controller through the **fallback_to_devise** option.
 
-**Important**: Please do notice that controller actions whithout CSRF protection **must** disable the Devise fallback for [security reasons][csrf]. Since Rails enables CSRF protection by default, this configuration requirement should only affect controllers where you have disabled it, which may be the case of API controllers.
+**Important**: Please do notice that controller actions without CSRF protection **must** disable the Devise fallback for [security reasons][csrf]. Since Rails enables CSRF protection by default, this configuration requirement should only affect controllers where you have disabled it, which may be the case of API controllers.
 
   [csrf]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues/49
 

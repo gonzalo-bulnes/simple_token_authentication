@@ -139,6 +139,8 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
     before(:each) do
       @entity = double()
+      # default identifer is :email
+      allow(@entity).to receive(:identifier).and_return(:email)
     end
 
     context 'when the Devise config. does not defines the identifier as a case-insentitive key' do
@@ -187,7 +189,6 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       end
     end
 
-
     context 'when the Devise config. defines the identifier as a case-insentitive key' do
 
       before(:each) do
@@ -231,6 +232,106 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           .and_return([])
 
           expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+        end
+      end
+    end
+
+    context 'when a custom identifier was defined', identifiers_option: true do
+
+      before(:each) do
+        allow(@entity).to receive(:identifier).and_return(:phone_number)
+      end
+
+      context 'when the Devise config. does not defines the identifier as a case-insentitive key' do
+
+        before(:each) do
+          allow(Devise).to receive_message_chain(:case_insensitive_keys, :include?)
+          .with(:phone_number).and_return(false)
+        end
+
+        context 'when a downcased identifier was provided' do
+
+          before(:each) do
+            allow(@entity).to receive(:get_identifier_from_params_or_headers)
+            .and_return('alice@example.com')
+          end
+
+          it 'returns the proper record if any' do
+            # let's say there is a record
+            record = double()
+            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'alice@example.com')
+            .and_return([record])
+
+            expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+          end
+        end
+
+        context 'when a upcased identifier was provided' do
+
+          before(:each) do
+            allow(@entity).to receive(:get_identifier_from_params_or_headers)
+            .and_return('AliCe@ExampLe.Com')
+          end
+
+          it 'does not return any record' do
+            # let's say there is a record...
+            record = double()
+            # ...whose identifier is downcased...
+            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'alice@example.com')
+            .and_return([record])
+            # ...not upcased
+            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'AliCe@ExampLe.Com')
+            .and_return([])
+
+            expect(subject.new.send(:find_record_from_identifier, @entity)).to be_nil
+          end
+        end
+      end
+
+      context 'when the Devise config. defines the identifier as a case-insentitive key' do
+
+        before(:each) do
+          allow(Devise).to receive_message_chain(:case_insensitive_keys, :include?)
+          .with(:phone_number).and_return(true)
+        end
+
+        context 'and a downcased identifier was provided' do
+
+          before(:each) do
+            allow(@entity).to receive(:get_identifier_from_params_or_headers)
+            .and_return('alice@example.com')
+          end
+
+          it 'returns the proper record if any' do
+            # let's say there is a record
+            record = double()
+            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'alice@example.com')
+            .and_return([record])
+
+            expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+          end
+        end
+
+        context 'and a upcased identifier was provided' do
+
+          before(:each) do
+            allow(@entity).to receive(:get_identifier_from_params_or_headers)
+            .and_return('AliCe@ExampLe.Com')
+          end
+
+          it 'returns the proper record if any' do
+            # let's say there is a record...
+            record = double()
+            # ...whose identifier is downcased...
+            allow(@entity).to receive_message_chain(:model, :where)
+            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'alice@example.com')
+            .and_return([record])
+            # ...not upcased
+            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'AliCe@ExampLe.Com')
+            .and_return([])
+
+            expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+          end
         end
       end
     end
