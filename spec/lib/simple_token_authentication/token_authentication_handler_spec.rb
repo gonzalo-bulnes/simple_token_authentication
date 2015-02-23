@@ -448,5 +448,58 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         end
       end
     end
+
+    # Namespaced::User
+
+    context 'and which handles token authentication for Namespaced::User' do
+
+      before(:each) do
+        double_namespaced_user_model
+      end
+
+      it 'ensures its instances require namespaced_user to authenticate from token or any Devise strategy before any action', public: true do
+        expect(subject).to receive(:before_filter).with(:authenticate_namespaced_user_from_token!, {})
+        subject.handle_token_authentication_for Namespaced::User
+      end
+
+      context 'and disables the fallback to Devise authentication' do
+
+        let(:options) do
+          { fallback_to_devise: false }
+        end
+
+        it 'ensures its instances require namespaced_user to authenticate from token before any action', public: true do
+          expect(subject).to receive(:before_filter).with(:authenticate_namespaced_user_from_token, {})
+          subject.handle_token_authentication_for Namespaced::User, options
+        end
+      end
+
+      describe 'instance' do
+
+        before(:each) do
+          double_namespaced_user_model
+
+          subject.class_eval do
+            handle_token_authentication_for Namespaced::User
+          end
+        end
+
+        it 'responds to :authenticate_namespaced_user_from_token', protected: true do
+          expect(subject.new).to respond_to :authenticate_namespaced_user_from_token
+        end
+
+        it 'responds to :authenticate_namespaced_user_from_token!', protected: true do
+          expect(subject.new).to respond_to :authenticate_namespaced_user_from_token!
+        end
+
+        it 'does not respond to :authenticate_user_from_token', protected: true do
+          expect(subject.new).not_to respond_to :authenticate_user_from_token
+        end
+
+        it 'does not respond to :authenticate_user_from_token!', protected: true do
+          expect(subject.new).not_to respond_to :authenticate_user_from_token!
+        end
+      end
+    end
   end
 end
