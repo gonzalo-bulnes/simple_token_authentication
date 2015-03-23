@@ -121,6 +121,8 @@ Finally define which controllers will handle token authentication (typ. `Applica
 
 class ApplicationController < ActionController::Base # or ActionController::API
                                                      # or ActionController::Metal
+                                                     # or Grape::API
+
   # ...
 
   acts_as_token_authentication_handler_for User

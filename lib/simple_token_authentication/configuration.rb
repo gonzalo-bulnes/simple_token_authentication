@@ -15,13 +15,14 @@ module SimpleTokenAuthentication
     @@header_names = {}
     @@identifiers = {}
     @@sign_in_token = false
-    @@controller_adapters = ['rails', 'rails_api', 'rails_metal']
+    @@controller_adapters = ['rails', 'rails_api', 'rails_metal', 'grape']
     @@model_adapters = ['active_record', 'mongoid']
     @@adapters_dependencies = { 'active_record' => 'ActiveRecord::Base',
                                 'mongoid'       => 'Mongoid::Document',
                                 'rails'         => 'ActionController::Base',
                                 'rails_api'     => 'ActionController::API',
-                                'rails_metal'   => 'ActionController::Metal' }
+                                'rails_metal'   => 'ActionController::Metal',
+                                'grape'         => 'Grape::API' }
     @@skip_devise_trackable = true
 
     # Allow the default configuration to be overwritten from initializers
