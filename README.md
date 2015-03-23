@@ -94,7 +94,10 @@ Finally define which controllers will handle token authentication (typ. `Applica
 ```ruby
 # app/controllers/application_controller.rb
 
-class ApplicationController < ActionController::Base # or ActionController::API
+class ApplicationController < ActionController::Base
+                         # or ActionController::API
+                         # or Grape::API
+
   # ...
 
   acts_as_token_authentication_handler_for User
