@@ -187,7 +187,7 @@ describe SimpleTokenAuthentication do
       # define a dummy Grape::API (a.k.a 'Grape') adapter
       dummy_grape_adapter = double()
       allow(dummy_grape_adapter).to receive(:base_class).and_return(Grape::API)
-      stub_const('SimpleTokenAuthentication::Adapters::DummyRailsAPIAdapter', dummy_grape_adapter)
+      stub_const('SimpleTokenAuthentication::Adapters::DummyGrapeAdapter', dummy_grape_adapter)
     end
 
     describe '#ensure_controllers_can_act_as_token_authentication_handlers' do
@@ -208,7 +208,7 @@ describe SimpleTokenAuthentication do
         expect(@dummy_controller).not_to respond_to :acts_as_token_authentication_handler_for
 
         subject.ensure_controllers_can_act_as_token_authentication_handlers [
-                          SimpleTokenAuthentication::Adapters::DummyRailsAPIAdapter]
+                          SimpleTokenAuthentication::Adapters::DummyGrapeAdapter]
 
         expect(@dummy_controller).to respond_to :acts_as_token_authentication_handler_for
       end
