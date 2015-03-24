@@ -1,8 +1,9 @@
 module SimpleTokenAuthentication
   class Entity
-    def initialize model
+    def initialize(model, entity_alias=nil)
       @model = model
       @name = model.name
+      @name_underscore = entity_alias
     end
 
     def model
@@ -14,7 +15,7 @@ module SimpleTokenAuthentication
     end
 
     def name_underscore
-      name.underscore
+      @name_underscore || name.underscore
     end
 
     # Private: Return the name of the header to watch for the token authentication param
