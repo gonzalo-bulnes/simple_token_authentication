@@ -1,9 +1,9 @@
 module SimpleTokenAuthentication
   class Entity
-    def initialize(model, entity_alias=nil)
+    def initialize(model, model_alias=nil)
       @model = model
       @name = model.name
-      @name_underscore = entity_alias
+      @name_underscore = model_alias.to_s unless model_alias.nil?
     end
 
     def model
@@ -24,7 +24,7 @@ module SimpleTokenAuthentication
         && token_header_name = SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:authentication_token]
         token_header_name
       else
-        "X-#{name}-Token"
+        "X-#{name_underscore.camelize}-Token"
       end
     end
 
@@ -34,7 +34,7 @@ module SimpleTokenAuthentication
         && identifier_header_name = SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][identifier]
         identifier_header_name
       else
-        "X-#{name}-#{identifier.to_s.camelize}"
+        "X-#{name_underscore.camelize}-#{identifier.to_s.camelize}"
       end
     end
 
