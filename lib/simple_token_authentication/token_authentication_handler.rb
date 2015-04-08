@@ -31,6 +31,8 @@ module SimpleTokenAuthentication
 
       if token_correct?(record, entity, token_comparator)
         perform_sign_in!(record, sign_in_handler)
+      else
+        sign_out self.send("current_#{entity.name.downcase}")
       end
     end
 
