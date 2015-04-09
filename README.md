@@ -106,6 +106,9 @@ class ApplicationController < ActionController::Base # or ActionController::API
   # The token authentication requirement can target specific controller actions:
   # acts_as_token_authentication_handler_for User, only: [:create, :update, :destroy]
   # acts_as_token_authentication_handler_for User, except: [:index, :show]
+  #
+  # or specific controller conditions:
+  # acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.request.format.html? }
 
   # Several token authenticatable models can be handled by the same controller.
   # If so, for all of them except the last, the fallback_to_devise should be disabled.

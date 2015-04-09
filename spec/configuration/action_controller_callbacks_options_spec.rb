@@ -50,4 +50,24 @@ describe 'ActionController', action_controller_callbacks_options: true do
       end
     end
   end
+
+  describe ':unless option' do
+
+    context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+
+      it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
+        some_class = @subjects.first
+
+        expect(some_class).to receive(:before_filter).with(:authenticate_user_from_token!, { unless: lambda { |controller| 'some condition' } })
+        some_class.acts_as_token_authentication_handler_for User, unless: lambda { |controller| 'some condition' }
+      end
+
+      it 'is applied to the corresponding callback (2)', rspec_3_error: true, private: true do
+        some_child_class = @subjects.last
+
+        expect(some_child_class).to receive(:before_filter).with(:authenticate_user_from_token!, { unless: lambda { |controller| 'some condition' } })
+        some_child_class.acts_as_token_authentication_handler_for User, unless: lambda { |controller| 'some condition' }
+      end
+    end
+  end
 end
