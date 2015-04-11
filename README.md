@@ -107,8 +107,9 @@ class ApplicationController < ActionController::Base # or ActionController::API
   # acts_as_token_authentication_handler_for User, only: [:create, :update, :destroy]
   # acts_as_token_authentication_handler_for User, except: [:index, :show]
   #
-  # or specific controller conditions:
+  # Or target specific controller conditions:
   # acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.request.format.html? }
+  # acts_as_token_authentication_handler_for User, if: lambda { |controller| controller.request.format.json? }
 
   # Several token authenticatable models can be handled by the same controller.
   # If so, for all of them except the last, the fallback_to_devise should be disabled.
