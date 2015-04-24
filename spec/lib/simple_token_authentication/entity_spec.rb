@@ -64,6 +64,12 @@ describe SimpleTokenAuthentication::Entity do
       expect(@subject.name_underscore).to be_instance_of String
       expect(@subject.name_underscore).to eq @subject.name_underscore.underscore
     end
+
+    it 'can be predefined', token_authenticatable_aliases_option: true do
+      @subject = SimpleTokenAuthentication::Entity.new(SuperUser, 'incognito_super_user')
+
+      expect(@subject.name_underscore).to eq 'incognito_super_user'
+    end
   end
 
   describe '#token_header_name', protected: true do

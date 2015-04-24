@@ -40,8 +40,8 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       it 'ensures token authentication is handled for the given (token authenticatable) models', public: true do
         double_super_admin_model
         entities_manager = double()
-        allow(entities_manager).to receive(:find_or_create_entity).with(User).and_return('User entity')
-        allow(entities_manager).to receive(:find_or_create_entity).with(SuperAdmin).and_return('SuperAdmin entity')
+        allow(entities_manager).to receive(:find_or_create_entity).with(User, nil).and_return('User entity')
+        allow(entities_manager).to receive(:find_or_create_entity).with(SuperAdmin, nil).and_return('SuperAdmin entity')
 
         # skip steps which are not relevant in this example
         allow(SimpleTokenAuthentication).to receive(:fallback).and_return('default')
@@ -53,6 +53,24 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         expect(subject).to receive(:set_token_authentication_hooks).with('SuperAdmin entity', {option: 'some specific value', fallback: 'default'})
         subject.handle_token_authentication_for(User, {option: 'value'})
         subject.handle_token_authentication_for(SuperAdmin, {option: 'some specific value'})
+      end
+    end
+
+    context 'when an alias is provided for the model', token_authenticatable_aliases_option: true do
+
+      it 'creates an Entity with that alias', private: true do
+        entities_manager = double()
+        allow(entities_manager).to receive(:find_or_create_entity)
+
+        # skip steps which are not relevant in this example
+        allow(subject).to receive(:entities_manager).and_return(entities_manager)
+        allow(subject).to receive(:set_token_authentication_hooks)
+        allow(subject).to receive(:define_token_authentication_helpers_for)
+
+        expect(entities_manager).to receive(:find_or_create_entity).with(User, 'some_alias')
+        subject.handle_token_authentication_for(User, {option: 'value', as: 'some_alias'})
+        expect(entities_manager).to receive(:find_or_create_entity).with(User, 'another_alias')
+        subject.handle_token_authentication_for(User, {option: 'value', 'as' => 'another_alias'})
       end
     end
   end
@@ -445,6 +463,65 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
         it 'does not respond to :authenticate_user_from_token!', protected: true do
           expect(subject.new).not_to respond_to :authenticate_user_from_token!
+        end
+      end
+
+      context 'with the :admin alias', token_authenticatable_aliases_option: true do
+
+        let(:options) do
+          { 'as' => :admin }
+        end
+
+        it 'ensures its instances require admin to authenticate from token or any Devise strategy before any action', public: true do
+          expect(subject).to receive(:before_filter).with(:authenticate_admin_from_token!, {})
+          subject.handle_token_authentication_for SuperAdmin, options
+        end
+
+        context 'and disables the fallback to Devise authentication' do
+
+          let(:options) do
+            { as: 'admin', fallback_to_devise: false }
+          end
+
+          it 'ensures its instances require admin to authenticate from token before any action', public: true do
+            expect(subject).to receive(:before_filter).with(:authenticate_admin_from_token, {})
+            subject.handle_token_authentication_for SuperAdmin, options
+          end
+        end
+
+        describe 'instance' do
+
+          before(:each) do
+            double_super_admin_model
+
+            subject.class_eval do
+              handle_token_authentication_for SuperAdmin, as: :admin
+            end
+          end
+
+          it 'responds to :authenticate_admin_from_token', protected: true do
+            expect(subject.new).to respond_to :authenticate_admin_from_token
+          end
+
+          it 'responds to :authenticate_admin_from_token!', protected: true do
+            expect(subject.new).to respond_to :authenticate_admin_from_token!
+          end
+
+          it 'does not respond to :authenticate_super_admin_from_token', protected: true do
+            expect(subject.new).not_to respond_to :authenticate_super_admin_from_token
+          end
+
+          it 'does not respond to :authenticate_super_admin_from_token!', protected: true do
+            expect(subject.new).not_to respond_to :authenticate_super_admin_from_token!
+          end
+
+          it 'does not respond to :authenticate_user_from_token', protected: true do
+            expect(subject.new).not_to respond_to :authenticate_user_from_token
+          end
+
+          it 'does not respond to :authenticate_user_from_token!', protected: true do
+            expect(subject.new).not_to respond_to :authenticate_user_from_token!
+          end
         end
       end
     end

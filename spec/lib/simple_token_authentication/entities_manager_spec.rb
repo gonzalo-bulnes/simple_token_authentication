@@ -19,10 +19,10 @@ describe SimpleTokenAuthentication::EntitiesManager do
       stub_const('SuperUser', super_user)
     end
 
-    context 'when a model is provided for the first time' do
+    context 'when a model is provided for the first time', token_authenticatable_aliases_option: true do
 
       it 'creates an Entity instance for the model', private: true do
-        expect(SimpleTokenAuthentication::Entity).to receive(:new).with(SuperUser)
+        expect(SimpleTokenAuthentication::Entity).to receive(:new).with(SuperUser, nil) # no alias
         expect(subject.find_or_create_entity(SuperUser)).to eq 'an Entity instance'
       end
 
@@ -35,12 +35,21 @@ describe SimpleTokenAuthentication::EntitiesManager do
           stub_const('Admin', admin)
           # ensure its Entity instance exists
           subject.find_or_create_entity(Admin)
-          allow(SimpleTokenAuthentication::Entity).to receive(:new).and_return('some new Entity instance')
+          allow(SimpleTokenAuthentication::Entity).to receive(:new).with(SuperUser, nil).and_return('some new Entity instance')
+          allow(SimpleTokenAuthentication::Entity).to receive(:new).with(SuperUser, 'some_alias').and_return('some new Entity instance with an alias')
         end
 
         it 'creates an Entity instance for the model', private: true do
-          expect(SimpleTokenAuthentication::Entity).to receive(:new).with(SuperUser)
+          expect(SimpleTokenAuthentication::Entity).to receive(:new).with(SuperUser, nil)
           expect(subject.find_or_create_entity(SuperUser)).to eq 'some new Entity instance'
+        end
+
+        context 'when a model alias was provided' do
+
+          it 'creates an Entity instance with that alias for the model', private: true do
+            expect(SimpleTokenAuthentication::Entity).to receive(:new).with(SuperUser, 'some_alias')
+            expect(subject.find_or_create_entity(SuperUser, 'some_alias')).to eq 'some new Entity instance with an alias'
+          end
         end
       end
     end

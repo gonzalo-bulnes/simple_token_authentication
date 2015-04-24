@@ -116,6 +116,14 @@ class ApplicationController < ActionController::Base # or ActionController::API
   # acts_as_token_authentication_handler_for SpecialUser, fallback_to_devise: false
   # acts_as_token_authentication_handler_for User # the last fallback is up to you
 
+  # Aliases can be defined for namespaced models:
+  #
+  # acts_as_token_authentication_handler_for Customer::Representative, as: :facilitator
+  # acts_as_token_authentication_handler_for SpecialUser, as: :user
+  #
+  # When defined, aliases are used to define both the params and the header names to watch.
+  # E.g. facilitator_token, X-Facilitator-Token
+
   # ...
 end
 ```

@@ -1,16 +1,5 @@
 require 'spec_helper'
 
-def ignore_cucumber_hack
-  skip_rails_test_environment_code
-end
-
-# Skip the code intended to be run in the Rails test environment
-def skip_rails_test_environment_code
-  rails = double()
-  stub_const('Rails', rails)
-  allow(rails).to receive_message_chain(:env, :test?).and_return(false)
-end
-
 describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler (or any if its children)' do
 
   after(:each) do
