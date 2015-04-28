@@ -83,11 +83,12 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
   end
 end
 
-describe 'A class which includes a module which extends ActsAsTokenAuthenticatable (a.k.a Adapters::MongoidAdapter)' do
+describe 'A class which includes a module which includes ActsAsTokenAuthenticatable and ActiveSupport::Concern (a.k.a Adapters::MongoidAdapter)' do
 
   before(:each) do
     base_module = Module.new do
-      extend SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+      extend ActiveSupport::Concern
+      include SimpleTokenAuthentication::ActsAsTokenAuthenticatable
     end
     stub_const('BaseModule', base_module)
 
@@ -101,11 +102,11 @@ describe 'A class which includes a module which extends ActsAsTokenAuthenticatab
   end
 end
 
-describe 'A class that inherits from a class which extends ActsAsTokenAuthenticatable (a.k.a Adapters::ActiveRecordAdapter)' do
+describe 'A class that inherits from a class which includes ActsAsTokenAuthenticatable (a.k.a Adapters::ActiveRecordAdapter)' do
 
   before(:each) do
     base_class = Class.new do
-      extend SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+      include SimpleTokenAuthentication::ActsAsTokenAuthenticatable
     end
     stub_const('BaseClass', base_class)
 
