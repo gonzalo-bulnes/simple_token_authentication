@@ -106,3 +106,38 @@ describe 'A token authenticatable class (or one of its children)' do
     end
   end
 end
+
+describe 'A class which includes a module which includes ActsAsTokenAuthenticatable and ActiveSupport::Concern (a.k.a Adapters::MongoidAdapter)' do
+
+  before(:each) do
+    base_module = Module.new do
+      extend ActiveSupport::Concern
+      include SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+    end
+    stub_const('BaseModule', base_module)
+
+    @subject = Class.new do
+      include BaseModule
+    end
+  end
+
+  it 'responds to :acts_as_token_authenticatable', protected: true do
+    expect(@subject).to respond_to :acts_as_token_authenticatable
+  end
+end
+
+describe 'A class that inherits from a class which includes ActsAsTokenAuthenticatable (a.k.a Adapters::ActiveRecordAdapter)' do
+
+  before(:each) do
+    base_class = Class.new do
+      include SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+    end
+    stub_const('BaseClass', base_class)
+
+    @subject = Class.new(BaseClass)
+  end
+
+  it 'responds to :acts_as_token_authenticatable', protected: true do
+    expect(@subject).to respond_to :acts_as_token_authenticatable
+  end
+end
