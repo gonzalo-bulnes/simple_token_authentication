@@ -2,7 +2,8 @@ require 'active_support/concern'
 require 'devise'
 
 require 'simple_token_authentication/entities_manager'
-require 'simple_token_authentication/fallback_authentication_handler'
+require 'simple_token_authentication/devise_fallback_handler'
+require 'simple_token_authentication/exception_fallback_handler'
 require 'simple_token_authentication/sign_in_handler'
 require 'simple_token_authentication/token_comparator'
 
@@ -14,10 +15,10 @@ module SimpleTokenAuthentication
       private_class_method :define_token_authentication_helpers_for
       private_class_method :set_token_authentication_hooks
       private_class_method :entities_manager
-      private_class_method :fallback_authentication_handler
+      private_class_method :fallback_handler
 
       private :authenticate_entity_from_token!
-      private :authenticate_entity_from_fallback!
+      private :fallback!
       private :token_correct?
       private :perform_sign_in!
       private :token_comparator
@@ -34,8 +35,8 @@ module SimpleTokenAuthentication
       end
     end
 
-    def authenticate_entity_from_fallback!(entity, fallback_authentication_handler)
-      fallback_authentication_handler.authenticate_entity!(self, entity)
+    def fallback!(entity, fallback_handler)
+      fallback_handler.fallback!(self, entity)
     end
 
     def token_correct?(record, entity, token_comparator)
@@ -95,7 +96,7 @@ module SimpleTokenAuthentication
         model_alias = options[:as] || options['as']
         entity = entities_manager.find_or_create_entity(model, model_alias)
         options = SimpleTokenAuthentication.parse_options(options)
-        define_token_authentication_helpers_for(entity, fallback_authentication_handler)
+        define_token_authentication_helpers_for(entity, fallback_handler(options))
         set_token_authentication_hooks(entity, options)
       end
 
@@ -109,15 +110,19 @@ module SimpleTokenAuthentication
       end
 
       # Private: Get one (always the same) object which behaves as a fallback authentication handler
-      def fallback_authentication_handler
+      def fallback_handler(options)
         if class_variable_defined?(:@@fallback_authentication_handler)
           class_variable_get(:@@fallback_authentication_handler)
         else
-          class_variable_set(:@@fallback_authentication_handler, FallbackAuthenticationHandler.new)
+          if options[:fallback] == :exception
+            class_variable_set(:@@fallback_authentication_handler, ExceptionFallbackHandler.new)
+          else
+            class_variable_set(:@@fallback_authentication_handler, DeviseFallbackHandler.new)
+          end
         end
       end
 
-      def define_token_authentication_helpers_for(entity, fallback_authentication_handler)
+      def define_token_authentication_helpers_for(entity, fallback_handler)
 
         method_name = "authenticate_#{entity.name_underscore}_from_token"
         method_name_bang = method_name + '!'
@@ -130,7 +135,7 @@ module SimpleTokenAuthentication
           define_method method_name_bang.to_sym do
             lambda do |_entity|
               authenticate_entity_from_token!(_entity)
-              authenticate_entity_from_fallback!(_entity, fallback_authentication_handler)
+              fallback!(_entity, fallback_handler)
             end.call(entity)
           end
         end

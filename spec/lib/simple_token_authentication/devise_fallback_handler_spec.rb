@@ -1,8 +1,10 @@
 require 'spec_helper'
 
-describe SimpleTokenAuthentication::FallbackAuthenticationHandler do
+describe SimpleTokenAuthentication::DeviseFallbackHandler do
 
   it_behaves_like 'an authentication handler'
+
+  it_behaves_like 'a fallback handler'
 
   describe '#authenticate_entity!' do
 
@@ -19,6 +21,19 @@ describe SimpleTokenAuthentication::FallbackAuthenticationHandler do
 
       # and returning the response
       expect(response).to eq 'Devise response.'
+    end
+  end
+
+  describe '#fallback!' do
+
+    it 'does #authenticate_entity!', private: true do
+      entity = double()
+      allow(@entity).to receive_message_chain(:name_underscore).and_return('entity')
+      controller = double()
+
+      expect(subject).to receive(:authenticate_entity!).with(controller, entity)
+
+      subject.send(:fallback!, controller, entity)
     end
   end
 end

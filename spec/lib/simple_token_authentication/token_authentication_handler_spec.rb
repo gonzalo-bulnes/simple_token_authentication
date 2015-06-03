@@ -78,10 +78,6 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
   describe '.entities_manager' do
 
     before(:each) do
-      # The private tag is here to keep the following examples out of
-      # the public documentation.
-      subject.send :public_class_method, :entities_manager
-
       allow(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
         .and_return('a EntitiesManager instance')
     end
@@ -90,65 +86,104 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
       it 'creates a new EntitiesManager instance', private: true do
         expect(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
-        expect(subject.entities_manager).to eq 'a EntitiesManager instance'
+        expect(subject.send(:entities_manager)).to eq 'a EntitiesManager instance'
       end
     end
 
     context 'when a EntitiesManager instance was already created' do
 
       before(:each) do
-        subject.entities_manager
+        subject.send(:entities_manager)
         # let's make any new EntitiesManager distinct from the first
         allow(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
         .and_return('another EntitiesManager instance')
       end
 
       it 'returns that instance', private: true do
-        expect(subject.entities_manager).to eq 'a EntitiesManager instance'
+        expect(subject.send(:entities_manager)).to eq 'a EntitiesManager instance'
       end
 
       it 'does not create a new EntitiesManager instance', private: true do
         expect(SimpleTokenAuthentication::EntitiesManager).not_to receive(:new)
-        expect(subject.entities_manager).not_to eq 'another EntitiesManager instance'
+        expect(subject.send(:entities_manager)).not_to eq 'another EntitiesManager instance'
       end
     end
   end
 
-  describe '.fallback_authentication_handler' do
+  describe '.fallback_handler' do
 
     before(:each) do
-      # The private tag is here to keep the following examples out of
-      # the public documentation.
-      subject.send :public_class_method, :fallback_authentication_handler
-
-      allow(SimpleTokenAuthentication::FallbackAuthenticationHandler).to receive(:new)
-        .and_return('a FallbackAuthenticationHandler instance')
+      allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
+        .and_return('a DeviseFallbackHandler instance')
+      allow(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
+        .and_return('an ExceptionFallbackHandler instance')
     end
 
-    context 'when called for the first time' do
-
-      it 'creates a new FallbackAuthenticationHandler instance', private: true do
-        expect(SimpleTokenAuthentication::FallbackAuthenticationHandler).to receive(:new)
-        expect(subject.fallback_authentication_handler).to eq 'a FallbackAuthenticationHandler instance'
-      end
-    end
-
-    context 'when a FallbackAuthenticationHandler instance was already created' do
+    context 'when the Devise fallback is enabled', fallback_option: true do
 
       before(:each) do
-        subject.fallback_authentication_handler
-        # let's make any new FallbackAuthenticationHandler distinct from the first
-        allow(SimpleTokenAuthentication::FallbackAuthenticationHandler).to receive(:new)
-        .and_return('another FallbackAuthenticationHandler instance')
+        @options = { fallback: :devise }
       end
 
-      it 'returns that instance', private: true do
-        expect(subject.fallback_authentication_handler).to eq 'a FallbackAuthenticationHandler instance'
+      context 'when called for the first time' do
+
+        it 'creates a new DeviseFallbackHandler instance', private: true do
+          expect(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
+          expect(subject.send(:fallback_handler, @options)).to eq 'a DeviseFallbackHandler instance'
+        end
       end
 
-      it 'does not create a new FallbackAuthenticationHandler instance', private: true do
-        expect(SimpleTokenAuthentication::FallbackAuthenticationHandler).not_to receive(:new)
-        expect(subject.fallback_authentication_handler).not_to eq 'another FallbackAuthenticationHandler instance'
+      context 'when a DeviseFallbackHandler instance was already created' do
+
+        before(:each) do
+          subject.send(:fallback_handler, @options)
+          # let's make any new DeviseFallbackHandler distinct from the first
+          allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
+          .and_return('another DeviseFallbackHandler instance')
+        end
+
+        it 'returns that instance', private: true do
+          expect(subject.send(:fallback_handler, @options)).to eq 'a DeviseFallbackHandler instance'
+        end
+
+        it 'does not create a new DeviseFallbackHandler instance', private: true do
+          expect(SimpleTokenAuthentication::DeviseFallbackHandler).not_to receive(:new)
+          expect(subject.send(:fallback_handler, @options)).not_to eq 'another DeviseFallbackHandler instance'
+        end
+      end
+    end
+
+    context 'when the Exception fallback is enabled', fallback_option: true do
+
+      before(:each) do
+        @options = { fallback: :exception }
+      end
+
+      context 'when called for the first time' do
+
+        it 'creates a new ExceptionFallbackHandler instance', private: true do
+          expect(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
+          expect(subject.send(:fallback_handler, @options)).to eq 'an ExceptionFallbackHandler instance'
+        end
+      end
+
+      context 'when a ExceptionFallbackHandler instance was already created' do
+
+        before(:each) do
+          subject.send(:fallback_handler, @options)
+          # let's make any new ExceptionFallbackHandler distinct from the first
+          allow(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
+          .and_return('another ExceptionFallbackHandler instance')
+        end
+
+        it 'returns that instance', private: true do
+          expect(subject.send(:fallback_handler, @options)).to eq 'an ExceptionFallbackHandler instance'
+        end
+
+        it 'does not create a new ExceptionFallbackHandler instance', private: true do
+          expect(SimpleTokenAuthentication::ExceptionFallbackHandler).not_to receive(:new)
+          expect(subject.send(:fallback_handler, @options)).not_to eq 'another ExceptionFallbackHandler instance'
+        end
       end
     end
   end
