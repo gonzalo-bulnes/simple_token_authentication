@@ -2,7 +2,7 @@ require 'active_support/concern'
 require 'devise'
 
 require 'simple_token_authentication/entities_manager'
-require 'simple_token_authentication/fallback_authentication_handler'
+require 'simple_token_authentication/devise_fallback_handler'
 require 'simple_token_authentication/sign_in_handler'
 require 'simple_token_authentication/token_comparator'
 
@@ -113,7 +113,7 @@ module SimpleTokenAuthentication
         if class_variable_defined?(:@@fallback_authentication_handler)
           class_variable_get(:@@fallback_authentication_handler)
         else
-          class_variable_set(:@@fallback_authentication_handler, FallbackAuthenticationHandler.new)
+          class_variable_set(:@@fallback_authentication_handler, DeviseFallbackHandler.new)
         end
       end
 

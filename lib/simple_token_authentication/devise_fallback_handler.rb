@@ -1,5 +1,5 @@
 module SimpleTokenAuthentication
-  class FallbackAuthenticationHandler
+  class DeviseFallbackHandler
     # Devise authentication is performed through a controller
     # which includes Devise::Controllers::Helpers
     # See http://rdoc.info/github/plataformatec/devise/master/\

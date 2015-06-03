@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SimpleTokenAuthentication::FallbackAuthenticationHandler do
+describe SimpleTokenAuthentication::DeviseFallbackHandler do
 
   it_behaves_like 'an authentication handler'
 
