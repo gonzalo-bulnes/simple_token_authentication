@@ -115,6 +115,8 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
     before(:each) do
       allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
         .and_return('a DeviseFallbackHandler instance')
+      allow(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
+        .and_return('an ExceptionFallbackHandler instance')
     end
 
     context 'when the Devise fallback is enabled', fallback_option: true do
@@ -149,6 +151,40 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         expect(subject.send(:fallback_handler, @options)).not_to eq 'another DeviseFallbackHandler instance'
       end
     end
+    end
+
+    context 'when the Exception fallback is enabled', fallback_option: true do
+
+      before(:each) do
+        @options = { fallback: :exception }
+      end
+
+      context 'when called for the first time' do
+
+        it 'creates a new ExceptionFallbackHandler instance', private: true do
+          expect(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
+          expect(subject.send(:fallback_handler, @options)).to eq 'an ExceptionFallbackHandler instance'
+        end
+      end
+
+      context 'when a ExceptionFallbackHandler instance was already created' do
+
+        before(:each) do
+          subject.send(:fallback_handler, @options)
+          # let's make any new ExceptionFallbackHandler distinct from the first
+          allow(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
+          .and_return('another ExceptionFallbackHandler instance')
+        end
+
+        it 'returns that instance', private: true do
+          expect(subject.send(:fallback_handler, @options)).to eq 'an ExceptionFallbackHandler instance'
+        end
+
+        it 'does not create a new ExceptionFallbackHandler instance', private: true do
+          expect(SimpleTokenAuthentication::ExceptionFallbackHandler).not_to receive(:new)
+          expect(subject.send(:fallback_handler, @options)).not_to eq 'another ExceptionFallbackHandler instance'
+        end
+      end
     end
   end
 
