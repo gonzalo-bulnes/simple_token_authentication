@@ -17,7 +17,7 @@ module SimpleTokenAuthentication
       private_class_method :fallback_handler
 
       private :authenticate_entity_from_token!
-      private :authenticate_entity_from_fallback!
+      private :fallback!
       private :token_correct?
       private :perform_sign_in!
       private :token_comparator
@@ -34,8 +34,8 @@ module SimpleTokenAuthentication
       end
     end
 
-    def authenticate_entity_from_fallback!(entity, fallback_authentication_handler)
-      fallback_authentication_handler.fallback!(self, entity)
+    def fallback!(entity, fallback_handler)
+      fallback_handler.fallback!(self, entity)
     end
 
     def token_correct?(record, entity, token_comparator)
@@ -130,7 +130,7 @@ module SimpleTokenAuthentication
           define_method method_name_bang.to_sym do
             lambda do |_entity|
               authenticate_entity_from_token!(_entity)
-              authenticate_entity_from_fallback!(_entity, fallback_authentication_handler)
+              fallback!(_entity, fallback_authentication_handler)
             end.call(entity)
           end
         end
