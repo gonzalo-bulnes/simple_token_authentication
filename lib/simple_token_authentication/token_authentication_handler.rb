@@ -114,7 +114,11 @@ module SimpleTokenAuthentication
         if class_variable_defined?(:@@fallback_authentication_handler)
           class_variable_get(:@@fallback_authentication_handler)
         else
-          class_variable_set(:@@fallback_authentication_handler, DeviseFallbackHandler.new)
+          if options[:fallback] == :exception
+            class_variable_set(:@@fallback_authentication_handler, ExceptionFallbackHandler.new)
+          else
+            class_variable_set(:@@fallback_authentication_handler, DeviseFallbackHandler.new)
+          end
         end
       end
 
