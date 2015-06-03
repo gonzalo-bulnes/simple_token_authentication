@@ -3,6 +3,7 @@ require 'devise'
 
 require 'simple_token_authentication/entities_manager'
 require 'simple_token_authentication/devise_fallback_handler'
+require 'simple_token_authentication/exception_fallback_handler'
 require 'simple_token_authentication/sign_in_handler'
 require 'simple_token_authentication/token_comparator'
 
