@@ -35,7 +35,7 @@ module SimpleTokenAuthentication
     end
 
     def authenticate_entity_from_fallback!(entity, fallback_authentication_handler)
-      fallback_authentication_handler.authenticate_entity!(self, entity)
+      fallback_authentication_handler.fallback!(self, entity)
     end
 
     def token_correct?(record, entity, token_comparator)

@@ -1,5 +1,11 @@
 module SimpleTokenAuthentication
   class DeviseFallbackHandler
+
+    # Fallback to the Devise authentication strategies.
+    def fallback!(controller, entity)
+      authenticate_entity!(controller, entity)
+    end
+
     # Devise authentication is performed through a controller
     # which includes Devise::Controllers::Helpers
     # See http://rdoc.info/github/plataformatec/devise/master/\
