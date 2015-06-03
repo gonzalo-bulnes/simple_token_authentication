@@ -6,6 +6,7 @@ module SimpleTokenAuthentication
   extend Configuration
 
   NoAdapterAvailableError = Class.new(LoadError)
+  InvalidOptionValue = Class.new(RuntimeError)
 
   private
 
