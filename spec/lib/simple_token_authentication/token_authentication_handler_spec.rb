@@ -78,10 +78,6 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
   describe '.entities_manager' do
 
     before(:each) do
-      # The private tag is here to keep the following examples out of
-      # the public documentation.
-      subject.send :public_class_method, :entities_manager
-
       allow(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
         .and_return('a EntitiesManager instance')
     end
@@ -90,26 +86,26 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
       it 'creates a new EntitiesManager instance', private: true do
         expect(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
-        expect(subject.entities_manager).to eq 'a EntitiesManager instance'
+        expect(subject.send(:entities_manager)).to eq 'a EntitiesManager instance'
       end
     end
 
     context 'when a EntitiesManager instance was already created' do
 
       before(:each) do
-        subject.entities_manager
+        subject.send(:entities_manager)
         # let's make any new EntitiesManager distinct from the first
         allow(SimpleTokenAuthentication::EntitiesManager).to receive(:new)
         .and_return('another EntitiesManager instance')
       end
 
       it 'returns that instance', private: true do
-        expect(subject.entities_manager).to eq 'a EntitiesManager instance'
+        expect(subject.send(:entities_manager)).to eq 'a EntitiesManager instance'
       end
 
       it 'does not create a new EntitiesManager instance', private: true do
         expect(SimpleTokenAuthentication::EntitiesManager).not_to receive(:new)
-        expect(subject.entities_manager).not_to eq 'another EntitiesManager instance'
+        expect(subject.send(:entities_manager)).not_to eq 'another EntitiesManager instance'
       end
     end
   end
@@ -117,10 +113,6 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
   describe '.fallback_handler' do
 
     before(:each) do
-      # The private tag is here to keep the following examples out of
-      # the public documentation.
-      subject.send :public_class_method, :fallback_handler
-
       allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
         .and_return('a DeviseFallbackHandler instance')
     end
@@ -129,26 +121,26 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
       it 'creates a new DeviseFallbackHandler instance', private: true do
         expect(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
-        expect(subject.fallback_handler).to eq 'a DeviseFallbackHandler instance'
+        expect(subject.send(:fallback_handler)).to eq 'a DeviseFallbackHandler instance'
       end
     end
 
     context 'when a DeviseFallbackHandler instance was already created' do
 
       before(:each) do
-        subject.fallback_handler
+        subject.send(:fallback_handler)
         # let's make any new DeviseFallbackHandler distinct from the first
         allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
         .and_return('another DeviseFallbackHandler instance')
       end
 
       it 'returns that instance', private: true do
-        expect(subject.fallback_handler).to eq 'a DeviseFallbackHandler instance'
+        expect(subject.send(:fallback_handler)).to eq 'a DeviseFallbackHandler instance'
       end
 
       it 'does not create a new DeviseFallbackHandler instance', private: true do
         expect(SimpleTokenAuthentication::DeviseFallbackHandler).not_to receive(:new)
-        expect(subject.fallback_handler).not_to eq 'another DeviseFallbackHandler instance'
+        expect(subject.send(:fallback_handler)).not_to eq 'another DeviseFallbackHandler instance'
       end
     end
   end
