@@ -14,7 +14,7 @@ module SimpleTokenAuthentication
       private_class_method :define_token_authentication_helpers_for
       private_class_method :set_token_authentication_hooks
       private_class_method :entities_manager
-      private_class_method :fallback_authentication_handler
+      private_class_method :fallback_handler
 
       private :authenticate_entity_from_token!
       private :authenticate_entity_from_fallback!
@@ -95,7 +95,7 @@ module SimpleTokenAuthentication
         model_alias = options[:as] || options['as']
         entity = entities_manager.find_or_create_entity(model, model_alias)
         options = SimpleTokenAuthentication.parse_options(options)
-        define_token_authentication_helpers_for(entity, fallback_authentication_handler)
+        define_token_authentication_helpers_for(entity, fallback_handler)
         set_token_authentication_hooks(entity, options)
       end
 
@@ -109,7 +109,7 @@ module SimpleTokenAuthentication
       end
 
       # Private: Get one (always the same) object which behaves as a fallback authentication handler
-      def fallback_authentication_handler
+      def fallback_handler
         if class_variable_defined?(:@@fallback_authentication_handler)
           class_variable_get(:@@fallback_authentication_handler)
         else

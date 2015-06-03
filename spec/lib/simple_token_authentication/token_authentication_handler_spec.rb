@@ -114,12 +114,12 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
     end
   end
 
-  describe '.fallback_authentication_handler' do
+  describe '.fallback_handler' do
 
     before(:each) do
       # The private tag is here to keep the following examples out of
       # the public documentation.
-      subject.send :public_class_method, :fallback_authentication_handler
+      subject.send :public_class_method, :fallback_handler
 
       allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
         .and_return('a DeviseFallbackHandler instance')
@@ -129,26 +129,26 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
       it 'creates a new DeviseFallbackHandler instance', private: true do
         expect(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
-        expect(subject.fallback_authentication_handler).to eq 'a DeviseFallbackHandler instance'
+        expect(subject.fallback_handler).to eq 'a DeviseFallbackHandler instance'
       end
     end
 
     context 'when a DeviseFallbackHandler instance was already created' do
 
       before(:each) do
-        subject.fallback_authentication_handler
+        subject.fallback_handler
         # let's make any new DeviseFallbackHandler distinct from the first
         allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
         .and_return('another DeviseFallbackHandler instance')
       end
 
       it 'returns that instance', private: true do
-        expect(subject.fallback_authentication_handler).to eq 'a DeviseFallbackHandler instance'
+        expect(subject.fallback_handler).to eq 'a DeviseFallbackHandler instance'
       end
 
       it 'does not create a new DeviseFallbackHandler instance', private: true do
         expect(SimpleTokenAuthentication::DeviseFallbackHandler).not_to receive(:new)
-        expect(subject.fallback_authentication_handler).not_to eq 'another DeviseFallbackHandler instance'
+        expect(subject.fallback_handler).not_to eq 'another DeviseFallbackHandler instance'
       end
     end
   end
