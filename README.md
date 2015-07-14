@@ -148,10 +148,10 @@ For a model named `DashboardUser`:
 * Query params: `dashboard_user_email` and `dashboard_user_token`
 * Headers: `X-DashboardUser-Email` and `X-DashboardUser-Token`
 
+### Customization
 Some aspects of the behavior of _Simple Token Authentication_ can be customized with an initializer.
 Below is an example with reasonable defaults:
 
-### Customization
 ```ruby
 # config/initializers/simple_token_authentication.rb
 
