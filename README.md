@@ -266,7 +266,7 @@ To use no fallback when token authentication fails, set `fallback: :none`.
 
 #### Authentication Method 1: Query Params
 
-```
+```ruby
 class SomeControllerTest < ActionController::TestCase
   test "index" do
     get :index, { user_email: "some@email.com", user_token: "some_token" }
@@ -277,7 +277,7 @@ end
 
 #### Authentication Method 2: Request Headers
 
-```
+```ruby
 class SomeControllerTest < ActionController::TestCase
   test "index" do
     @request.headers['X-User-Email'] = "some@email.com"
