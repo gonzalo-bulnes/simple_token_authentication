@@ -3,3 +3,4 @@ rvm:
   - "1.9.3"
   - "2.0.0"
 install: bundle install --jobs=3 --retry=3 --no-deployment
+sudo: false
