@@ -134,9 +134,9 @@ end
 
 Configuration
 -------------
-
 Some aspects of the behavior of _Simple Token Authentication_ can be customized with an initializer.
-Below is an example with reasonable defaults:
+
+The default configuration file below contains examples of the patterns expected and how to customize them:
 
 ```ruby
 # config/initializers/simple_token_authentication.rb
@@ -247,6 +247,26 @@ When `fallabck: :exception` is set, then an exception is raised on token authent
 To use no fallback when token authentication fails, set `fallback: :none`.
 
   [csrf]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues/49
+
+### Testing
+
+```ruby
+class SomeControllerTest < ActionController::TestCase
+
+  test "index with token authentication via query params" do
+    get :index, { user_email: "alice@example.com", user_token: "1G8_s7P-V-4MGojaKD7a" }
+    assert_response :success
+  end
+  
+  test "index with token authentication via request headers" do
+	@request.headers['X-User-Email'] = "alice@example.com"
+    @request.headers['X-User-Token'] = "1G8_s7P-V-4MGojaKD7a"
+    
+    get :index
+    assert_response :success
+  end
+end
+```
 
 Documentation
 -------------
