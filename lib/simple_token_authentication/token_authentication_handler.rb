@@ -60,7 +60,7 @@ module SimpleTokenAuthentication
       # The finder method should be compatible with all the model adapters,
       # namely ActiveRecord and Mongoid in all their supported versions.
       record = nil
-      record = identifier_param_value && entity.model.where(entity.identifier => identifier_param_value).first
+      record = identifier_param_value && entity.model.find_for_database_authentication(entity.identifier => identifier_param_value)
     end
 
     # Private: Take benefit from Devise case-insensitive keys
