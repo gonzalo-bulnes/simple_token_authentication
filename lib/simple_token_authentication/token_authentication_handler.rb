@@ -123,6 +123,7 @@ module SimpleTokenAuthentication
 
         method_name = "authenticate_#{entity.name_underscore}_from_token"
         method_name_bang = method_name + '!'
+        method_name_generic = method_name + '_or_fallback'
 
         class_eval do
           define_method method_name.to_sym do
@@ -133,6 +134,13 @@ module SimpleTokenAuthentication
             lambda do |_entity|
               authenticate_entity_from_token!(_entity)
               fallback!(_entity, fallback_handler)
+            end.call(entity)
+          end
+
+          define_method method_name_generic.to_sym do
+            lambda do |_entity|
+              authenticate_entity_from_token!(_entity)
+              fallback!(_entity, fallback_handler) unless options[:fallback] == :none
             end.call(entity)
           end
         end
@@ -148,7 +156,7 @@ module SimpleTokenAuthentication
         if respond_to?(:before_action)
           # See https://github.com/rails/rails/commit/9d62e04838f01f5589fa50b0baa480d60c815e2c
           before_action authenticate_method, options.slice(:only, :except, :if, :unless)
-        else
+        elsif defined?(before_filter)
           before_filter authenticate_method, options.slice(:only, :except, :if, :unless)
         end
       end
