@@ -114,14 +114,15 @@ end
 
 ### Allow controllers to handle token authentication
 
-Finally define which controllers will handle token authentication (typ. `ApplicationController`) for which _token authenticatable_ models:
+#### Rails, Rails API and ActionController::Metal
+
+Define which controllers will handle token authentication (typ. `ApplicationController`) for which _token authenticatable_ models:
 
 ```ruby
 # app/controllers/application_controller.rb
 
 class ApplicationController < ActionController::Base # or ActionController::API
                                                      # or ActionController::Metal
-                                                     # or Grape::API
 
   # ...
 
@@ -157,6 +158,28 @@ class ApplicationController < ActionController::Base # or ActionController::API
   # E.g. facilitator_token, X-Facilitator-Token
 
   # ...
+end
+```
+
+#### Grape
+
+Define which controllers will handle token authentication for which _token authenticatable_ models, and call the appropriate token authentication method (e.g. `authenticate_user_from_token_or_fallback` if `User` is a token authenticatable model):
+
+```ruby
+module V1
+  class Reports < Grape::API
+    format :json
+    version 'v1', using: :path
+
+    acts_as_token_authentication_handler_for User, fallback: :exception
+    # Please see the Rails and Rails API section above for more options!
+
+    desc 'Get all reports'
+    get '/reports' do
+      authenticate_user_from_token_or_fallback
+      report = Report.where(author: current_user) # for example
+    end
+  end
 end
 ```
 
