@@ -42,7 +42,7 @@ module SimpleTokenAuthentication
     available_adapters.compact!
 
     # stop here if dependencies are missing or no adequate adapters are present
-    raise SimpleTokenAuthentication::NoAdapterAvailableError if available_adapters.empty?
+    raise NoAdapterAvailableError if available_adapters.empty?
 
     available_adapters
   end
