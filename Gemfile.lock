@@ -132,7 +132,7 @@ GEM
       tins (~> 1.0)
     thor (0.19.1)
     thread_safe (0.3.5)
-    tins (1.7.0)
+    tins (1.6.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     warden (1.2.3)
@@ -148,6 +148,7 @@ DEPENDENCIES
   mongoid (>= 3.1.0, < 5)
   rspec (~> 3.0)
   simple_token_authentication!
+  tins (< 1.7.0)
 
 BUNDLED WITH
    1.10.6
