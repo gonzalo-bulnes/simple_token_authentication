@@ -12,3 +12,6 @@ gemspec
 
 # To use debugger
 # gem 'debugger'
+
+# this is an Inch dependency, which version I want to restrict to keep Ruby 1.9 compatibility
+gem 'tins', '< 1.7.0'

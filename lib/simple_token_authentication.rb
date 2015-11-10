@@ -1,12 +1,10 @@
 require 'simple_token_authentication/acts_as_token_authenticatable'
 require 'simple_token_authentication/acts_as_token_authentication_handler'
 require 'simple_token_authentication/configuration'
+require 'simple_token_authentication/errors'
 
 module SimpleTokenAuthentication
   extend Configuration
-
-  NoAdapterAvailableError = Class.new(LoadError)
-  InvalidOptionValue = Class.new(RuntimeError)
 
   private
 
@@ -42,7 +40,7 @@ module SimpleTokenAuthentication
     available_adapters.compact!
 
     # stop here if dependencies are missing or no adequate adapters are present
-    raise SimpleTokenAuthentication::NoAdapterAvailableError if available_adapters.empty?
+    raise NoAdapterAvailableError.new if available_adapters.empty?
 
     available_adapters
   end
