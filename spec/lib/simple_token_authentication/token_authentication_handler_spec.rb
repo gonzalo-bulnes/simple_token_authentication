@@ -213,8 +213,9 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         it 'returns the proper record if any' do
           # let's say there is a record
           record = double()
-          allow(@entity).to receive_message_chain(:model, :where).with(email: 'alice@example.com')
-          .and_return([record])
+          allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+          .with(email: 'alice@example.com')
+          .and_return(record)
 
           expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
         end
@@ -231,11 +232,13 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           # let's say there is a record...
           record = double()
           # ...whose identifier is downcased...
-          allow(@entity).to receive_message_chain(:model, :where).with(email: 'alice@example.com')
-          .and_return([record])
+          allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+          .with(email: 'alice@example.com')
+          .and_return(record)
           # ...not upcased
-          allow(@entity).to receive_message_chain(:model, :where).with(email: 'AliCe@ExampLe.Com')
-          .and_return([])
+          allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+          .with(email: 'AliCe@ExampLe.Com')
+          .and_return(nil)
 
           expect(subject.new.send(:find_record_from_identifier, @entity)).to be_nil
         end
@@ -259,8 +262,9 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         it 'returns the proper record if any' do
           # let's say there is a record
           record = double()
-          allow(@entity).to receive_message_chain(:model, :where).with(email: 'alice@example.com')
-          .and_return([record])
+          allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+          .with(email: 'alice@example.com')
+          .and_return(record)
 
           expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
         end
@@ -277,12 +281,13 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           # let's say there is a record...
           record = double()
           # ...whose identifier is downcased...
-          allow(@entity).to receive_message_chain(:model, :where)
-          allow(@entity).to receive_message_chain(:model, :where).with(email: 'alice@example.com')
-          .and_return([record])
+          allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+          allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+          .with(email: 'alice@example.com')
+          .and_return(record)
           # ...not upcased
-          allow(@entity).to receive_message_chain(:model, :where).with(email: 'AliCe@ExampLe.Com')
-          .and_return([])
+          allow(@entity).to receive_message_chain(:model, :find_for_authentication).with(email: 'AliCe@ExampLe.Com')
+          .and_return(nil)
 
           expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
         end
@@ -312,8 +317,9 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           it 'returns the proper record if any' do
             # let's say there is a record
             record = double()
-            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'alice@example.com')
-            .and_return([record])
+            allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+            .with(phone_number: 'alice@example.com')
+            .and_return(record)
 
             expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
           end
@@ -330,11 +336,13 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
             # let's say there is a record...
             record = double()
             # ...whose identifier is downcased...
-            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'alice@example.com')
-            .and_return([record])
+            allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+            .with(phone_number: 'alice@example.com')
+            .and_return(record)
             # ...not upcased
-            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'AliCe@ExampLe.Com')
-            .and_return([])
+            allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+            .with(phone_number: 'AliCe@ExampLe.Com')
+            .and_return(nil)
 
             expect(subject.new.send(:find_record_from_identifier, @entity)).to be_nil
           end
@@ -358,8 +366,9 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           it 'returns the proper record if any' do
             # let's say there is a record
             record = double()
-            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'alice@example.com')
-            .and_return([record])
+            allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+            .with(phone_number: 'alice@example.com')
+            .and_return(record)
 
             expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
           end
@@ -376,12 +385,14 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
             # let's say there is a record...
             record = double()
             # ...whose identifier is downcased...
-            allow(@entity).to receive_message_chain(:model, :where)
-            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'alice@example.com')
-            .and_return([record])
+            allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+            allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+            .with(phone_number: 'alice@example.com')
+            .and_return(record)
             # ...not upcased
-            allow(@entity).to receive_message_chain(:model, :where).with(phone_number: 'AliCe@ExampLe.Com')
-            .and_return([])
+            allow(@entity).to receive_message_chain(:model, :find_for_authentication)
+            .with(phone_number: 'AliCe@ExampLe.Com')
+            .and_return(nil)
 
             expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
           end
