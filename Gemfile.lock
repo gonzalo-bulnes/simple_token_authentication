@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    simple_token_authentication (1.10.1)
+    simple_token_authentication (1.11.0)
       actionmailer (>= 3.2.6, < 5)
       actionpack (>= 3.2.6, < 5)
       devise (~> 3.2)
