@@ -1,6 +1,10 @@
 language: ruby
 rvm:
   - "1.9.3"
-  - "2.0.0"
+  - "2.2.0"
+  - ruby-head
+matrix:
+  allow_failures:
+    - rvm: ruby-head
 install: bundle install --jobs=3 --retry=3 --no-deployment
 sudo: false
