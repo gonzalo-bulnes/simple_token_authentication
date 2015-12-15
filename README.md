@@ -136,7 +136,8 @@ Configuration
 -------------
 
 Some aspects of the behavior of _Simple Token Authentication_ can be customized with an initializer.
-Below is an example with reasonable defaults:
+
+The file below contains examples of the patterns that _token authentication handlers_ will watch for credentials (e.g. `user_email`, `X-SuperAdmin-Token`) and how to customize them:
 
 ```ruby
 # config/initializers/simple_token_authentication.rb
@@ -240,13 +241,37 @@ In fact, you can mix both methods and provide the `user_email` with one and the 
 
 If sign-in is successful, no other authentication method will be run, but if it doesn't (the authentication params were missing, or incorrect) then Devise takes control and tries to `authenticate_user!` with its own modules. That behaviour can however be modified for any controller through the **fallback** option (which defaults to `fallback: :devise`).
 
-When `fallabck: :exception` is set, then an exception is raised on token authentication failure. The resulting controller behaviour is very similar to the behaviour induced by using the Devise `authenticate_user!` callback instead of `authenticate_user`. That setting allows, for example, to prevent unauthenticated users to accede API controllers while disabling the default fallback to Devise.
+When `fallback: :exception` is set, then an exception is raised on token authentication failure. The resulting controller behaviour is very similar to the behaviour induced by using the Devise `authenticate_user!` callback instead of `authenticate_user`. That setting allows, for example, to prevent unauthenticated users to accede API controllers while disabling the default fallback to Devise.
 
 **Important**: Please do notice that controller actions without CSRF protection **must** disable the Devise fallback for [security reasons][csrf] (both `fallback: :exception` and `fallback: :none` will disable the Devise fallback). Since Rails enables CSRF protection by default, this configuration requirement should only affect controllers where you have disabled it specifically, which may be the case of API controllers.
 
 To use no fallback when token authentication fails, set `fallback: :none`.
 
   [csrf]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues/49
+
+### Testing
+
+Here is an example of how you can test-drive your configuration using [Minitest][minitest]:
+
+  [minitest]: https://github.com/seattlerb/minitest
+
+```ruby
+class SomeControllerTest < ActionController::TestCase
+
+  test "index with token authentication via query params" do
+    get :index, { user_email: "alice@example.com", user_token: "1G8_s7P-V-4MGojaKD7a" }
+    assert_response :success
+  end
+
+  test "index with token authentication via request headers" do
+    @request.headers['X-User-Email'] = "alice@example.com"
+    @request.headers['X-User-Token'] = "1G8_s7P-V-4MGojaKD7a"
+
+    get :index
+    assert_response :success
+  end
+end
+```
 
 Documentation
 -------------
