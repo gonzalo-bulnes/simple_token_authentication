@@ -21,7 +21,7 @@ module SimpleTokenAuthentication
                                 'mongoid'       => 'Mongoid::Document',
                                 'rails'         => 'ActionController::Base',
                                 'rails_api'     => 'ActionController::API',
-                                'metal'         => 'ActionController::Metal' }
+                                'rails_metal'   => 'ActionController::Metal' }
     @@skip_devise_trackable = true
 
     # Allow the default configuration to be overwritten from initializers
