@@ -20,7 +20,8 @@ module SimpleTokenAuthentication
     @@adapters_dependencies = { 'active_record' => 'ActiveRecord::Base',
                                 'mongoid'       => 'Mongoid::Document',
                                 'rails'         => 'ActionController::Base',
-                                'rails_api'     => 'ActionController::API' }
+                                'rails_api'     => 'ActionController::API',
+                                'rails_metal'   => 'ActionController::Metal' }
     @@skip_devise_trackable = true
 
     # Allow the default configuration to be overwritten from initializers

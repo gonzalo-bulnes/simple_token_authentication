@@ -43,6 +43,7 @@ describe SimpleTokenAuthentication::Configuration do
         expect(@subject.adapters_dependencies['mongoid']).to eq 'Mongoid::Document'
         expect(@subject.adapters_dependencies['rails']).to eq 'ActionController::Base'
         expect(@subject.adapters_dependencies['rails_api']).to eq 'ActionController::API'
+        expect(@subject.adapters_dependencies['rails_metal']).to eq 'ActionController::Metal'
       end
     end
 
