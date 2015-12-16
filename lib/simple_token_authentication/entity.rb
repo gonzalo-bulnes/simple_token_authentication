@@ -56,10 +56,11 @@ module SimpleTokenAuthentication
 
     def get_token_from_params_or_headers controller
       # if the token is not present among params, get it from headers
-      if token = controller.params[token_param_name].blank? && controller.request.headers[token_header_name]
-        controller.params[token_param_name] = token
+      token = get_token_from_params(controller)
+      if token.blank?
+        token = get_token_from_headers(controller)
       end
-      controller.params[token_param_name]
+      token
     end
 
     def get_identifier_from_params_or_headers controller
@@ -68,6 +69,14 @@ module SimpleTokenAuthentication
         controller.params[identifier_param_name] = identifer_param
       end
       controller.params[identifier_param_name]
+    end
+
+    def get_token_from_params(controller)
+      controller.params[token_param_name]
+    end
+
+    def get_token_from_headers(controller)
+      controller.request.headers[token_header_name]
     end
   end
 end
