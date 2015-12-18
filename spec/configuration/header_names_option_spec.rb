@@ -64,7 +64,7 @@ describe 'Simple Token Authentication' do
 
             before(:each) do
               # request headers are set in the nested contexts, these are minor settings
-              allow(@controller).to receive_message_chain(:request, :headers).and_return(double())
+              allow(@controller).to receive_message_chain(:request, :headers).and_return(double({}))
               allow(@controller).to receive(:sign_in_handler).and_return(:sign_in_handler)
             end
 

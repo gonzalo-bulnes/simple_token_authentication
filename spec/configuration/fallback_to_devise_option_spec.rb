@@ -21,7 +21,8 @@ describe 'Simple Token Authentication' do
 
         it 'delegates authentication to Devise strategies', protected: true do
           @controller = @controller_class.new
-          allow(@controller).to receive(:params)
+          allow(@controller).to receive(:params).and_return({})
+          allow(@controller).to receive_message_chain(:request, :headers).and_return({})
           allow(@controller).to receive(:find_record_from_identifier)
 
           # sets :authenticate_user_from_token! (bang) in the before_filter
@@ -41,7 +42,8 @@ describe 'Simple Token Authentication' do
 
         it 'does nothing after token authentication fails', protected: true do
           @controller = @controller_class.new
-          allow(@controller).to receive(:params)
+          allow(@controller).to receive(:params).and_return({})
+          allow(@controller).to receive_message_chain(:request, :headers).and_return({})
           allow(@controller).to receive(:find_record_from_identifier)
 
           # sets :authenticate_user_from_token (non-bang) in the before_filter
@@ -61,7 +63,8 @@ describe 'Simple Token Authentication' do
 
         it 'delegates authentication to Devise strategies', protected: true do
           @controller = @controller_class.new
-          allow(@controller).to receive(:params)
+          allow(@controller).to receive(:params).and_return({})
+          allow(@controller).to receive_message_chain(:request, :headers).and_return({})
           allow(@controller).to receive(:find_record_from_identifier)
 
           # sets :authenticate_user_from_token! (bang) in the before_filter
@@ -89,7 +92,8 @@ describe 'Simple Token Authentication' do
 
           before(:each) do
             @controller = @controller_class.new
-            allow(@controller).to receive(:params)
+            allow(@controller).to receive(:params).and_return({})
+            allow(@controller).to receive_message_chain(:request, :headers).and_return({})
             allow(@controller).to receive(:find_record_from_identifier)
 
             # sets :authenticate_user_from_token (non-bang) in the before_filter
