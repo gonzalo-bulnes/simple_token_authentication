@@ -139,7 +139,7 @@ module SimpleTokenAuthentication
             token: "X-#{entity.name_underscore.camelize}-Token"
           }
         }
-        (options[:search] || {}).reverse_merge(default_options)
+        default_options.deep_merge(options[:search] || {})
       end
 
       # Private: Get one (always the same) object which behaves as a fallback authentication handler
