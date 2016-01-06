@@ -178,4 +178,41 @@ describe SimpleTokenAuthentication do
       end
     end
   end
+
+  context "when ActionController::Metal is available" do
+
+    before(:each) do
+      stub_const('ActionController::Metal', Class.new)
+
+      # define a dummy ActionController::Metal (a.k.a 'Rails Metal') adapter
+      dummy_rails_adapter = double()
+      allow(dummy_rails_adapter).to receive(:base_class).and_return(ActionController::Metal)
+      stub_const('SimpleTokenAuthentication::Adapters::DummyRailsMetalAdapter', dummy_rails_adapter)
+    end
+
+    describe '#ensure_controllers_can_act_as_token_authentication_handlers' do
+
+      before(:each) do
+        class SimpleTokenAuthentication::DummyController < ActionController::Metal; end
+        @dummy_controller = SimpleTokenAuthentication::DummyController
+
+        expect(@dummy_controller.new).to be_instance_of SimpleTokenAuthentication::DummyController
+        expect(@dummy_controller.new).to be_kind_of ActionController::Metal
+      end
+
+      after(:each) do
+        SimpleTokenAuthentication.send(:remove_const, :DummyController)
+      end
+
+      it 'allows any kind of ActionController::Metal to acts as token authentication handler', private: true do
+        expect(@dummy_controller).not_to respond_to :acts_as_token_authentication_handler_for
+
+        subject.ensure_controllers_can_act_as_token_authentication_handlers [
+                          SimpleTokenAuthentication::Adapters::DummyRailsMetalAdapter]
+
+        expect(@dummy_controller).to respond_to :acts_as_token_authentication_handler_for
+      end
+    end
+
+  end
 end

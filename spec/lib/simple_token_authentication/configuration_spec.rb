@@ -20,8 +20,8 @@ describe SimpleTokenAuthentication::Configuration do
 
       it_behaves_like 'a configuration option', 'controller_adapters'
 
-      it "defauts to ['rails', 'rails_api']", private: true do
-        expect(@subject.controller_adapters).to eq ['rails', 'rails_api']
+      it "defauts to ['rails', 'rails_api', 'rails_metal']", private: true do
+        expect(@subject.controller_adapters).to eq ['rails', 'rails_api', 'rails_metal']
       end
     end
 
@@ -43,6 +43,7 @@ describe SimpleTokenAuthentication::Configuration do
         expect(@subject.adapters_dependencies['mongoid']).to eq 'Mongoid::Document'
         expect(@subject.adapters_dependencies['rails']).to eq 'ActionController::Base'
         expect(@subject.adapters_dependencies['rails_api']).to eq 'ActionController::API'
+        expect(@subject.adapters_dependencies['rails_metal']).to eq 'ActionController::Metal'
       end
     end
 
