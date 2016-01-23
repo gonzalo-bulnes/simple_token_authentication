@@ -59,7 +59,7 @@ module SimpleTokenAuthentication
         return parameters if parameters
       end
       if search_options[:params]
-        retrieve_parameters(params, search_options[:params][:identifer],
+        retrieve_parameters(params, search_options[:params][:identifier],
                             search_options[:params][:token])
       end
     end
