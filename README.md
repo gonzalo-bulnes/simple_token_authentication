@@ -58,10 +58,10 @@ class User < ActiveRecord::Base
 end
 ```
 
-If the model or models you chose have no `:authentication_token` attribute, add them one (with an index):
+If the model or models you chose have no `:authentication_token` attribute, add them one (with a unique index):
 
 ```bash
-rails g migration add_authentication_token_to_users authentication_token:string:index
+rails g migration add_authentication_token_to_users "authentication_token:string{30}:uniq"
 rake db:migrate
 ```
 
