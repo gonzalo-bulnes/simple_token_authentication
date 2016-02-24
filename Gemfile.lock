@@ -4,7 +4,7 @@ PATH
     simple_token_authentication (1.12.0)
       actionmailer (>= 3.2.6, < 5)
       actionpack (>= 3.2.6, < 5)
-      devise (~> 3.2)
+      devise (>= 3.2, <= 4)
 
 GEM
   remote: https://rubygems.org/
@@ -85,7 +85,7 @@ GEM
       bson (~> 3.0)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
-    nokogiri (1.6.7.1)
+    nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     optionable (0.2.0)
     origin (2.1.1)
@@ -110,7 +110,7 @@ GEM
       activesupport (= 4.2.5)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (10.4.2)
+    rake (10.5.0)
     responders (2.1.1)
       railties (>= 4.2.0, < 5.1)
     rspec (3.4.0)
@@ -151,4 +151,4 @@ DEPENDENCIES
   tins (< 1.7.0)
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
