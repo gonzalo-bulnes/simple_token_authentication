@@ -10,7 +10,7 @@ describe 'Simple Token Authentication' do
 
   describe ':header_names option', header_names_option: true do
 
-    describe 'determines which header fields are looked at for authentication credentials' do
+    describe 'determines which header fields are looked at for authentication credentials', before_filter: true, before_action: true do
 
       before(:each) do
         user = double()
@@ -38,6 +38,7 @@ describe 'Simple Token Authentication' do
         # given a controller class which acts as token authentication handler
         @controller_class = Class.new
         allow(@controller_class).to receive(:before_filter)
+        allow(@controller_class).to receive(:before_action)
         @controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
         @controller = @controller_class.new
@@ -394,7 +395,7 @@ describe 'Simple Token Authentication' do
       end
     end
 
-    it 'can be modified from an initializer file', public: true do
+    it 'can be modified from an initializer file', public: true, before_filter: true, before_action: true do
       user = double()
       stub_const('User', user)
       allow(user).to receive(:name).and_return('User')
@@ -412,6 +413,7 @@ describe 'Simple Token Authentication' do
       # given a controller class which acts as token authentication handler
       @controller_class = Class.new
       allow(@controller_class).to receive(:before_filter)
+      allow(@controller_class).to receive(:before_action)
       @controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
       # INITIALIZATION

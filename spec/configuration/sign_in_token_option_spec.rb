@@ -16,6 +16,7 @@ describe 'Simple Token Authentication' do
         # given a controller class which acts as token authentication handler
         controller_class = Class.new
         allow(controller_class).to receive(:before_filter)
+        allow(controller_class).to receive(:before_action)
         controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
         # and handles authentication for a given model
         controller_class.acts_as_token_authentication_handler_for User
@@ -61,6 +62,7 @@ describe 'Simple Token Authentication' do
       # given a controller class which acts as token authentication handler
       controller_class = Class.new
       allow(controller_class).to receive(:before_filter)
+      allow(controller_class).to receive(:before_action)
       controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
       allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return('initial value')

@@ -144,7 +144,13 @@ module SimpleTokenAuthentication
         else
           :"authenticate_#{entity.name_underscore}_from_token"
         end
-        before_filter authenticate_method, options.slice(:only, :except, :if, :unless)
+
+        if respond_to?(:before_action)
+          # See https://github.com/rails/rails/commit/9d62e04838f01f5589fa50b0baa480d60c815e2c
+          before_action authenticate_method, options.slice(:only, :except, :if, :unless)
+        else
+          before_filter authenticate_method, options.slice(:only, :except, :if, :unless)
+        end
       end
     end
   end
