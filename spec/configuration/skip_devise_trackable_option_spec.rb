@@ -4,7 +4,7 @@ describe SimpleTokenAuthentication do
 
   describe ':skip_devise_trackable option', skip_devise_trackable_option: true do
 
-    describe 'determines if token authentication should increment the tracking statistics' do
+    describe 'determines if token authentication should increment the tracking statistics', before_filter: true, before_action: true do
 
       before(:each) do
         user = double()
@@ -16,6 +16,7 @@ describe SimpleTokenAuthentication do
         # given a controller class which acts as token authentication handler
         controller_class = Class.new
         allow(controller_class).to receive(:before_filter)
+        allow(controller_class).to receive(:before_action)
         controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
         controller_class.acts_as_token_authentication_handler_for User
 
@@ -51,7 +52,7 @@ describe SimpleTokenAuthentication do
       end
     end
 
-    it 'can be modified from an initializer file', public: true do
+    it 'can be modified from an initializer file', public: true, before_filter: true, before_action: true do
       user = double()
       stub_const('User', user)
       allow(user).to receive(:name).and_return('User')
@@ -61,6 +62,7 @@ describe SimpleTokenAuthentication do
       # given a controller class which acts as token authentication handler
       controller_class = Class.new
       allow(controller_class).to receive(:before_filter)
+      allow(controller_class).to receive(:before_action)
       controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
       allow(SimpleTokenAuthentication).to receive(:skip_devise_trackable).and_return('initial value')
