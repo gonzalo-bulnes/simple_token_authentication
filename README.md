@@ -284,11 +284,12 @@ Any question? Please don't hesitate to open a new issue to get help. I keep ques
   [open-questions]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues?labels=question&page=1&state=open
   [faq]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues?direction=desc&labels=question&page=1&sort=comments&state=closed
 
-### Changelog
+### Change Log
 
-Releases are commented to provide a brief [changelog][changelog].
+Releases are commented to provide a [brief change log][releases], details can be found in the [`CHANGELOG`][changelog] file.
 
-  [changelog]: https://github.com/gonzalo-bulnes/simple_token_authentication/releases
+  [releases]: https://github.com/gonzalo-bulnes/simple_token_authentication/releases
+  [changelog]: ./CHANGELOG.md
 
 Development
 -----------
