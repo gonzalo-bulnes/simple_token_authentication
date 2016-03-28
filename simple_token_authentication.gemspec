@@ -16,13 +16,14 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,doc,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "actionmailer", "5.0.0.beta3"
-  s.add_dependency "actionpack", "5.0.0.beta3"
-  s.add_dependency "devise", "4.0.0.rc2"
+  s.add_dependency "actionmailer", ">= 3.2", "< 6"
+  s.add_dependency "actionpack", ">= 3.2", "< 6"
+  s.add_dependency "devise", ">= 3.2", "< 5"
 
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "inch", "~> 0.4"
-  s.add_development_dependency "activerecord", "5.0.0.beta3"
-  # this is an Inch dependency, which version I want to restrict to keep Ruby 1.9 compatibility
+  s.add_development_dependency "activerecord", ">= 3.2.6", "< 6"
+  # These are indirect dependencies, which versions I want to restrict to keep Ruby 1.9.3 compatibility
   s.add_development_dependency 'tins', '< 1.7.0'
+  s.add_development_dependency 'mime-types', '< 3'
 end
