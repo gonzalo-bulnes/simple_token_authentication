@@ -50,11 +50,11 @@ module SimpleTokenAuthentication
 
   def self.adapter_dependency_fulfilled? adapter_short_name
     dependency = SimpleTokenAuthentication.adapters_dependencies[adapter_short_name]
-    # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/229/commits/74eda6c28cd0b45636c466de56f2dbaca5c5b629#r57507423
-    case
-    when ActiveSupport.version.to_s > '5.1'
+
+    unless respond_to?(:qualified_const_defined?)
       const_defined?(dependency)
-    when ActiveSupport.version.to_s =~ /^5\.0/
+    elsif ActiveSupport.version.to_s =~ /^5\.0/
+      # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/229/commits/74eda6c28cd0b45636c466de56f2dbaca5c5b629#r57507423
       silencing_deprecation_warnings { qualified_const_defined?(dependency) }
     else
       qualified_const_defined?(dependency)
