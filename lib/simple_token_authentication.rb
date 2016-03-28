@@ -3,11 +3,9 @@ require 'simple_token_authentication/acts_as_token_authenticatable'
 require 'simple_token_authentication/acts_as_token_authentication_handler'
 require 'simple_token_authentication/configuration'
 require 'simple_token_authentication/errors'
-require 'simple_token_authentication/helpers'
 
 module SimpleTokenAuthentication
   extend Configuration
-  extend Helpers
 
   private
 
@@ -51,11 +49,9 @@ module SimpleTokenAuthentication
   def self.adapter_dependency_fulfilled? adapter_short_name
     dependency = SimpleTokenAuthentication.adapters_dependencies[adapter_short_name]
 
-    unless respond_to?(:qualified_const_defined?)
-      const_defined?(dependency)
-    elsif ActiveSupport.version.to_s =~ /^5\.0/
+    if !respond_to?(:qualified_const_defined?) || (ActiveSupport.respond_to?(:version) && ActiveSupport.version.to_s =~ /^5\.0/)
       # See https://github.com/gonzalo-bulnes/simple_token_authentication/pull/229/commits/74eda6c28cd0b45636c466de56f2dbaca5c5b629#r57507423
-      silencing_deprecation_warnings { qualified_const_defined?(dependency) }
+      const_defined?(dependency)
     else
       qualified_const_defined?(dependency)
     end
