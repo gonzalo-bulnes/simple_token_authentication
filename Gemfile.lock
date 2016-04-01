@@ -145,10 +145,11 @@ PLATFORMS
 DEPENDENCIES
   activerecord (>= 3.2.6, < 5)
   inch (~> 0.4)
+  mime-types (< 3)
   mongoid (>= 3.1.0, < 5)
   rspec (~> 3.0)
   simple_token_authentication!
   tins (< 1.7.0)
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
