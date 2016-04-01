@@ -188,6 +188,45 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - A test suite, using Cucumber : )
 
+## 1.0.0.pre.5 - 2014-01-09
+
+### Fixed
+
+- Authentication was required as soon as the gem was loaded - reported by @pdobb and @AhmedAttyah
+
+## Changed
+
+- Use the Bundler-friendly format for version numbers instead of follwing strictly the Semantic Versionning specification
+
+## 1.0.0-beta.4 - 2013-12-26
+
+### Fixed
+
+- The user record is now fetched using `find_by_email` when `find_by` is not present (Rails 3.2) - with help from @AhmedAttyah
+
+## 1.0.0-beta.3 - 2013-12-17
+
+### Fixed
+
+- Redundant dependencies: _Simple Token Authentication_ only depends on ActionMailer and ActiveRecord, not Rails
+
+## 1.0.0-beta.2 - 2013-12-16
+
+### Added
+
+- Explicit dependency on Devise
+
+## 1.0.0-beta - 2013-12-16
+
+### Added
+
+- Documentation
+
+## Previously
+
+This [gist][gist] did refactor the Jose Valim's code into an `ActiveSupport::Concern`.
+
+[gist]: https://gist.github.com/gonzalo-bulnes/7659739
 [1.12.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.10.1...v1.11.0
 [1.10.1]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.10.0...v1.10.1
@@ -207,6 +246,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.1.1]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.0.0.pre.5..v1.0.0
+[1.0.0.pre.5]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.0.0.beta.4..v1.0.0.pre.5
+[1.0.0.beta.4]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.0.0.beta.3..v1.0.0.beta.4
+[1.0.0.beta.3]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.0.0.beta.2..v1.0.0.beta.3
+[1.0.0.beta.2]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.0.0.beta..v1.0.0.beta.2
 
 ## Inspiration
 
