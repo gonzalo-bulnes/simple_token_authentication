@@ -27,7 +27,9 @@ describe SimpleTokenAuthentication do
         # and both identifier and authentication token are correct
         allow(@controller).to receive(:find_record_from_identifier).and_return(@record)
         allow(@controller).to receive(:token_correct?).and_return(true)
-        allow(@controller).to receive(:env).and_return({})
+        request = double()
+        allow(request).to receive(:env).and_return({})
+        allow(@controller).to receive(:request)
         allow(@controller).to receive(:sign_in)
       end
 
@@ -36,7 +38,7 @@ describe SimpleTokenAuthentication do
         it 'instructs Devise to track token-authentication-related signins' do
           allow(SimpleTokenAuthentication).to receive(:skip_devise_trackable).and_return(true)
 
-          expect(@controller).to receive_message_chain(:env, :[]=).with('devise.skip_trackable', true)
+          expect(@controller).to receive_message_chain(:request,:env, :[]=).with('devise.skip_trackable', true)
           @controller.authenticate_user_from_token
         end
       end
@@ -46,7 +48,7 @@ describe SimpleTokenAuthentication do
         it 'instructs Devise not to track token-authentication-related signins' do
           allow(SimpleTokenAuthentication).to receive(:skip_devise_trackable).and_return(false)
 
-          expect(@controller).to receive_message_chain(:env, :[]=).with('devise.skip_trackable', false)
+          expect(@controller).to receive_message_chain(:request,:env, :[]=).with('devise.skip_trackable', false)
           @controller.authenticate_user_from_token
         end
       end
@@ -80,7 +82,7 @@ describe SimpleTokenAuthentication do
       # and both identifier and authentication token are correct
       allow(@controller).to receive(:find_record_from_identifier).and_return(@record)
       allow(@controller).to receive(:token_correct?).and_return(true)
-      allow(@controller).to receive(:env).and_return({})
+      allow(@controller).to receive(:request).and_return({})
       allow(@controller).to receive(:sign_in)
 
       # even if modified *after* the class was loaded
@@ -88,7 +90,7 @@ describe SimpleTokenAuthentication do
 
       # the option updated value is taken into account
       # when token authentication is performed
-      expect(@controller).to receive_message_chain(:env, :[]=).with('devise.skip_trackable', 'updated value')
+      expect(@controller).to receive_message_chain(:request,:env, :[]=).with('devise.skip_trackable', 'updated value')
       @controller.authenticate_user_from_token
     end
   end
