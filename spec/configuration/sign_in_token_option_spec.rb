@@ -28,7 +28,9 @@ describe 'Simple Token Authentication' do
         # and both identifier and authentication token are correct
         allow(@controller).to receive(:find_record_from_identifier).and_return(@record)
         allow(@controller).to receive(:token_correct?).and_return(true)
-        allow(@controller).to receive(:env).and_return({})
+        request = double()
+        allow(request).to receive(:env).and_return({})
+        allow(@controller).to receive(:request).and_return(request)
       end
 
       context 'when false' do
@@ -80,8 +82,9 @@ describe 'Simple Token Authentication' do
       # and both identifier and authentication token are correct
       allow(@controller).to receive(:find_record_from_identifier).and_return(@record)
       allow(@controller).to receive(:token_correct?).and_return(true)
-      allow(@controller).to receive(:env).and_return({})
-
+      request = double()
+      allow(request).to receive(:env).and_return({})
+      allow(@controller).to receive(:request).and_return(request)
       # even if modified *after* the class was loaded
       allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return('updated value')
 
