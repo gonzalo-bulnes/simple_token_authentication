@@ -1,3 +1,14 @@
+GIT
+  remote: git://github.com/plataformatec/devise.git
+  revision: 2b3799e6ceb315172d14a16103ab9fb1702f79fc
+  specs:
+    devise (4.0.0.rc2)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0, < 5.1)
+      responders
+      warden (~> 1.2.3)
+
 PATH
   remote: .
   specs:
@@ -50,13 +61,6 @@ GEM
     builder (3.2.2)
     coderay (1.1.1)
     connection_pool (2.2.0)
-    devise (3.5.6)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 3.2.6, < 5)
-      responders
-      thread_safe (~> 0.1)
-      warden (~> 1.2.3)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     globalid (0.3.6)
@@ -144,6 +148,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (>= 3.2.6, < 6)
+  devise!
   inch (~> 0.4)
   mime-types (< 3)
   mongoid (>= 3.1.0, < 5)
