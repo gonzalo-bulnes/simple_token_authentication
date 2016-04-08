@@ -1,4 +1,7 @@
 language: ruby
+gemfile:
+  - Gemfile
+  - gemfiles/ruby_1.9.3.gemfile
 rvm:
   - "1.9.3"
   - "2.2.0"
@@ -6,5 +9,12 @@ rvm:
 matrix:
   allow_failures:
     - rvm: ruby-head
+  exclude:
+    - rvm: 1.9.3
+      gemfile: Gemfile
+    - rvm: 2.2.0
+      gemfile: gemfiles/ruby_1.9.3.gemfile
+    - rvm: ruby-head
+      gemfile: gemfiles/ruby_1.9.3.gemfile
 install: bundle install --jobs=3 --retry=3 --no-deployment
 sudo: false
