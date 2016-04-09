@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe SimpleTokenAuthentication::ExceptionFallbackHandler do
 
+  let(:exception_fallback_handler) { SimpleTokenAuthentication::ExceptionFallbackHandler.instance }
+
   it_behaves_like 'a fallback handler'
 
   describe '#fallback!' do
@@ -17,7 +19,7 @@ describe SimpleTokenAuthentication::ExceptionFallbackHandler do
       end
 
       it 'delegates exception throwing to Warden', private: true do
-        expect{ subject.fallback!(@controller, @entity) }.to throw_symbol(:warden, scope: :entity)
+        expect{ exception_fallback_handler.fallback!(@controller, @entity) }.to throw_symbol(:warden, scope: :entity)
       end
     end
 
@@ -32,7 +34,7 @@ describe SimpleTokenAuthentication::ExceptionFallbackHandler do
       end
 
       it 'does not throw any exception', private: true do
-        expect{ subject.fallback!(@controller, @entity) }.not_to throw_symbol(:warden, scope: :entity)
+        expect{ exception_fallback_handler.fallback!(@controller, @entity) }.not_to throw_symbol(:warden, scope: :entity)
       end
     end
   end

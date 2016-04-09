@@ -11,7 +11,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
     SimpleTokenAuthentication.send(:remove_const, :SomeClass)
   end
 
-  it_behaves_like 'a token authentication handler'
+  it_behaves_like 'a token authentication handler', lambda { described_class.new }
 
   let(:subject) { described_class }
 
@@ -112,44 +112,14 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
   describe '.fallback_handler' do
 
-    before(:each) do
-      allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
-        .and_return('a DeviseFallbackHandler instance')
-      allow(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
-        .and_return('an ExceptionFallbackHandler instance')
-    end
-
     context 'when the Devise fallback is enabled', fallback_option: true do
 
       before(:each) do
         @options = { fallback: :devise }
       end
 
-      context 'when called for the first time' do
-
-        it 'creates a new DeviseFallbackHandler instance', private: true do
-          expect(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
-          expect(subject.send(:fallback_handler, @options)).to eq 'a DeviseFallbackHandler instance'
-        end
-      end
-
-      context 'when a DeviseFallbackHandler instance was already created' do
-
-        before(:each) do
-          subject.send(:fallback_handler, @options)
-          # let's make any new DeviseFallbackHandler distinct from the first
-          allow(SimpleTokenAuthentication::DeviseFallbackHandler).to receive(:new)
-          .and_return('another DeviseFallbackHandler instance')
-        end
-
-        it 'returns that instance', private: true do
-          expect(subject.send(:fallback_handler, @options)).to eq 'a DeviseFallbackHandler instance'
-        end
-
-        it 'does not create a new DeviseFallbackHandler instance', private: true do
-          expect(SimpleTokenAuthentication::DeviseFallbackHandler).not_to receive(:new)
-          expect(subject.send(:fallback_handler, @options)).not_to eq 'another DeviseFallbackHandler instance'
-        end
+      it 'returns a DeviseFallbackHandler instance', private: true do
+        expect(subject.send(:fallback_handler, @options)).to be_kind_of SimpleTokenAuthentication::DeviseFallbackHandler
       end
     end
 
@@ -159,31 +129,8 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         @options = { fallback: :exception }
       end
 
-      context 'when called for the first time' do
-
-        it 'creates a new ExceptionFallbackHandler instance', private: true do
-          expect(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
-          expect(subject.send(:fallback_handler, @options)).to eq 'an ExceptionFallbackHandler instance'
-        end
-      end
-
-      context 'when a ExceptionFallbackHandler instance was already created' do
-
-        before(:each) do
-          subject.send(:fallback_handler, @options)
-          # let's make any new ExceptionFallbackHandler distinct from the first
-          allow(SimpleTokenAuthentication::ExceptionFallbackHandler).to receive(:new)
-          .and_return('another ExceptionFallbackHandler instance')
-        end
-
-        it 'returns that instance', private: true do
-          expect(subject.send(:fallback_handler, @options)).to eq 'an ExceptionFallbackHandler instance'
-        end
-
-        it 'does not create a new ExceptionFallbackHandler instance', private: true do
-          expect(SimpleTokenAuthentication::ExceptionFallbackHandler).not_to receive(:new)
-          expect(subject.send(:fallback_handler, @options)).not_to eq 'another ExceptionFallbackHandler instance'
-        end
+      it 'returns a ExceptionFallbackHandler instance', private: true do
+        expect(subject.send(:fallback_handler, @options)).to be_kind_of SimpleTokenAuthentication::ExceptionFallbackHandler
       end
     end
   end

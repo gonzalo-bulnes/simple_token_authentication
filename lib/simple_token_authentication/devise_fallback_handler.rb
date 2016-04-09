@@ -1,5 +1,6 @@
 module SimpleTokenAuthentication
   class DeviseFallbackHandler
+    include Singleton
 
     # Fallback to the Devise authentication strategies.
     def fallback!(controller, entity)
