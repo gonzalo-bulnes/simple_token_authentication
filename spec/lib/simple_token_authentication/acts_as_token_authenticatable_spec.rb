@@ -2,8 +2,10 @@ require 'spec_helper'
 
 
 class DummyTokenGenerator
-  def initialize(args={})
-    @tokens_to_be_generated = args[:tokens_to_be_generated]
+  include Singleton
+
+  def tokens_to_be_generated=(tokens)
+    @tokens_to_be_generated = tokens
   end
 
   def generate_token
@@ -69,8 +71,6 @@ describe 'A token authenticatable class (or one of its children)' do
 
             def initialize(args={})
               @authentication_token = args[:authentication_token]
-              @token_generator = DummyTokenGenerator.new(
-                  tokens_to_be_generated: TOKENS_IN_USE + ['Dist1nCt-Tok3N'])
             end
 
             def authentication_token=(value)
@@ -87,7 +87,9 @@ describe 'A token authenticatable class (or one of its children)' do
             end
 
             def token_generator
-              @token_generator
+              token_generator = DummyTokenGenerator.instance
+              token_generator.tokens_to_be_generated = TOKENS_IN_USE + ['Dist1nCt-Tok3N']
+              token_generator
             end
           end
         end

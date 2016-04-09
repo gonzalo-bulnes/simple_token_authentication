@@ -35,9 +35,8 @@ module SimpleTokenAuthentication
       self.class.where(authentication_token: token).count == 0
     end
 
-    # Private: Get one (always the same) object which behaves as a token generator
     def token_generator
-      @token_generator ||= TokenGenerator.new
+      TokenGenerator.instance
     end
 
     module ClassMethods
