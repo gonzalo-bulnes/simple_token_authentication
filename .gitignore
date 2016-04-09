@@ -14,8 +14,9 @@ test/dummy/.sass-cache
 .ruby-version
 .ruby-gemset
 
-# Appraisal (note that gemfiles/*.gemfile should be committed in)
-gemfiles
+# Appraisal
+gemfiles/*
+!gemfiles/*.gemfile
 
 # Editors
 *.sublime-project
