@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["gon.bulnes@gmail.com"]
   s.homepage    = "https://github.com/gonzalo-bulnes/simple_token_authentication"
   s.summary     = "Simple (but safe) token authentication for Rails apps or API with Devise."
-  s.license     = "GPL-3.0+"
+  s.license     = "MIT"
 
   s.files = Dir["{app,config,doc,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
