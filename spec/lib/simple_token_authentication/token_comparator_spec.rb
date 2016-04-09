@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe SimpleTokenAuthentication::TokenComparator do
 
+  let(:token_comparator) { described_class.instance }
+
   it_behaves_like 'a token comparator'
 
   it 'delegates token comparison to Devise.secure_compare', private: true do
@@ -11,7 +13,7 @@ describe SimpleTokenAuthentication::TokenComparator do
 
     # delegating consists in sending the message
     expect(Devise).to receive(:secure_compare)
-    response = subject.compare('A_raNd0MtoKeN', 'ano4heR-Tok3n')
+    response = token_comparator.compare('A_raNd0MtoKeN', 'ano4heR-Tok3n')
 
     # and returning the response
     expect(response).to eq 'Devise.secure_compare response.'

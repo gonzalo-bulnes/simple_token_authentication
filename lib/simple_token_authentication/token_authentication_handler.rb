@@ -74,9 +74,8 @@ module SimpleTokenAuthentication
       identifier_value
     end
 
-    # Private: Get one (always the same) object which behaves as a token comprator
     def token_comparator
-      @@token_comparator ||= TokenComparator.new
+      TokenComparator.instance
     end
 
     def sign_in_handler
