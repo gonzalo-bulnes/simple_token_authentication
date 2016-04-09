@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added
+
+- This change log : )
+
+### Changed
+
+- The [Travis CI build matrix][matrix] to improve the regression testing coverage
+
+
+  [matrix]: https://github.com/gonzalo-bulnes/simple_token_authentication/blob/v1.13.0/.travis.yml
+
 ## [1.12.0] - 2016-01-06
 
 ### Added
@@ -182,13 +195,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Nothing, this is a replacement for **v1.0.0** (because I messed up with Rubygems)
 
-## 1.0.0 - 2014-01-26 [YANKED]
+## [1.0.0] - 2014-01-26 [YANKED]
 
 ### Added
 
 - A test suite, using Cucumber : )
 
-## 1.0.0.pre.5 - 2014-01-09
+## [1.0.0.pre.5] - 2014-01-09
 
 ### Fixed
 
@@ -198,19 +211,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Use the Bundler-friendly format for version numbers instead of follwing strictly the Semantic Versionning specification
 
-## 1.0.0-beta.4 - 2013-12-26
+## [1.0.0-beta.4] - 2013-12-26
 
 ### Fixed
 
 - The user record is now fetched using `find_by_email` when `find_by` is not present (Rails 3.2) - with help from @AhmedAttyah
 
-## 1.0.0-beta.3 - 2013-12-17
+## [1.0.0-beta.3] - 2013-12-17
 
 ### Fixed
 
 - Redundant dependencies: _Simple Token Authentication_ only depends on ActionMailer and ActiveRecord, not Rails
 
-## 1.0.0-beta.2 - 2013-12-16
+## [1.0.0-beta.2] - 2013-12-16
 
 ### Added
 
@@ -227,6 +240,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This [gist][gist] did refactor the Jose Valim's code into an `ActiveSupport::Concern`.
 
 [gist]: https://gist.github.com/gonzalo-bulnes/7659739
+[Unreleased]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.12.0...HEAD
 [1.12.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.10.1...v1.11.0
 [1.10.1]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.10.0...v1.10.1
