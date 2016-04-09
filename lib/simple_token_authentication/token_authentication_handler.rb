@@ -79,9 +79,8 @@ module SimpleTokenAuthentication
       @@token_comparator ||= TokenComparator.new
     end
 
-    # Private: Get one (always the same) object which behaves as a sign in handler
     def sign_in_handler
-      @@sign_in_handler ||= SignInHandler.new
+      SignInHandler.instance
     end
 
     module ClassMethods
