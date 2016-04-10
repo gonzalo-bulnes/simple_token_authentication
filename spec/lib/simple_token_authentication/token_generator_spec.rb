@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe SimpleTokenAuthentication::TokenGenerator do
 
+  let(:token_generator) { SimpleTokenAuthentication::TokenGenerator.instance }
+
   it_behaves_like 'a token generator'
 
   it 'delegates token generation to Devise.friendly_token', private: true do
@@ -11,7 +13,7 @@ describe SimpleTokenAuthentication::TokenGenerator do
 
     # delegating consists in sending the message
     expect(Devise).to receive(:friendly_token)
-    response = subject.generate_token
+    response = token_generator.generate_token
 
     # and returning the response
     expect(response).to eq 'FRi3ndlY_TokeN'

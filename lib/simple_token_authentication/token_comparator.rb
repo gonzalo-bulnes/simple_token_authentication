@@ -2,6 +2,7 @@ require 'devise'
 
 module SimpleTokenAuthentication
   class TokenComparator
+    include Singleton
 
     # Compare two String instances
     #

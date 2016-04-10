@@ -1,5 +1,7 @@
 module SimpleTokenAuthentication
   class ExceptionFallbackHandler
+    include Singleton
+
     # Notifies the failure of authentication to Warden in the same DEvise does.
     # Does result in an HTTP 401 response in a Devise context.
     def fallback!(controller, entity)

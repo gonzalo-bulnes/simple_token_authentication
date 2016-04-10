@@ -74,14 +74,12 @@ module SimpleTokenAuthentication
       identifier_value
     end
 
-    # Private: Get one (always the same) object which behaves as a token comprator
     def token_comparator
-      @@token_comparator ||= TokenComparator.new
+      TokenComparator.instance
     end
 
-    # Private: Get one (always the same) object which behaves as a sign in handler
     def sign_in_handler
-      @@sign_in_handler ||= SignInHandler.new
+      SignInHandler.instance
     end
 
     module ClassMethods
@@ -114,9 +112,9 @@ module SimpleTokenAuthentication
           class_variable_get(:@@fallback_authentication_handler)
         else
           if options[:fallback] == :exception
-            class_variable_set(:@@fallback_authentication_handler, ExceptionFallbackHandler.new)
+            class_variable_set(:@@fallback_authentication_handler, ExceptionFallbackHandler.instance)
           else
-            class_variable_set(:@@fallback_authentication_handler, DeviseFallbackHandler.new)
+            class_variable_set(:@@fallback_authentication_handler, DeviseFallbackHandler.instance)
           end
         end
       end

@@ -1,5 +1,7 @@
 module SimpleTokenAuthentication
   class SignInHandler
+    include Singleton
+
     # Devise sign in is performed through a controller
     # which includes Devise::Controllers::SignInOut
     def sign_in(controller, record, *args)
