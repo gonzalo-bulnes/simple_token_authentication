@@ -3,16 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.13.0] - 2016-04-20
 
 ### Added
 
+- Support for Devise 4
 - This change log : )
 
 ### Changed
 
 - The [Travis CI build matrix][matrix] to improve the regression testing coverage
-
+- The migration suggestion to make it safer - by @halilim
 
   [matrix]: https://github.com/gonzalo-bulnes/simple_token_authentication/blob/v1.13.0/.travis.yml
 
@@ -240,7 +241,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This [gist][gist] did refactor the Jose Valim's code into an `ActiveSupport::Concern`.
 
 [gist]: https://gist.github.com/gonzalo-bulnes/7659739
-[Unreleased]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.12.0...HEAD
+[1.13.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.10.1...v1.11.0
 [1.10.1]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.10.0...v1.10.1

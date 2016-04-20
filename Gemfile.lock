@@ -4,7 +4,7 @@ PATH
     simple_token_authentication (1.12.0)
       actionmailer (>= 3.2.6, < 5)
       actionpack (>= 3.2.6, < 5)
-      devise (~> 3.2)
+      devise (>= 3.2, < 5)
 
 GEM
   remote: https://rubygems.org/
@@ -54,12 +54,11 @@ GEM
     builder (3.2.2)
     coderay (1.1.1)
     connection_pool (2.2.0)
-    devise (3.5.6)
+    devise (4.0.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
-      railties (>= 3.2.6, < 5)
+      railties (>= 4.1.0, < 5.1)
       responders
-      thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
     erubis (2.7.0)
