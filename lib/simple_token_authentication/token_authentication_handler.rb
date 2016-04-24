@@ -27,10 +27,11 @@ module SimpleTokenAuthentication
       private :integrate_with_devise_case_insensitive_keys
     end
 
-    def authenticate_entity_from_token!(entity)
-      record = find_record_from_identifier(entity)
+    def authenticate_entity_from_token!(entity, search_options)
+      identifier, token = search_parameters(search_options)
+      record = find_record_from_identifier(entity, identifier)
 
-      if token_correct?(record, entity, token_comparator)
+      if token_correct?(record, token, token_comparator)
         perform_sign_in!(record, sign_in_handler)
       end
     end
@@ -39,9 +40,8 @@ module SimpleTokenAuthentication
       fallback_handler.fallback!(self, entity)
     end
 
-    def token_correct?(record, entity, token_comparator)
-      record && token_comparator.compare(record.authentication_token,
-                                         entity.get_token_from_params_or_headers(self))
+    def token_correct?(record, token, token_comparator)
+      record && token_comparator.compare(record.authentication_token, token)
     end
 
     def perform_sign_in!(record, sign_in_handler)
@@ -52,14 +52,32 @@ module SimpleTokenAuthentication
       sign_in_handler.sign_in self, record, store: SimpleTokenAuthentication.sign_in_token
     end
 
-    def find_record_from_identifier(entity)
-      identifier_param_value = entity.get_identifier_from_params_or_headers(self).presence
+    def search_parameters(search_options)
+      if search_options[:headers]
+        parameters = retrieve_parameters(request.headers, search_options[:headers][:identifier],
+                                         search_options[:headers][:token])
+        return parameters if parameters
+      end
+      if search_options[:params]
+        retrieve_parameters(params, search_options[:params][:identifier],
+                            search_options[:params][:token])
+      end
+    end
 
-      identifier_param_value = integrate_with_devise_case_insensitive_keys(identifier_param_value, entity)
+    def retrieve_parameters(object, identifier, token)
+      if object[identifier].present? && object[token].present?
+        [object[identifier], object[token]]
+      else
+        nil
+      end
+    end
+
+    def find_record_from_identifier(entity, identifier)
+      identifier = integrate_with_devise_case_insensitive_keys(identifier, entity)
 
       # The finder method should be compatible with all the model adapters,
       # namely ActiveRecord and Mongoid in all their supported versions.
-      identifier_param_value && entity.model.find_for_authentication(entity.identifier => identifier_param_value)
+      identifier && entity.model.find_for_authentication(entity.identifier => identifier)
     end
 
     # Private: Take benefit from Devise case-insensitive keys
@@ -93,7 +111,8 @@ module SimpleTokenAuthentication
         model_alias = options[:as] || options['as']
         entity = entities_manager.find_or_create_entity(model, model_alias)
         options = SimpleTokenAuthentication.parse_options(options)
-        define_token_authentication_helpers_for(entity, fallback_handler(options))
+        define_token_authentication_helpers_for(entity, search_options(entity, options),
+                                                fallback_handler(options))
         set_token_authentication_hooks(entity, options)
       end
 
@@ -104,6 +123,21 @@ module SimpleTokenAuthentication
         else
           class_variable_set(:@@entities_manager, EntitiesManager.new)
         end
+      end
+
+      # Private: Gets the options for finding the identifier and token for the current controller.
+      def search_options(entity, options)
+        default_options = {
+          params: {
+            identifier: "#{entity.name_underscore}_#{entity.identifier}".to_sym,
+            token: "#{entity.name_underscore}_token".to_sym,
+          },
+          headers: {
+            identifier: "X-#{entity.name_underscore.camelize}-#{entity.identifier.to_s.camelize}",
+            token: "X-#{entity.name_underscore.camelize}-Token"
+          }
+        }
+        default_options.deep_merge(options[:search] || {})
       end
 
       # Private: Get one (always the same) object which behaves as a fallback authentication handler
@@ -119,21 +153,19 @@ module SimpleTokenAuthentication
         end
       end
 
-      def define_token_authentication_helpers_for(entity, fallback_handler)
+      def define_token_authentication_helpers_for(entity, search_options, fallback_handler)
 
         method_name = "authenticate_#{entity.name_underscore}_from_token"
         method_name_bang = method_name + '!'
 
         class_eval do
           define_method method_name.to_sym do
-            lambda { |_entity| authenticate_entity_from_token!(_entity) }.call(entity)
+            authenticate_entity_from_token!(entity, search_options)
           end
 
           define_method method_name_bang.to_sym do
-            lambda do |_entity|
-              authenticate_entity_from_token!(_entity)
-              fallback!(_entity, fallback_handler)
-            end.call(entity)
+            authenticate_entity_from_token!(entity, search_options)
+            fallback!(entity, fallback_handler)
           end
         end
       end

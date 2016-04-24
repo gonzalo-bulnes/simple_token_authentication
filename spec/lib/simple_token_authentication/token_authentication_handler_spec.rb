@@ -23,7 +23,8 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
     it 'ensures token authentication is handled for a given (token authenticatable) model', public: true do
       entities_manager = double()
-      allow(entities_manager).to receive(:find_or_create_entity).and_return('entity')
+      entity = SimpleTokenAuthentication::Entity.new(User)
+      allow(entities_manager).to receive(:find_or_create_entity).and_return(entity)
 
       # skip steps which are not relevant in this example
       allow(SimpleTokenAuthentication).to receive(:fallback).and_return('default')
@@ -31,7 +32,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       allow(subject).to receive(:set_token_authentication_hooks)
       allow(subject).to receive(:define_token_authentication_helpers_for)
 
-      expect(subject).to receive(:set_token_authentication_hooks).with('entity', {option: 'value', fallback: 'default'})
+      expect(subject).to receive(:set_token_authentication_hooks).with(entity, {option: 'value', fallback: 'default'})
       subject.handle_token_authentication_for(User, {option: 'value'})
     end
 
@@ -40,8 +41,12 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       it 'ensures token authentication is handled for the given (token authenticatable) models', public: true do
         double_super_admin_model
         entities_manager = double()
-        allow(entities_manager).to receive(:find_or_create_entity).with(User, nil).and_return('User entity')
-        allow(entities_manager).to receive(:find_or_create_entity).with(SuperAdmin, nil).and_return('SuperAdmin entity')
+        user_entity = SimpleTokenAuthentication::Entity.new(User)
+        super_admin_entity = SimpleTokenAuthentication::Entity.new(SuperAdmin)
+        allow(entities_manager).to receive(:find_or_create_entity).with(User, nil)
+        .and_return(user_entity)
+        allow(entities_manager).to receive(:find_or_create_entity).with(SuperAdmin, nil)
+        .and_return(super_admin_entity)
 
         # skip steps which are not relevant in this example
         allow(SimpleTokenAuthentication).to receive(:fallback).and_return('default')
@@ -49,8 +54,8 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         allow(subject).to receive(:set_token_authentication_hooks)
         allow(subject).to receive(:define_token_authentication_helpers_for)
 
-        expect(subject).to receive(:set_token_authentication_hooks).with('User entity', {option: 'value', fallback: 'default'})
-        expect(subject).to receive(:set_token_authentication_hooks).with('SuperAdmin entity', {option: 'some specific value', fallback: 'default'})
+        expect(subject).to receive(:set_token_authentication_hooks).with(user_entity, {option: 'value', fallback: 'default'})
+        expect(subject).to receive(:set_token_authentication_hooks).with(super_admin_entity, {option: 'some specific value', fallback: 'default'})
         subject.handle_token_authentication_for(User, {option: 'value'})
         subject.handle_token_authentication_for(SuperAdmin, {option: 'some specific value'})
       end
@@ -68,8 +73,10 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         allow(subject).to receive(:define_token_authentication_helpers_for)
 
         expect(entities_manager).to receive(:find_or_create_entity).with(User, 'some_alias')
+        .and_return(SimpleTokenAuthentication::Entity.new(User))
         subject.handle_token_authentication_for(User, {option: 'value', as: 'some_alias'})
         expect(entities_manager).to receive(:find_or_create_entity).with(User, 'another_alias')
+        .and_return(SimpleTokenAuthentication::Entity.new(User))
         subject.handle_token_authentication_for(User, {option: 'value', 'as' => 'another_alias'})
       end
     end
@@ -160,20 +167,18 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
         it 'returns the proper record if any' do
           # let's say there is a record
           record = double()
+          email = 'alice@example.com'
           allow(@entity).to receive_message_chain(:model, :find_for_authentication)
-          .with(email: 'alice@example.com')
+          .with(email: email)
           .and_return(record)
 
-          expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+          expect(subject.new.send(:find_record_from_identifier, @entity, email)).to eq record
         end
       end
 
       context 'when a upcased identifier was provided' do
 
-        before(:each) do
-          allow(@entity).to receive(:get_identifier_from_params_or_headers)
-          .and_return('AliCe@ExampLe.Com')
-        end
+        let(:identifier) { 'AliCe@ExampLe.Com' }
 
         it 'does not return any record' do
           # let's say there is a record...
@@ -187,7 +192,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           .with(email: 'AliCe@ExampLe.Com')
           .and_return(nil)
 
-          expect(subject.new.send(:find_record_from_identifier, @entity)).to be_nil
+          expect(subject.new.send(:find_record_from_identifier, @entity, identifier)).to be_nil
         end
       end
     end
@@ -201,10 +206,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
       context 'and a downcased identifier was provided' do
 
-        before(:each) do
-          allow(@entity).to receive(:get_identifier_from_params_or_headers)
-          .and_return('alice@example.com')
-        end
+        let(:identifier) { 'alice@example.com' }
 
         it 'returns the proper record if any' do
           # let's say there is a record
@@ -213,16 +215,13 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           .with(email: 'alice@example.com')
           .and_return(record)
 
-          expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+          expect(subject.new.send(:find_record_from_identifier, @entity, identifier)).to eq record
         end
       end
 
       context 'and a upcased identifier was provided' do
 
-        before(:each) do
-          allow(@entity).to receive(:get_identifier_from_params_or_headers)
-          .and_return('AliCe@ExampLe.Com')
-        end
+        let(:identifier) { 'AliCe@ExampLe.Com' }
 
         it 'returns the proper record if any' do
           # let's say there is a record...
@@ -236,7 +235,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           allow(@entity).to receive_message_chain(:model, :find_for_authentication).with(email: 'AliCe@ExampLe.Com')
           .and_return(nil)
 
-          expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+          expect(subject.new.send(:find_record_from_identifier, @entity, identifier)).to eq record
         end
       end
     end
@@ -256,28 +255,22 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
         context 'when a downcased identifier was provided' do
 
-          before(:each) do
-            allow(@entity).to receive(:get_identifier_from_params_or_headers)
-            .and_return('alice@example.com')
-          end
+          let(:identifier) { 'alice@example.com' }
 
           it 'returns the proper record if any' do
             # let's say there is a record
             record = double()
             allow(@entity).to receive_message_chain(:model, :find_for_authentication)
-            .with(phone_number: 'alice@example.com')
+            .with(phone_number: identifier)
             .and_return(record)
 
-            expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+            expect(subject.new.send(:find_record_from_identifier, @entity, identifier)).to eq record
           end
         end
 
         context 'when a upcased identifier was provided' do
 
-          before(:each) do
-            allow(@entity).to receive(:get_identifier_from_params_or_headers)
-            .and_return('AliCe@ExampLe.Com')
-          end
+          let(:identifier) { 'AliCe@ExampLe.Com' }
 
           it 'does not return any record' do
             # let's say there is a record...
@@ -291,7 +284,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
             .with(phone_number: 'AliCe@ExampLe.Com')
             .and_return(nil)
 
-            expect(subject.new.send(:find_record_from_identifier, @entity)).to be_nil
+            expect(subject.new.send(:find_record_from_identifier, @entity, identifier)).to be_nil
           end
         end
       end
@@ -305,10 +298,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
         context 'and a downcased identifier was provided' do
 
-          before(:each) do
-            allow(@entity).to receive(:get_identifier_from_params_or_headers)
-            .and_return('alice@example.com')
-          end
+          let(:identifier) { 'alice@example.com' }
 
           it 'returns the proper record if any' do
             # let's say there is a record
@@ -317,16 +307,13 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
             .with(phone_number: 'alice@example.com')
             .and_return(record)
 
-            expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+            expect(subject.new.send(:find_record_from_identifier, @entity, identifier)).to eq record
           end
         end
 
         context 'and a upcased identifier was provided' do
 
-          before(:each) do
-            allow(@entity).to receive(:get_identifier_from_params_or_headers)
-            .and_return('AliCe@ExampLe.Com')
-          end
+          let(:identifier) { 'AliCe@ExampLe.Com' }
 
           it 'returns the proper record if any' do
             # let's say there is a record...
@@ -341,7 +328,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
             .with(phone_number: 'AliCe@ExampLe.Com')
             .and_return(nil)
 
-            expect(subject.new.send(:find_record_from_identifier, @entity)).to eq record
+            expect(subject.new.send(:find_record_from_identifier, @entity, identifier)).to eq record
           end
         end
       end

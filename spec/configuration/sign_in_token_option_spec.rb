@@ -21,7 +21,8 @@ describe 'Simple Token Authentication' do
         controller_class.acts_as_token_authentication_handler_for User
 
         @controller = controller_class.new
-        allow(@controller).to receive(:params)
+        allow(@controller).to receive(:params).and_return({})
+        allow(@controller).to receive_message_chain(:request, :headers).and_return({})
         # and there are credentials for a record of that model in params or headers
         allow(@controller).to receive(:get_identifier_from_params_or_headers)
         # and both identifier and authentication token are correct
@@ -72,7 +73,8 @@ describe 'Simple Token Authentication' do
 
       # RUNTIME
       @controller = controller_class.new
-      allow(@controller).to receive(:params)
+      allow(@controller).to receive(:params).and_return({})
+      allow(@controller).to receive_message_chain(:request, :headers).and_return({})
       # and there are credentials for a record of that model in params or headers
       allow(@controller).to receive(:get_identifier_from_params_or_headers)
       # and both identifier and authentication token are correct

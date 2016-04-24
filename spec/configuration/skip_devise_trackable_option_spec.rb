@@ -20,7 +20,8 @@ describe SimpleTokenAuthentication do
         controller_class.acts_as_token_authentication_handler_for User
 
         @controller = controller_class.new
-        allow(@controller).to receive(:params)
+        allow(@controller).to receive(:params).and_return({})
+        allow(@controller).to receive_message_chain(:request, :headers).and_return({})
         # and there are credentials for a record of that model in params or headers
         allow(@controller).to receive(:get_identifier_from_params_or_headers)
         # and both identifier and authentication token are correct
@@ -61,6 +62,7 @@ describe SimpleTokenAuthentication do
       # given a controller class which acts as token authentication handler
       controller_class = Class.new
       allow(controller_class).to receive(:before_filter)
+      allow(controller_class).to receive_message_chain(:request, :headers).and_return({})
       controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
       allow(SimpleTokenAuthentication).to receive(:skip_devise_trackable).and_return('initial value')
@@ -72,7 +74,8 @@ describe SimpleTokenAuthentication do
 
       # RUNTIME
       @controller = controller_class.new
-      allow(@controller).to receive(:params)
+      allow(@controller).to receive(:params).and_return({})
+      allow(@controller).to receive_message_chain(:request, :headers).and_return({})
       # and there are credentials for a record of that model in params or headers
       allow(@controller).to receive(:get_identifier_from_params_or_headers)
       # and both identifier and authentication token are correct
