@@ -13,7 +13,7 @@ describe 'Simple Token Authentication' do
 
         # given a controller class which acts as token authentication handler
         @controller_class = Class.new
-        allow(@controller_class).to receive(:before_filter)
+        allow(@controller_class).to receive(:before_action)
         @controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
       end
 
@@ -24,8 +24,8 @@ describe 'Simple Token Authentication' do
           allow(@controller).to receive(:params)
           allow(@controller).to receive(:find_record_from_identifier)
 
-          # sets :authenticate_user_from_token! (bang) in the before_filter
-          expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token!, {})
+          # sets :authenticate_user_from_token! (bang) in the before_action
+          expect(@controller_class).to receive(:before_action).with(:authenticate_user_from_token!, {})
 
           # when falling back to Devise is enabled
           @controller_class.acts_as_token_authentication_handler_for User, fallback_to_devise: true
@@ -44,8 +44,8 @@ describe 'Simple Token Authentication' do
           allow(@controller).to receive(:params)
           allow(@controller).to receive(:find_record_from_identifier)
 
-          # sets :authenticate_user_from_token (non-bang) in the before_filter
-          expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token, {})
+          # sets :authenticate_user_from_token (non-bang) in the before_action
+          expect(@controller_class).to receive(:before_action).with(:authenticate_user_from_token, {})
 
           # when falling back to Devise is enabled
           @controller_class.acts_as_token_authentication_handler_for User, fallback_to_devise: false
@@ -64,8 +64,8 @@ describe 'Simple Token Authentication' do
           allow(@controller).to receive(:params)
           allow(@controller).to receive(:find_record_from_identifier)
 
-          # sets :authenticate_user_from_token! (bang) in the before_filter
-          expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token!, {})
+          # sets :authenticate_user_from_token! (bang) in the before_action
+          expect(@controller_class).to receive(:before_action).with(:authenticate_user_from_token!, {})
 
           # when falling back to Devise is enabled
           @controller_class.acts_as_token_authentication_handler_for User
@@ -92,10 +92,10 @@ describe 'Simple Token Authentication' do
             allow(@controller).to receive(:params)
             allow(@controller).to receive(:find_record_from_identifier)
 
-            # sets :authenticate_user_from_token (non-bang) in the before_filter
-            expect(@controller_class).to receive(:before_filter).with(:authenticate_user_from_token, {})
-            # sets :authenticate_admin_from_token! (bang) in the before_filter
-            expect(@controller_class).to receive(:before_filter).with(:authenticate_admin_from_token!, {})
+            # sets :authenticate_user_from_token (non-bang) in the before_action
+            expect(@controller_class).to receive(:before_action).with(:authenticate_user_from_token, {})
+            # sets :authenticate_admin_from_token! (bang) in the before_action
+            expect(@controller_class).to receive(:before_action).with(:authenticate_admin_from_token!, {})
 
             # when falling back to Devise is enabled for Admin but not User
             @controller_class.acts_as_token_authentication_handler_for User, fallback_to_devise: false

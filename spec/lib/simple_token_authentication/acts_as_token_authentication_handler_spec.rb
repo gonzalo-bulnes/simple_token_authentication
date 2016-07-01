@@ -61,7 +61,7 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
       double_user_model
 
       some_class = @subjects.first
-      allow(some_class).to receive(:before_filter)
+      allow(some_class).to receive(:before_action)
 
       expect(some_class).to receive(:include).with(SimpleTokenAuthentication::TokenAuthenticationHandler)
       expect(some_class).to receive(:handle_token_authentication_for).with(User, { option: 'value' })
@@ -73,7 +73,7 @@ describe 'Any class which extends SimpleTokenAuthentication::ActsAsTokenAuthenti
       double_user_model
 
       some_child_class = @subjects.last
-      allow(some_child_class).to receive(:before_filter)
+      allow(some_child_class).to receive(:before_action)
 
       expect(some_child_class).to receive(:include).with(SimpleTokenAuthentication::TokenAuthenticationHandler)
       expect(some_child_class).to receive(:handle_token_authentication_for).with(User, { option: 'value' })

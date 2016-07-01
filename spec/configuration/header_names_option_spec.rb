@@ -37,7 +37,7 @@ describe 'Simple Token Authentication' do
 
         # given a controller class which acts as token authentication handler
         @controller_class = Class.new
-        allow(@controller_class).to receive(:before_filter)
+        allow(@controller_class).to receive(:before_action)
         @controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
         @controller = @controller_class.new
@@ -411,7 +411,7 @@ describe 'Simple Token Authentication' do
 
       # given a controller class which acts as token authentication handler
       @controller_class = Class.new
-      allow(@controller_class).to receive(:before_filter)
+      allow(@controller_class).to receive(:before_action)
       @controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
       # INITIALIZATION
