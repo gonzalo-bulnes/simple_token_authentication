@@ -144,7 +144,7 @@ module SimpleTokenAuthentication
         else
           :"authenticate_#{entity.name_underscore}_from_token"
         end
-        before_filter authenticate_method, options.slice(:only, :except, :if, :unless)
+        before_action authenticate_method, options.slice(:only, :except, :if, :unless)
       end
     end
   end

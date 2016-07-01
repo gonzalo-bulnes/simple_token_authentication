@@ -15,7 +15,7 @@ describe SimpleTokenAuthentication do
 
         # given a controller class which acts as token authentication handler
         controller_class = Class.new
-        allow(controller_class).to receive(:before_filter)
+        allow(controller_class).to receive(:before_action)
         controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
         controller_class.acts_as_token_authentication_handler_for User
 
@@ -60,7 +60,7 @@ describe SimpleTokenAuthentication do
 
       # given a controller class which acts as token authentication handler
       controller_class = Class.new
-      allow(controller_class).to receive(:before_filter)
+      allow(controller_class).to receive(:before_action)
       controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
       allow(SimpleTokenAuthentication).to receive(:skip_devise_trackable).and_return('initial value')
