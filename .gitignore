@@ -14,6 +14,9 @@ test/dummy/.sass-cache
 .ruby-version
 .ruby-gemset
 
+# rbenv
+vendor/bundle
+
 # Appraisal
 gemfiles/*
 !gemfiles/*.gemfile
