@@ -2,4 +2,6 @@
 
 source "https://rubygems.org"
 
+gem "mongoid", :git => "https://github.com/mongodb/mongoid.git", :branch => "master"
+
 gemspec :path => "../"

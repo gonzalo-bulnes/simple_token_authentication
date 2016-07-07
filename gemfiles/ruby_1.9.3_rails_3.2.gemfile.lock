@@ -2,9 +2,9 @@ PATH
   remote: ../
   specs:
     simple_token_authentication (1.13.0)
-      actionmailer (>= 3.2.6, < 5)
-      actionpack (>= 3.2.6, < 5)
-      devise (>= 3.2, < 5)
+      actionmailer (>= 3.2.6, < 6)
+      actionpack (>= 3.2.6, < 6)
+      devise (>= 3.2, < 6)
 
 GEM
   remote: https://rubygems.org/
@@ -141,7 +141,7 @@ DEPENDENCIES
   appraisal (~> 2.0)
   inch (~> 0.4)
   mime-types (< 3)
-  mongoid (>= 3.1.0, < 5)
+  mongoid (>= 3.1.0, < 7)
   rspec (~> 3.0)
   simple_token_authentication!
   tins (< 1.7.0)
