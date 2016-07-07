@@ -1,3 +1,7 @@
+appraise 'rails_4_devise_4' do
+  # Use the version constraints defined in the gemspec
+end
+
 appraise 'rails_4_devise_3' do
   gem 'devise', '~> 3.2'
 end
