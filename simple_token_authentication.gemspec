@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.license     = "GPL-3.0+"
 
   s.files = Dir["{app,config,doc,lib}/**/*", "CHANGELOG.md", "LICENSE", "Rakefile", "README.md"]
-  s.test_files = Dir["spec/**/*", "gemfiles/*.gemfile", "Appraisals"]
+  s.test_files = Dir["spec/**/*", "gemfiles/*.gemfile", "gemfiles/*.gemfile.lock", "Appraisals"]
 
   s.add_dependency "actionmailer", ">= 3.2.6", "< 6"
   s.add_dependency "actionpack", ">= 3.2.6", "< 6"
