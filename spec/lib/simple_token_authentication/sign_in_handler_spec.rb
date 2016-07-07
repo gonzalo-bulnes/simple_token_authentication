@@ -10,8 +10,11 @@ describe SimpleTokenAuthentication::SignInHandler do
 
     it 'delegates sign in to Devise::Controllers::SignInOut#sign_in through a controller', private: true do
       controller = double()
+      env = double()
+      request = double()
+      allow(request).to receive(:env).and_return({})
+      allow(controller).to receive(:request).and_return(request)
       allow(controller).to receive(:sign_in).with(:record, option: 'some_value').and_return('Devise response.')
-      allow(controller).to receive(:env).and_return({})
 
       # delegating consists in sending the message
       expect(controller).to receive(:sign_in)
@@ -42,7 +45,9 @@ describe SimpleTokenAuthentication::SignInHandler do
       it 'ensures Devise trackable statistics are kept untouched', private: true do
         controller = double()
         env = double()
-        allow(controller).to receive(:env).and_return(env)
+        request = double()
+        allow(request).to receive(:env).and_return(env)
+        allow(controller).to receive(:request).and_return(request)
         expect(env).to receive(:[]=).with('devise.skip_trackable', true)
 
         sign_in_handler.send :integrate_with_devise_trackable!, controller
@@ -59,7 +64,9 @@ describe SimpleTokenAuthentication::SignInHandler do
       it 'ensures Devise trackable statistics are updated', private: true do
         controller = double()
         env = double()
-        allow(controller).to receive(:env).and_return(env)
+        request = double()
+        allow(request).to receive(:env).and_return(env)
+        allow(controller).to receive(:request).and_return(request)
         expect(env).to receive(:[]=).with('devise.skip_trackable', false)
 
         sign_in_handler.send :integrate_with_devise_trackable!, controller

@@ -16,6 +16,7 @@ describe 'Simple Token Authentication' do
         # given a controller class which acts as token authentication handler
         controller_class = Class.new
         allow(controller_class).to receive(:before_filter)
+        allow(controller_class).to receive(:before_action)
         controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
         # and handles authentication for a given model
         controller_class.acts_as_token_authentication_handler_for User
@@ -27,7 +28,9 @@ describe 'Simple Token Authentication' do
         # and both identifier and authentication token are correct
         allow(@controller).to receive(:find_record_from_identifier).and_return(@record)
         allow(@controller).to receive(:token_correct?).and_return(true)
-        allow(@controller).to receive(:env).and_return({})
+        request = double()
+        allow(request).to receive(:env).and_return({})
+        allow(@controller).to receive(:request).and_return(request)
       end
 
       context 'when false' do
@@ -61,6 +64,7 @@ describe 'Simple Token Authentication' do
       # given a controller class which acts as token authentication handler
       controller_class = Class.new
       allow(controller_class).to receive(:before_filter)
+      allow(controller_class).to receive(:before_action)
       controller_class.send :extend, SimpleTokenAuthentication::ActsAsTokenAuthenticationHandler
 
       allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return('initial value')
@@ -78,8 +82,9 @@ describe 'Simple Token Authentication' do
       # and both identifier and authentication token are correct
       allow(@controller).to receive(:find_record_from_identifier).and_return(@record)
       allow(@controller).to receive(:token_correct?).and_return(true)
-      allow(@controller).to receive(:env).and_return({})
-
+      request = double()
+      allow(request).to receive(:env).and_return({})
+      allow(@controller).to receive(:request).and_return(request)
       # even if modified *after* the class was loaded
       allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return('updated value')
 

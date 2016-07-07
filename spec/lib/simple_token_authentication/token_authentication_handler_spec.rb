@@ -348,7 +348,7 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
     end
   end
 
-  describe 'and which supports the :before_filter hook' do
+  describe 'and which supports the :before_filter hook', before_filter: true do
 
     before(:each) do
       allow(subject).to receive(:before_filter)
@@ -478,6 +478,178 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
 
           it 'ensures its instances require admin to authenticate from token before any action', public: true do
             expect(subject).to receive(:before_filter).with(:authenticate_admin_from_token, {})
+            subject.handle_token_authentication_for SuperAdmin, options
+          end
+        end
+
+        describe 'instance' do
+
+          before(:each) do
+            double_super_admin_model
+
+            subject.class_eval do
+              handle_token_authentication_for SuperAdmin, as: :admin
+            end
+          end
+
+          it 'responds to :authenticate_admin_from_token', protected: true do
+            expect(subject.new).to respond_to :authenticate_admin_from_token
+          end
+
+          it 'responds to :authenticate_admin_from_token!', protected: true do
+            expect(subject.new).to respond_to :authenticate_admin_from_token!
+          end
+
+          it 'does not respond to :authenticate_super_admin_from_token', protected: true do
+            expect(subject.new).not_to respond_to :authenticate_super_admin_from_token
+          end
+
+          it 'does not respond to :authenticate_super_admin_from_token!', protected: true do
+            expect(subject.new).not_to respond_to :authenticate_super_admin_from_token!
+          end
+
+          it 'does not respond to :authenticate_user_from_token', protected: true do
+            expect(subject.new).not_to respond_to :authenticate_user_from_token
+          end
+
+          it 'does not respond to :authenticate_user_from_token!', protected: true do
+            expect(subject.new).not_to respond_to :authenticate_user_from_token!
+          end
+        end
+      end
+    end
+  end
+
+  describe 'and which supports the :before_action hook', before_action: true do
+
+    before(:each) do
+      allow(subject).to receive(:before_action)
+    end
+
+    # User
+
+    context 'and which handles token authentication for User' do
+
+      before(:each) do
+        double_user_model
+      end
+
+      it 'ensures its instances require user to authenticate from token or any Devise strategy before any action', public: true do
+        expect(subject).to receive(:before_action).with(:authenticate_user_from_token!, {})
+        subject.handle_token_authentication_for User
+      end
+
+      context 'and disables the fallback to Devise authentication' do
+
+        let(:options) do
+          { fallback_to_devise: false }
+        end
+
+        it 'ensures its instances require user to authenticate from token before any action', public: true do
+          expect(subject).to receive(:before_action).with(:authenticate_user_from_token, {})
+          subject.handle_token_authentication_for User, options
+        end
+      end
+
+      describe 'instance' do
+
+        before(:each) do
+          double_user_model
+
+          subject.class_eval do
+            handle_token_authentication_for User
+          end
+        end
+
+        it 'responds to :authenticate_user_from_token', protected: true do
+          expect(subject.new).to respond_to :authenticate_user_from_token
+        end
+
+        it 'responds to :authenticate_user_from_token!', protected: true do
+          expect(subject.new).to respond_to :authenticate_user_from_token!
+        end
+
+        it 'does not respond to :authenticate_super_admin_from_token', protected: true do
+          expect(subject.new).not_to respond_to :authenticate_super_admin_from_token
+        end
+
+        it 'does not respond to :authenticate_super_admin_from_token!', protected: true do
+          expect(subject.new).not_to respond_to :authenticate_super_admin_from_token!
+        end
+      end
+    end
+
+    # SuperAdmin
+
+    context 'and which handles token authentication for SuperAdmin' do
+
+      before(:each) do
+        double_super_admin_model
+      end
+
+      it 'ensures its instances require super_admin to authenticate from token or any Devise strategy before any action', public: true do
+        expect(subject).to receive(:before_action).with(:authenticate_super_admin_from_token!, {})
+        subject.handle_token_authentication_for SuperAdmin
+      end
+
+      context 'and disables the fallback to Devise authentication' do
+
+        let(:options) do
+          { fallback_to_devise: false }
+        end
+
+        it 'ensures its instances require super_admin to authenticate from token before any action', public: true do
+          expect(subject).to receive(:before_action).with(:authenticate_super_admin_from_token, {})
+          subject.handle_token_authentication_for SuperAdmin, options
+        end
+      end
+
+      describe 'instance' do
+
+        before(:each) do
+          double_super_admin_model
+
+          subject.class_eval do
+            handle_token_authentication_for SuperAdmin
+          end
+        end
+
+        it 'responds to :authenticate_super_admin_from_token', protected: true do
+          expect(subject.new).to respond_to :authenticate_super_admin_from_token
+        end
+
+        it 'responds to :authenticate_super_admin_from_token!', protected: true do
+          expect(subject.new).to respond_to :authenticate_super_admin_from_token!
+        end
+
+        it 'does not respond to :authenticate_user_from_token', protected: true do
+          expect(subject.new).not_to respond_to :authenticate_user_from_token
+        end
+
+        it 'does not respond to :authenticate_user_from_token!', protected: true do
+          expect(subject.new).not_to respond_to :authenticate_user_from_token!
+        end
+      end
+
+      context 'with the :admin alias', token_authenticatable_aliases_option: true do
+
+        let(:options) do
+          { 'as' => :admin }
+        end
+
+        it 'ensures its instances require admin to authenticate from token or any Devise strategy before any action', public: true do
+          expect(subject).to receive(:before_action).with(:authenticate_admin_from_token!, {})
+          subject.handle_token_authentication_for SuperAdmin, options
+        end
+
+        context 'and disables the fallback to Devise authentication' do
+
+          let(:options) do
+            { as: 'admin', fallback_to_devise: false }
+          end
+
+          it 'ensures its instances require admin to authenticate from token before any action', public: true do
+            expect(subject).to receive(:before_action).with(:authenticate_admin_from_token, {})
             subject.handle_token_authentication_for SuperAdmin, options
           end
         end
