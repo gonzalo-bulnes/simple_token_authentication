@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Support for hooks, specifically `after_successful_token_authentication` for now
 - A Contributor Code of Conduct to ensure everyone feels safe contributing
 
 ## [1.14.0] - 2016-07-09

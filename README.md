@@ -275,6 +275,27 @@ To use no fallback when token authentication fails, set `fallback: :none`.
 
   [csrf]: https://github.com/gonzalo-bulnes/simple_token_authentication/issues/49
 
+### Hooks
+
+One hook is currently available to trigger custom behaviour after an user has been successfully authenticated through token authentication. To use it, override the `after_successful_token_authentication` method in the corresponding token authentication handler:
+
+```ruby
+# app/controller/application_controller.rb
+
+class ApplicationController < ActiveController::Base
+  acts_as_token_authentication_handler_for User
+
+  # ...
+
+  private
+
+    def after_successful_token_authentication
+      # Make the authentication token to be disposable - for example
+      renew_authentication_token!
+    end
+end
+```
+
 ### Testing
 
 Here is an example of how you can test-drive your configuration using [Minitest][minitest]:

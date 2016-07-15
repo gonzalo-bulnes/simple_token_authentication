@@ -691,4 +691,32 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
       end
     end
   end
+
+  describe '#authenticate_entity_from_token!' do
+
+    let(:token_authentication_handler) { described_class.new }
+
+    before(:each) do
+        allow(token_authentication_handler).to receive(:find_record_from_identifier)
+        allow(token_authentication_handler).to receive(:perform_sign_in!)
+        allow(token_authentication_handler).to receive(:token_correct?).and_return(false)
+    end
+
+    it 'does not trigger the :after_successful_token_authentication hook', hooks: true, private: true do
+      expect(token_authentication_handler).not_to receive(:after_successful_token_authentication)
+      token_authentication_handler.send(:authenticate_entity_from_token!, double)
+    end
+
+    context 'after successful authentication' do
+
+      before(:each) do
+        allow(token_authentication_handler).to receive(:token_correct?).and_return(true)
+      end
+
+      it 'calls the :after_successful_token_authentication hook', hooks: true, protected: true do
+        expect(token_authentication_handler).to receive(:after_successful_token_authentication).once
+        token_authentication_handler.send(:authenticate_entity_from_token!, double)
+      end
+    end
+  end
 end
