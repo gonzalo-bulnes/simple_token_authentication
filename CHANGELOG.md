@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- A Contributor Code of Conduct to ensure everyone feels safe contributing
+
 ## [1.14.0] - 2016-07-09
 
 ### Added
@@ -253,6 +259,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This [gist][gist] did refactor the Jose Valim's code into an `ActiveSupport::Concern`.
 
 [gist]: https://gist.github.com/gonzalo-bulnes/7659739
+[Unreleased]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.14.0...master
 [1.14.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.11.0...v1.12.0
