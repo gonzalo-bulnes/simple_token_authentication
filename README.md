@@ -322,6 +322,10 @@ Contributions are welcome! I'm not personally maintaining any [list of contribut
 
 Please be sure to [review the open issues][open-questions] and contribute with your ideas or code in the issue best suited to the topic. Keeping discussions in a single place makes easier to everyone interested in that topic to keep track of the contributions.
 
+Finally, please note that this project is released with a [Contributor Code of Conduct][coc]. By participating in this project you agree to abide by its terms.
+
+  [coc]: ./CODE_OF_CONDUCT.md
+
 Credits
 -------
 
