@@ -24,7 +24,9 @@ This gem packages the content of the gist and provides a set of convenient optio
 Installation
 ------------
 
-First install [Devise][devise] and configure it with any modules you want, then add the gem to your `Gemfile`:
+### In a nutshell
+
+First install [Devise][devise] and configure it with any modules you want, then add the gem to your `Gemfile` and `bundle install`:
 
 ```ruby
 # Gemfile
@@ -32,12 +34,7 @@ First install [Devise][devise] and configure it with any modules you want, then 
 gem 'simple_token_authentication', '~> 1.0' # see semver.org
 ```
 
-Usage
------
-
-### In a nutshell
-
-Only two steps are required to setup token authentication:
+Once that done, only two steps are required to setup token authentication:
 
 1. [Make one or more models token authenticatable][token_authenticatable] (ActiveRecord and Mongoid are supported)
 1. [Allow controllers to handle token authentication][token_authentication_handler] (Rails, Rails API, and `ActionController::Metal` are supported)
@@ -52,7 +49,7 @@ _If you want more details about how the gem works, keep reading! We'll get to th
 Simple Token Authentication provides the ability to manage an `authentication_token` from your model instances. A model with that ability enabled is said to be **token authenticatable** (typically, the `User` model will be made token authenticatable).
 
 The gem also provides the ability for any controller to handle token authentication for one or multiple _token authenticatable_ models. That ability allows, for example, to automatically sign in an `user` when the correct credentials are provided with a request. A controller with that ability enabled is said to behave as a **token authentication handler**.
-The token authentication credentials for a given request can be provided either in the form of [query params][authentication_method_query_params], or [HTTP headers][authentication_method_headers]. By default, the required credentials are the users's email and their authentication token.
+The token authentication credentials for a given request can be provided either in the form of [query params][authentication_method_query_params], or [HTTP headers][authentication_method_headers]. By default, the required credentials are the user's email and their authentication token.
 
 What happens when a request is provided with no credentials or incorrect credentials is [highly configurable][integration_with_other_authentication_methods] (some scenarios may require access to be denied, other may allow unauthenticated access, or provide others strategies to authenticate users). By default, when token authentication fails, Devise is used as a fallback to ensure a consistent behaviour with controllers that do not handle token authentication.
 
