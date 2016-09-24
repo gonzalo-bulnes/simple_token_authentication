@@ -24,7 +24,7 @@ This gem packages the content of the gist and provides a set of convenient optio
 Installation
 ------------
 
-Install [Devise][devise] with any modules you want, then add the gem to your `Gemfile`:
+First install [Devise][devise] and configure it with any modules you want, then add the gem to your `Gemfile`:
 
 ```ruby
 # Gemfile
