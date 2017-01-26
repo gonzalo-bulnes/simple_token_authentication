@@ -33,6 +33,8 @@ module SimpleTokenAuthentication
   # Returns an Array of available adapters
   def self.load_available_adapters adapters_short_names
     available_adapters = adapters_short_names.collect do |short_name|
+      next if short_name == 'rails' && (ActiveSupport.respond_to?(:version) && ActiveSupport.version >= Gem::Version.new('4.1.0'))
+      next if short_name == 'rails_api' && (ActiveSupport.respond_to?(:version) && ActiveSupport.version >= Gem::Version.new('5.0.0'))
       adapter_name = "simple_token_authentication/adapters/#{short_name}_adapter"
       if adapter_dependency_fulfilled?(short_name) && require(adapter_name)
         adapter_name.camelize.constantize

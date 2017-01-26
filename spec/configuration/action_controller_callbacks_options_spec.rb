@@ -13,7 +13,7 @@ describe 'ActionController', action_controller_callbacks_options: true do
 
   describe ':only option', before_filter: true do
 
-    context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+    context 'when provided to `acts_as_token_authentication_handler_for`' do
 
       it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
         some_class = @subjects.first
@@ -33,7 +33,7 @@ describe 'ActionController', action_controller_callbacks_options: true do
 
   describe ':except option', before_filter: true do
 
-    context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+    context 'when provided to `acts_as_token_authentication_handler_for`' do
 
       it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
         some_class = @subjects.first
@@ -53,7 +53,7 @@ describe 'ActionController', action_controller_callbacks_options: true do
 
   describe ':if option', before_filter: true do
 
-    context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+    context 'when provided to `acts_as_token_authentication_handler_for`' do
 
       it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
         some_class = @subjects.first
@@ -73,7 +73,7 @@ describe 'ActionController', action_controller_callbacks_options: true do
 
   describe ':unless option', before_filter: true do
 
-    context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+    context 'when provided to `acts_as_token_authentication_handler_for`' do
 
       it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
         some_class = @subjects.first
@@ -95,7 +95,7 @@ describe 'ActionController', action_controller_callbacks_options: true do
 
     describe ':only option' do
 
-      context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+      context 'when provided to `acts_as_token_authentication_handler_for`' do
 
         it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
           some_class = @subjects.first
@@ -115,7 +115,7 @@ describe 'ActionController', action_controller_callbacks_options: true do
 
     describe ':except option' do
 
-      context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+      context 'when provided to `acts_as_token_authentication_handler_for`' do
 
         it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
           some_class = @subjects.first
@@ -135,7 +135,7 @@ describe 'ActionController', action_controller_callbacks_options: true do
 
     describe ':if option' do
 
-      context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+      context 'when provided to `acts_as_token_authentication_handler_for`' do
 
         it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
           some_class = @subjects.first
@@ -155,7 +155,7 @@ describe 'ActionController', action_controller_callbacks_options: true do
 
     describe ':unless option' do
 
-      context 'when provided to `acts_as_token_authentication_hanlder_for`' do
+      context 'when provided to `acts_as_token_authentication_handler_for`' do
 
         it 'is applied to the corresponding callback (1)', rspec_3_error: true, private: true do
           some_class = @subjects.first
