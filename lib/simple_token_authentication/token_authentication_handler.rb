@@ -66,9 +66,17 @@ module SimpleTokenAuthentication
 
       identifier_param_value = integrate_with_devise_case_insensitive_keys(identifier_param_value, entity)
 
+      query = { entity.identifier => identifier_param_value }
+
+      if Devise.request_keys.present?
+        Devise.request_keys.each do |key|
+          query.merge!(key => request.send(key))
+        end
+      end
+
       # The finder method should be compatible with all the model adapters,
       # namely ActiveRecord and Mongoid in all their supported versions.
-      identifier_param_value && entity.model.find_for_authentication(entity.identifier => identifier_param_value)
+      identifier_param_value && entity.model.find_for_authentication(query)
     end
 
     # Private: Take benefit from Devise case-insensitive keys
