@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    simple_token_authentication (1.15.1)
+    simple_token_authentication (1.15.2)
       actionmailer (>= 3.2.6, < 6)
       actionpack (>= 3.2.6, < 6)
       devise (>= 3.2, < 6)
@@ -50,6 +50,11 @@ GEM
     bcrypt (3.1.11)
     bson (4.2.1)
     builder (3.2.3)
+    cassandra-driver (3.2.0)
+      ione (~> 1.2)
+    cequel (3.0.0)
+      activemodel (>= 4.0)
+      cassandra-driver (~> 3.0)
     coderay (1.1.1)
     concurrent-ruby (1.0.4)
     devise (4.2.0)
@@ -68,6 +73,7 @@ GEM
       sparkr (>= 0.2.0)
       term-ansicolor
       yard (~> 0.8.7.5)
+    ione (1.2.4)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -139,6 +145,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord (>= 3.2.6, < 6)
   appraisal (~> 2.0)
+  cequel (>= 1.0, < 4)
   inch (~> 0.4)
   mongoid (>= 3.1.0, < 7)
   rspec (~> 3.0)

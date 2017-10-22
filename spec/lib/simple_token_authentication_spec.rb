@@ -48,6 +48,44 @@ describe SimpleTokenAuthentication do
     end
   end
 
+  context 'when Cequel is available' do
+
+    before(:each) do
+      stub_const('Cequel', Module.new)
+      stub_const('Cequel::Record', Class.new)
+
+      # define a dummy Cequel adapter
+      dummy_cequel_adapter = double()
+      allow(dummy_cequel_adapter).to receive(:base_class).and_return(Cequel::Record)
+      stub_const('SimpleTokenAuthentication::Adapters::DummyCequelAdapter',
+                                                       dummy_cequel_adapter)
+    end
+
+    describe '#ensure_models_can_act_as_token_authenticatables' do
+
+      before(:each) do
+        class SimpleTokenAuthentication::DummyModel < Cequel::Record; end
+        @dummy_model = SimpleTokenAuthentication::DummyModel
+
+        expect(@dummy_model.new).to be_instance_of SimpleTokenAuthentication::DummyModel
+        expect(@dummy_model.new).to be_kind_of Cequel::Record
+      end
+
+      after(:each) do
+        SimpleTokenAuthentication.send(:remove_const, :DummyModel)
+      end
+
+      it 'allows any kind of Cequel::Record to act as token authenticatable', private: true do
+        expect(@dummy_model).not_to respond_to :acts_as_token_authenticatable
+
+        subject.ensure_models_can_act_as_token_authenticatables [
+                SimpleTokenAuthentication::Adapters::DummyCequelAdapter]
+
+        expect(@dummy_model).to respond_to :acts_as_token_authenticatable
+      end
+    end
+  end
+
   context 'when Mongoid is available' do
 
     before(:each) do
@@ -98,6 +136,7 @@ describe SimpleTokenAuthentication do
       it 'raises NoAdapterAvailableError', private: true do
         allow(subject).to receive(:require).and_return(true)
         hide_const('ActiveRecord')
+        hide_const('Cequel')
         hide_const('Mongoid')
 
         expect do

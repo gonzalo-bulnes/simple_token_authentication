@@ -29,8 +29,8 @@ describe SimpleTokenAuthentication::Configuration do
 
       it_behaves_like 'a configuration option', 'model_adapters'
 
-      it "defauts to ['active_record', 'mongoid']", private: true do
-        expect(@subject.model_adapters).to eq ['active_record', 'mongoid']
+      it "defauts to ['active_record', 'cequel', 'mongoid']", private: true do
+        expect(@subject.model_adapters).to eq ['active_record', 'cequel', 'mongoid']
       end
     end
 
@@ -40,6 +40,7 @@ describe SimpleTokenAuthentication::Configuration do
 
       it 'lists the supported adapters dependencies by default', private: true do
         expect(@subject.adapters_dependencies['active_record']).to eq 'ActiveRecord::Base'
+        expect(@subject.adapters_dependencies['cequel']).to eq 'Cequel::Record'
         expect(@subject.adapters_dependencies['mongoid']).to eq 'Mongoid::Document'
         expect(@subject.adapters_dependencies['rails']).to eq 'ActionController::Base'
         expect(@subject.adapters_dependencies['rails_api']).to eq 'ActionController::API'
