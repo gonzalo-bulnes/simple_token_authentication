@@ -145,7 +145,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord (>= 3.2.6, < 6)
   appraisal (~> 2.0)
-  cequel (~> 3.0)
+  cequel (>= 1.0, < 4)
   inch (~> 0.4)
   mongoid (>= 3.1.0, < 7)
   rspec (~> 3.0)
