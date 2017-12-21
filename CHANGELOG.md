@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased] - 2017-12-21
+
+## Fixed
+
+- Removed the `Gemfile.lock` - mostly to acknowledge that it was used only in development and is not really needed.
+
 ## [1.15.1] - 2017-01-26
 
 ## Fixed
@@ -268,6 +274,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This [gist][gist] did refactor the Jose Valim's code into an `ActiveSupport::Concern`.
 
 [gist]: https://gist.github.com/gonzalo-bulnes/7659739
+[Unreleased]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.15.1...master
 [1.15.1]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.15.0...v1.15.1
 [1.15.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.14.0...v1.15.0
 [1.14.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.13.0...v1.14.0
