@@ -8,6 +8,12 @@ end
 
 describe 'Simple Token Authentication' do
 
+  before(:all)  do
+    SimpleTokenAuthentication.persist_token_as = :plain
+
+
+  end
+
   describe ':header_names option', header_names_option: true do
 
     describe 'determines which header fields are looked at for authentication credentials', before_filter: true, before_action: true do

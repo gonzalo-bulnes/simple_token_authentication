@@ -68,17 +68,8 @@ describe 'A token authenticatable class (or one of its children)' do
 
         @subjects.each do |k|
           k.class_eval do
-
             def initialize(args={})
               @authentication_token = args[:authentication_token]
-            end
-
-            def authentication_token=(value)
-              @authentication_token = value
-            end
-
-            def authentication_token
-              @authentication_token
             end
 
             # the 'ExampleTok3n' is already in use
@@ -92,11 +83,14 @@ describe 'A token authenticatable class (or one of its children)' do
               token_generator
             end
           end
+          k.send(:include, SimpleTokenAuthentication::ActsAsTokenAuthenticatable)
         end
         @subjects.map!{ |subject| subject.new }
       end
 
-      it 'ensures its authentication token is unique', public: true do
+      it 'ensures its authentication token is unique if storing tokens as plaintext', public: true do
+        SimpleTokenAuthentication.persist_token_as = :plain
+
         @subjects.each do |subject|
           subject.ensure_authentication_token
 
@@ -105,6 +99,45 @@ describe 'A token authenticatable class (or one of its children)' do
           expect(subject.authentication_token).to eq 'Dist1nCt-Tok3N'
         end
       end
+
+
+      it "prevents the authentication token being stored in plain text if digest has been configured", public: true do
+        # set the config to use plaintext persisted tokens
+        SimpleTokenAuthentication.persist_token_as = :digest
+
+        @subjects.each do |subject|
+          subject.ensure_authentication_token
+          expect(subject.plain_authentication_token).to eq 'Dist1nCt-Tok3N'
+          expect(subject.persisted_authentication_token).not_to be nil
+          expect(subject.persisted_authentication_token).not_to eq 'Dist1nCt-Tok3N'
+        end
+      end
+
+      it "ensures the stored digest is a true digest" do
+        SimpleTokenAuthentication.persist_token_as = :digest
+
+        @subjects.each do |subject|
+          subject.ensure_authentication_token
+          hashed_token = subject.persisted_authentication_token
+          plain_token = subject.plain_authentication_token
+          comp = Devise::Encryptor.compare(SimpleTokenAuthentication, hashed_token, plain_token)
+          expect(comp).to be true
+        end
+      end
+
+      it "ensures a stored digest can be compared" do
+
+        SimpleTokenAuthentication.persist_token_as = :digest
+        token_comparator = SimpleTokenAuthentication::TokenComparator.instance
+        @subjects.each do |subject|
+          subject.ensure_authentication_token
+          hashed_token = subject.persisted_authentication_token
+          plain_token = subject.plain_authentication_token
+          comp = token_comparator.compare(hashed_token, plain_token)
+          expect(comp).to be true
+        end
+      end
+
     end
   end
 end

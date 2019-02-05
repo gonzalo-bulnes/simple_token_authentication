@@ -15,7 +15,12 @@ module SimpleTokenAuthentication
       # while mitigating timing attacks.
       # See http://rubydoc.info/github/plataformatec/\
       #            devise/master/Devise#secure_compare-class_method
-      Devise.secure_compare(a, b)
+      pta = SimpleTokenAuthentication.persist_token_as
+      if pta == :plain
+        Devise.secure_compare(a, b)
+      elsif pta == :digest
+        Devise::Encryptor.compare(SimpleTokenAuthentication, a, b)
+      end
     end
   end
 end

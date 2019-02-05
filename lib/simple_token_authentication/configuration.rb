@@ -9,6 +9,7 @@ module SimpleTokenAuthentication
     mattr_accessor :model_adapters
     mattr_accessor :adapters_dependencies
     mattr_accessor :skip_devise_trackable
+    mattr_accessor :persist_token_as
 
     # Default configuration
     @@fallback = :devise
@@ -23,6 +24,7 @@ module SimpleTokenAuthentication
                                 'rails_api'     => 'ActionController::API',
                                 'rails_metal'   => 'ActionController::Metal' }
     @@skip_devise_trackable = true
+    @@persist_token_as = :plain
 
     # Allow the default configuration to be overwritten from initializers
     def configure
@@ -45,6 +47,14 @@ module SimpleTokenAuthentication
       end
       options.reject! { |k,v| k == :fallback_to_devise }
       options
+    end
+
+    def pepper
+      Devise.pepper
+    end
+
+    def stretches
+      Devise.stretches
     end
   end
 end
