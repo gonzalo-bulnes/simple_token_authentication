@@ -48,6 +48,21 @@ module SimpleTokenAuthentication
     available_adapters
   end
 
+  # Load a cache provider
+  def self.load_cache_provider
+
+    cache_short_name = SimpleTokenAuthentication.cache_provider_name
+    connection = SimpleTokenAuthentication.cache_connection
+
+    return nil unless cache_short_name
+
+    cache_provider_name = "simple_token_authentication/caches/#{cache_short_name}_provider"
+    res = require(cache_provider_name)
+    cpc = cache_provider_name.camelize.constantize
+    cpc.connection = connection
+    SimpleTokenAuthentication.cache_provider = cpc
+  end
+
   def self.adapter_dependency_fulfilled? adapter_short_name
     dependency = SimpleTokenAuthentication.adapters_dependencies[adapter_short_name]
 
@@ -59,9 +74,14 @@ module SimpleTokenAuthentication
     end
   end
 
+  def self.run_post_config_setup
+    load_cache_provider
+  end
+
   available_model_adapters = load_available_adapters SimpleTokenAuthentication.model_adapters
   ensure_models_can_act_as_token_authenticatables available_model_adapters
 
   available_controller_adapters = load_available_adapters SimpleTokenAuthentication.controller_adapters
   ensure_controllers_can_act_as_token_authentication_handlers available_controller_adapters
+
 end

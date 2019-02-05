@@ -10,6 +10,9 @@ module SimpleTokenAuthentication
     mattr_accessor :adapters_dependencies
     mattr_accessor :skip_devise_trackable
     mattr_accessor :persist_token_as
+    mattr_accessor :cache_provider_name
+    mattr_accessor :cache_connection
+    mattr_accessor :cache_provider
 
     # Default configuration
     @@fallback = :devise
@@ -25,10 +28,14 @@ module SimpleTokenAuthentication
                                 'rails_metal'   => 'ActionController::Metal' }
     @@skip_devise_trackable = true
     @@persist_token_as = :plain
+    @@cache_provider_name = nil
+    @@cache_connection = nil
+    @@cache_provider = nil
 
     # Allow the default configuration to be overwritten from initializers
     def configure
       yield self if block_given?
+      run_post_config_setup
     end
 
     def parse_options(options)
@@ -47,6 +54,14 @@ module SimpleTokenAuthentication
       end
       options.reject! { |k,v| k == :fallback_to_devise }
       options
+    end
+
+    def persist_token_as_plain?
+      SimpleTokenAuthentication.persist_token_as == :plain
+    end
+
+    def persist_token_as_digest?
+      SimpleTokenAuthentication.persist_token_as == :digest
     end
 
     def pepper

@@ -12,8 +12,7 @@ module SimpleTokenAuthentication
       private :generate_authentication_token
       private :token_suitable?
       private :token_generator
-      private :persist_token_as_plain?
-      private :persist_token_as_digest?
+      private :invalidate_cached_auth
 
       attr_accessor :plain_authentication_token, :persisted_authentication_token
     end
@@ -22,22 +21,30 @@ module SimpleTokenAuthentication
 
       self.plain_authentication_token = token
 
-      if persist_token_as_plain?
+      if token.nil?
+        self.persisted_authentication_token = nil
+      elsif  SimpleTokenAuthentication.persist_token_as_plain?
         # Persist the plain token
         self.persisted_authentication_token = token
-      elsif persist_token_as_digest?
+      elsif SimpleTokenAuthentication.persist_token_as_digest?
         # Persist the digest of the token
         self.persisted_authentication_token = Devise::Encryptor.digest(SimpleTokenAuthentication, token)
+
+        invalidate_cached_auth
       end
 
-      # Check for existence of an overridden method, to allow specs to operate without a true persistence layer
-      if defined?(super)
-        super(self.persisted_authentication_token)
+      # Check for existence of an write_attribute method, to allow specs to operate without a true persistence layer
+      if defined?(write_attribute)
+        write_attribute(:authentication_token, self.persisted_authentication_token)
       end
     end
 
     def authentication_token
-      self.plain_authentication_token
+      if defined?(read_attribute)
+        read_attribute :authentication_token
+      else
+        persisted_authentication_token
+      end
     end
 
     # Set an authentication token if missing
@@ -59,7 +66,7 @@ module SimpleTokenAuthentication
 
     def token_suitable?(token)
       # Alway true if digest is persisted, since we can't check for duplicates
-      return true if persist_token_as_digest?
+      return true if SimpleTokenAuthentication.persist_token_as_digest?
       self.class.where(authentication_token: token).count == 0
     end
 
@@ -67,15 +74,12 @@ module SimpleTokenAuthentication
       TokenGenerator.instance
     end
 
-
-    def persist_token_as_plain?
-      SimpleTokenAuthentication.persist_token_as == :plain
+    # Invalidate an existing cache item by setting its value to 'new'
+    # This works
+    def invalidate_cached_auth
+      cache = SimpleTokenAuthentication.cache_provider
+      cache.invalidate_auth(self.id) if cache
     end
-
-    def persist_token_as_digest?
-      SimpleTokenAuthentication.persist_token_as == :digest
-    end
-
 
     module ClassMethods
       def acts_as_token_authenticatable(options = {})

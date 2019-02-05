@@ -25,6 +25,7 @@ module SimpleTokenAuthentication
       private :sign_in_handler
       private :find_record_from_identifier
       private :integrate_with_devise_case_insensitive_keys
+      private :cached_auth?
     end
 
     # This method is a hook and is meant to be overridden.
@@ -38,9 +39,12 @@ module SimpleTokenAuthentication
     def authenticate_entity_from_token!(entity)
       record = find_record_from_identifier(entity)
 
-      if token_correct?(record, entity, token_comparator)
+      if cached_auth?(record, entity) || token_correct?(record, entity, token_comparator)
+        cache_new_auth(record, entity, true)
         perform_sign_in!(record, sign_in_handler)
         after_successful_token_authentication
+      else
+        cache_new_auth(record, entity, false)
       end
     end
 
@@ -70,6 +74,30 @@ module SimpleTokenAuthentication
       # namely ActiveRecord and Mongoid in all their supported versions.
       identifier_param_value && entity.model.find_for_authentication(entity.identifier => identifier_param_value)
     end
+
+    # If a cache has been specified
+    # get the previous authentication result for this record with this token
+    # Only if found and the previous result was 'authenticated' return true
+    # Otherwise return false
+    def cached_auth?(record, entity)
+      return false unless record && entity
+
+      cache = SimpleTokenAuthentication.cache_provider
+      if cache
+        res = cache.get_previous_auth(record.id, entity.get_token_from_params_or_headers(self))
+        return res
+      end
+      false
+    end
+
+    # Store a new auth result to cache
+    def cache_new_auth(record, entity, success)
+      cache = SimpleTokenAuthentication.cache_provider
+      if cache
+        res = cache.set_new_auth(record.id, entity.get_token_from_params_or_headers(self), success)
+      end
+    end
+
 
     # Private: Take benefit from Devise case-insensitive keys
     #
