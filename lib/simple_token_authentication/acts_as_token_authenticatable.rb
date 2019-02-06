@@ -29,9 +29,9 @@ module SimpleTokenAuthentication
       elsif SimpleTokenAuthentication.persist_token_as_digest?
         # Persist the digest of the token
         self.persisted_authentication_token = Devise::Encryptor.digest(SimpleTokenAuthentication, token)
-
-        invalidate_cached_auth
       end
+
+      invalidate_cached_auth
 
       # Check for existence of an write_attribute method, to allow specs to operate without a true persistence layer
       if defined?(write_attribute)
