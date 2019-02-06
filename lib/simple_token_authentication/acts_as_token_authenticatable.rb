@@ -29,9 +29,9 @@ module SimpleTokenAuthentication
       elsif SimpleTokenAuthentication.persist_token_as_digest?
         # Persist the digest of the token
         self.persisted_authentication_token = Devise::Encryptor.digest(SimpleTokenAuthentication, token)
-
-        invalidate_cached_auth
       end
+
+      invalidate_cached_auth
 
       # Check for existence of an write_attribute method, to allow specs to operate without a true persistence layer
       if defined?(write_attribute)
@@ -74,8 +74,7 @@ module SimpleTokenAuthentication
       TokenGenerator.instance
     end
 
-    # Invalidate an existing cache item by setting its value to 'new'
-    # This works
+    # Invalidate an existing cache item
     def invalidate_cached_auth
       cache = SimpleTokenAuthentication.cache_provider
       cache.invalidate_auth(self.id) if cache
