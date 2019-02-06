@@ -258,10 +258,16 @@ SimpleTokenAuthentication.configure do |config|
   # and config.cache_connection points to an existing (or new) connection for this
   # type of cache.
   # The example in this case is for the dalli gem to access a memcached server,
-  # where an existing connection has been made by Rails
+  # where an existing connection has been made and is stored in a global variable
 
   # config.cache_provider_name = 'dalli'
-  # config.cache_connection = Rails.cache.dalli
+  # config.cache_connection = @@dalli_connection
+
+  # A second example is for the configured Rails cache (memory_store in this example),
+  # where an existing connection has been made by Rails
+
+  # config.cache_provider_name = 'rails_cache'
+  # config.cache_connection = Rails.cache
 
 end
 ```
@@ -306,12 +312,20 @@ text version is only retained in the instance after the record is initially save
 therefore should be communicated to the user for future use immediately. Tokens
 can not be recreated from the digest,
 
+#### Caching Authentications with Stored Digest Tokens
 BCrypt hashing is computationally expensive by design. If the configuration uses
 `config.sign_in_token = false` then the initial sign in is performed once per
-session and there will be a short delay on the initial authentication. If instead
+session and there will be a delay only on the initial authentication. If instead
 the configuration uses `config.sign_in_token = true` then the email and
-authentication token will be required for every request. For API use this is likely
-to lead to poor performance.
+authentication token will be required for every request. This will lead to a slow
+response on every request, since the token must be hashed every time.
+For API use this is likely to lead to poor performance.
+
+The rspec example in `spec/lib/simple_token_authentication/test_caching_spec.rb`
+*tests the speed of the cache versus uncached authentication* shows the speed up.
+When using a BCrypt hashing cost of 13 (set by Devise.stretches), the speed up
+between using the ActiveSupport MemoryStore cache against not caching is greater than
+2000 times.
 
 To avoid the penalty of rehashing on every request, `cache_provider` and
 `cache_connection` options enable caching using an existing in-memory cache.

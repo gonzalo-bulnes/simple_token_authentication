@@ -25,4 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "activerecord", ">= 3.2.6", "< 6"
   s.add_development_dependency 'mongoid', '>= 3.1.0', '< 7'
   s.add_development_dependency "appraisal", "~> 2.0"
+
+  s.add_development_dependency 'dalli'
+  s.add_development_dependency 'activesupport'
 end

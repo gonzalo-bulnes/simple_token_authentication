@@ -26,6 +26,7 @@ module SimpleTokenAuthentication
       private :find_record_from_identifier
       private :integrate_with_devise_case_insensitive_keys
       private :cached_auth?
+      private :cache_new_auth
     end
 
     # This method is a hook and is meant to be overridden.
@@ -45,6 +46,7 @@ module SimpleTokenAuthentication
         after_successful_token_authentication
       else
         cache_new_auth(record, entity, false)
+        false
       end
     end
 

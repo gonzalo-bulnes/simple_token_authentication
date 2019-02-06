@@ -1,4 +1,5 @@
 require 'digest/sha2'
+require 'simple_token_authentication/cache'
 
 module SimpleTokenAuthentication
   module Cache
