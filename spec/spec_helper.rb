@@ -5,7 +5,6 @@ require 'action_controller'
 require 'active_record'
 require 'mongoid'
 require 'active_support'
-require 'byebug'
 require 'simple_token_authentication'
 
 Dir["./spec/support/**/*.rb"].sort.each { |f| require f; puts f }

@@ -74,8 +74,7 @@ module SimpleTokenAuthentication
       TokenGenerator.instance
     end
 
-    # Invalidate an existing cache item by setting its value to 'new'
-    # This works
+    # Invalidate an existing cache item
     def invalidate_cached_auth
       cache = SimpleTokenAuthentication.cache_provider
       cache.invalidate_auth(self.id) if cache
