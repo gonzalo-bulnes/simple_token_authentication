@@ -12,16 +12,23 @@ module SimpleTokenAuthentication
     # This aims to avoid snooping by other users of the cache, especially since many
     # caches do not require authentication by other system users.
     # This new digest does not provide the full protection from attack that the persisted token
-    # BCrypt digest has, since it is not computationally expensive, and therefore could be brute-forced.
+    # BCrypt digest has, since it is not so computationally expensive, and therefore could be brute-forced.
     # Since this hash is only intended to be stored short-term in an in-memory cache
     # accessible by reasonably trusted system users, this compromise allows
     # rapid validation of previous authentications, with reasonable protection
     # against revealing tokens.
 
+    # In order to reflect a session time out with cached authentications, the configuration provides
+    # a `cache_expiration_time` setting. This is passed to the cache every time a new authentication
+    # result is written. Enforcement of this time is expected to be performed by the cache.
+    # Cache providers can also enforce this if the specific cache does not reliably enforce
+    # this expiration time.
+
     def base_class
       raise NotImplementedError
     end
 
+    # The current cache connection
     def connection= c
       @connection = c
     end
@@ -29,6 +36,16 @@ module SimpleTokenAuthentication
     def connection
       @connection
     end
+
+    # Time to expire previous cached authentication results
+    def expiration_time= e
+      @expiration_time = e
+    end
+
+    def expiration_time
+      @expiration_time
+    end
+
 
     # Set a new cached authentication for this record, recording the
     # plain token, authentication status, and timestamp

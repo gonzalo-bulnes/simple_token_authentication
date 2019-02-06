@@ -53,6 +53,7 @@ module SimpleTokenAuthentication
 
     cache_short_name = SimpleTokenAuthentication.cache_provider_name
     connection = SimpleTokenAuthentication.cache_connection
+    exp_time = SimpleTokenAuthentication.cache_expiration_time
 
     return nil unless cache_short_name
 
@@ -60,6 +61,7 @@ module SimpleTokenAuthentication
     res = require(cache_provider_name)
     cpc = cache_provider_name.camelize.constantize
     cpc.connection = connection
+    cpc.expiration_time = exp_time
     SimpleTokenAuthentication.cache_provider = cpc
   end
 

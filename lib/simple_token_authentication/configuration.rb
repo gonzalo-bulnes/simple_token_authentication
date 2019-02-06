@@ -13,6 +13,7 @@ module SimpleTokenAuthentication
     mattr_accessor :cache_provider_name
     mattr_accessor :cache_connection
     mattr_accessor :cache_provider
+    mattr_accessor :cache_expiration_time
 
     # Default configuration
     @@fallback = :devise
@@ -31,6 +32,7 @@ module SimpleTokenAuthentication
     @@cache_provider_name = nil
     @@cache_connection = nil
     @@cache_provider = nil
+    @@cache_expiration_time = 15.minutes
 
     # Allow the default configuration to be overwritten from initializers
     def configure

@@ -269,6 +269,11 @@ SimpleTokenAuthentication.configure do |config|
   # config.cache_provider_name = 'rails_cache'
   # config.cache_connection = Rails.cache
 
+  # Set an expiration time for the configured cache
+  #
+  # Each authentication cache result is sent with an expiration time. By default it is
+  # 15 minutes. Use 0 to indicate no expiration.
+  # config.cache_expiration_time = 5.minutes
 end
 ```
 
@@ -289,7 +294,7 @@ If `:plain` is set, the `authentication_token` field will hold the generated
 authentication token in plain text. This is the default, and was in fact the only
 option before version **1.16.0**.
 
-In plain text mode tokens are checked for uniqueness when generated, and if a token
+In *plain text* mode tokens are checked for uniqueness when generated, and if a token
 is found not to be unique it is regenerated.
 
 The record attribute `authentication_token` returns the stored value, which
@@ -301,16 +306,16 @@ generated authentication token, along with a randomly generated salt. This has t
 benefit of preventing tokens being exposed if the database or a backup is
 compromised, or a DB role views the users table.
 
-In this digest mode, authentication tokens can not be realistically checked for
+In *digest* mode, authentication tokens can not be realistically checked for
 uniqueness, so the generation of unique tokens is not guaranteed,
 even if it is highly likely.
 
 The record attribute `authentication_token` returns the stored value, the digest.
 In order to access the plain text token when it is initially
 generated, instead read the attribute `plain_authentication_token`. This plain
-text version is only retained in the instance after the record is initially saved,
+text version is only retained in the instance after `authentication_token` is set,
 therefore should be communicated to the user for future use immediately. Tokens
-can not be recreated from the digest,
+can not be recreated from the digest and are not persisted in the datatabase.
 
 #### Caching Authentications with Stored Digest Tokens
 BCrypt hashing is computationally expensive by design. If the configuration uses
@@ -321,24 +326,24 @@ authentication token will be required for every request. This will lead to a slo
 response on every request, since the token must be hashed every time.
 For API use this is likely to lead to poor performance.
 
+To avoid the penalty of rehashing on every request, `cache_provider` and
+`cache_connection` options enable caching using an existing in-memory cache
+(such as memcached). The approach is to cache the user id, the authentication token
+(as an SHA2 digest), and the authentication status. On a
+subsequent request, the cache is checked to see if the authentication has already
+happened successfully. If the token is regenerated, the cached value is
+invalidated. Comments in the file `lib/simple_token_authentication/cache.rb` provide
+additional detail.
+
 The rspec example in `spec/lib/simple_token_authentication/test_caching_spec.rb`
 *tests the speed of the cache versus uncached authentication* shows the speed up.
 When using a BCrypt hashing cost of 13 (set by Devise.stretches), the speed up
 between using the ActiveSupport MemoryStore cache against not caching is greater than
 2000 times.
 
-To avoid the penalty of rehashing on every request, `cache_provider` and
-`cache_connection` options enable caching using an existing in-memory cache.
-The approach is to cache the email, an authentication token SHA2 digest and
-authentication status in an in-memory cache (such as memcached) for a time limit. On a
-subsequent request, the cache is checked to see if the authentication has already
-happened successfully. If the token is regenerated, the cached value is
-invalidated. Comments in the file `lib/simple_token_authentication/cache.rb` provide
-additional detail.
-
 It should be noted that hashing uses the same Devise defaults as for entity
-passwords (including hashing cost and the Devise secret). In the current release
-there is no way to configure this differently.
+passwords (including hashing cost and the Devise secret). Currently there is no
+way to configure this differently for passwords and authentication tokens.
 
 
 ### Authentication Method 1: Query Params

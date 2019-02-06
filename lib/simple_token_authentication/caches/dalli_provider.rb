@@ -13,7 +13,7 @@ module SimpleTokenAuthentication
       # Set a new cached authentication for this record, recording the
       # plain token, authentication status, and timestamp
       def self.set_new_auth record_id, plain_token, authenticated
-        connection.set(cache_record_key(record_id), cache_record_value(plain_token, record_id, authenticated))
+        connection.set(cache_record_key(record_id), cache_record_value(plain_token, record_id, authenticated), expiration_time)
       end
 
       # Get a new cached authentication for this record, recording the
