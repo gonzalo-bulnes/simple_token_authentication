@@ -64,7 +64,11 @@ describe 'SimpleTokenAuthentication::Caches::RailsCacheProvider' do
       SimpleTokenAuthentication.persist_token_as = :digest
 
       @subject = Class.new do
+        def self.before_save _
+        end
         include SimpleTokenAuthentication::ActsAsTokenAuthenticatable
+        acts_as_token_authenticatable
+
         attr_accessor :email, :id
 
         def initialize(opt={})

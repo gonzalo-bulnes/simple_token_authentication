@@ -57,6 +57,8 @@ describe 'A token authenticatable class (or one of its children)' do
     it 'responds to :ensure_authentication_token', protected: true do
       @subjects.map!{ |subject| subject.new }
       @subjects.each do |subject|
+        allow(subject.class).to receive(:before_save)
+        subject.class.acts_as_token_authenticatable
         expect(subject).to respond_to :ensure_authentication_token
       end
     end
@@ -92,6 +94,9 @@ describe 'A token authenticatable class (or one of its children)' do
         SimpleTokenAuthentication.persist_token_as = :plain
 
         @subjects.each do |subject|
+          allow(subject.class).to receive(:before_save)
+          subject.class.acts_as_token_authenticatable
+
           subject.ensure_authentication_token
 
           expect(subject.authentication_token).not_to eq 'ExampleTok3n'
@@ -106,6 +111,9 @@ describe 'A token authenticatable class (or one of its children)' do
         SimpleTokenAuthentication.persist_token_as = :digest
 
         @subjects.each do |subject|
+          allow(subject.class).to receive(:before_save)
+          subject.class.acts_as_token_authenticatable
+
           subject.ensure_authentication_token
           expect(subject.plain_authentication_token).to eq 'Dist1nCt-Tok3N'
           expect(subject.persisted_authentication_token).not_to be nil
@@ -117,6 +125,9 @@ describe 'A token authenticatable class (or one of its children)' do
         SimpleTokenAuthentication.persist_token_as = :digest
 
         @subjects.each do |subject|
+          allow(subject.class).to receive(:before_save)
+          subject.class.acts_as_token_authenticatable
+
           subject.ensure_authentication_token
           hashed_token = subject.persisted_authentication_token
           plain_token = subject.plain_authentication_token
@@ -130,6 +141,9 @@ describe 'A token authenticatable class (or one of its children)' do
         SimpleTokenAuthentication.persist_token_as = :digest
         token_comparator = SimpleTokenAuthentication::TokenComparator.instance
         @subjects.each do |subject|
+          allow(subject.class).to receive(:before_save)
+          subject.class.acts_as_token_authenticatable
+          
           subject.ensure_authentication_token
           hashed_token = subject.persisted_authentication_token
           plain_token = subject.plain_authentication_token
