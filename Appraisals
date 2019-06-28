@@ -1,3 +1,7 @@
+appraise 'rails_6_devise_4' do
+  # use gemspec constraints
+end
+
 appraise 'rails_5_devise_4' do
   # use gemspec constraints
 end
