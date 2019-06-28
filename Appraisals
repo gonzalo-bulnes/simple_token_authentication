@@ -1,5 +1,11 @@
-appraise 'rails_5_devise_4' do
+appraise 'rails_6_devise_4' do
   # use gemspec constraints
+end
+
+appraise 'rails_5_devise_4' do
+  gem 'actionmailer', '~> 5.0'
+  gem 'actionpack', '~> 5.0'
+  gem 'activerecord', '~> 5.0'
 end
 
 appraise 'rails_4_devise_3' do
