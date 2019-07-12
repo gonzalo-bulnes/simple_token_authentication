@@ -22,4 +22,5 @@ appraise 'ruby_1.9.3_rails_3.2' do
   gem 'mime-types', '< 3'
   gem 'term-ansicolor', '~> 1.3.0'
   gem 'tins', '< 1.7.0'
+  gem 'yard', '<= 0.9.5'
 end
