@@ -3,15 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - 2017-12-21
+## [Unreleased] - 2019-08-20
 
-## Fixed
+### Added
+
+- Add Rails 6 support - @MatthiasRMS
+
+### Fixed
 
 - Removed the `Gemfile.lock` - mostly to acknowledge that it was used only in development and is not really needed.
 
 ## [1.15.1] - 2017-01-26
 
-## Fixed
+### Fixed
 
 - Work around [jbuilder][jbuilder] issues caused by the Rails API adapter - @IvRRimum with help from @Pepan
 
@@ -307,4 +311,3 @@ This [gist][gist] did refactor the Jose Valim's code into an `ActiveSupport::Con
 ## Inspiration
 
 Thanks to @nTraum for pointing me at http://keepachangelog.com and to @olivierlacan for writing it in the first place!
-
