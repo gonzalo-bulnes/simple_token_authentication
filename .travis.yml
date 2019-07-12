@@ -1,5 +1,6 @@
 language: ruby
 gemfile:
+  - gemfiles/rails_6_devise_4.gemfile
   - gemfiles/rails_5_devise_4.gemfile
   - gemfiles/rails_4_devise_3.gemfile
   - gemfiles/ruby_1.9.3_rails_3.2.gemfile
@@ -11,6 +12,8 @@ matrix:
   allow_failures:
     - rvm: ruby-head
   exclude:
+    - rvm: 1.9.3
+      gemfile: gemfiles/rails_6_devise_4.gemfile
     - rvm: 1.9.3
       gemfile: gemfiles/rails_5_devise_4.gemfile
     - rvm: 1.9.3
