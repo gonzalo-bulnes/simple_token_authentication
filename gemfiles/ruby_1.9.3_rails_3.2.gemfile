@@ -8,5 +8,6 @@ gem "activerecord", ">= 3.2.15", "< 4"
 gem "mime-types", "< 3"
 gem "term-ansicolor", "~> 1.3.0"
 gem "tins", "< 1.7.0"
+gem "yard", "<= 0.9.5"
 
 gemspec path: "../"
