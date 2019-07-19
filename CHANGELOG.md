@@ -7,7 +7,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Add Rails 6 support - @MatthiasRMS 
 
-## [Unreleased] - 2017-12-21
 
 ## Fixed
 
