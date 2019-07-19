@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - 2019-07-12
 
-- Add Rails 6 support
+- Add Rails 6 support - @MatthiasRMS 
 
 ## [Unreleased] - 2017-12-21
 
