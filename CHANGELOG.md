@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Add Rails 6 support for Mongoid Adapter - @unused
+
 ## [1.16.0] - 2019-08-20
 
 ### Added
