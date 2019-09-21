@@ -23,6 +23,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "inch", "~> 0.4"
   s.add_development_dependency "activerecord", ">= 3.2.6", "< 7"
-  s.add_development_dependency 'mongoid', '>= 3.1.0', '< 7'
+  s.add_development_dependency 'mongoid', ">= 3.1.0", "< 8"
   s.add_development_dependency "appraisal", "~> 2.0"
 end
