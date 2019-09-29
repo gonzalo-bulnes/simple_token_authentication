@@ -32,7 +32,7 @@ module SimpleTokenAuthentication
     end
 
     def token_suitable?(token)
-      self.class.where(authentication_token: token).count == 0
+      self.class.exists?(authentication_token: token)
     end
 
     def token_generator
