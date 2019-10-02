@@ -2,8 +2,4 @@
 
 source "https://rubygems.org"
 
-gem "actionmailer", "~> 5.0"
-gem "actionpack", "~> 5.0"
-gem "activerecord", "~> 5.0"
-
 gemspec path: "../"
