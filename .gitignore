@@ -9,6 +9,7 @@ test/dummy/.sass-cache
 
 # Rubygems
 *.gem
+*.lock
 
 # RVM
 .ruby-version

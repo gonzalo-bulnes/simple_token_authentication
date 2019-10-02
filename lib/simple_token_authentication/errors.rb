@@ -12,7 +12,7 @@ module SimpleTokenAuthentication
 
             # Gemfile
 
-            gem 'mongoid', '~> 4.0' # for example
+            gem 'mongoid', '~> 7.0.5' # for example
             gem 'simple_token_authentication', '~> 1.0'
 
         See https://github.com/gonzalo-bulnes/simple_token_authentication/issues/158
