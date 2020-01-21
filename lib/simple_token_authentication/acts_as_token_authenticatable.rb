@@ -19,24 +19,62 @@ module SimpleTokenAuthentication
     # Because it is intended to be used as a filter,
     # this method is -and should be kept- idempotent.
     def ensure_authentication_token
-      if authentication_token.blank?
-        self.authentication_token = generate_authentication_token(token_generator)
+      token_fields.each do |field_name|
+        if self.read_attribute(field_name).blank?
+          self.write_attribute(field_name, generate_authentication_token(token_generator, field_name))
+        end
       end
     end
 
-    def generate_authentication_token(token_generator)
+    def generate_authentication_token(token_generator, field_name)
       loop do
         token = token_generator.generate_token
-        break token if token_suitable?(token)
+        break token if token_suitable?(token, field_name)
       end
     end
 
-    def token_suitable?(token)
-      self.class.where(authentication_token: token).count == 0
+    def token_suitable?(token, field_name)
+      self.class.where("#{field_name} = ?", token).exists?
     end
 
     def token_generator
       TokenGenerator.instance
+    end
+
+    def token_providers
+      if SimpleTokenAuthentication.use_multiple_providers
+        SimpleTokenAuthentication.token_providers[class_name_as_key].try(:keys) || []
+      else
+        []
+      end
+    end
+
+    def use_token_providers?
+      token_providers.present?
+    end
+
+    def token_fields
+      if use_token_providers?
+        SimpleTokenAuthentication.token_providers[class_name_as_key].values.uniq
+      else
+        [default_token_field]
+      end
+    end
+
+    def token_for_provider(provider)
+      if use_token_providers? && SimpleTokenAuthentication.token_providers[class_name_as_key][provider].present?
+        self.read_attribute(SimpleTokenAuthentication.token_providers[class_name_as_key][provider])
+      else
+        self.read_attribute(default_token_field)
+      end
+    end
+
+    def default_token_field
+      'authentication_token'
+    end
+
+    def class_name_as_key
+      self.class.name.underscore.to_sym
     end
 
     module ClassMethods
