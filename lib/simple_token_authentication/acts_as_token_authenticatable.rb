@@ -20,8 +20,8 @@ module SimpleTokenAuthentication
     # this method is -and should be kept- idempotent.
     def ensure_authentication_token
       token_fields.each do |field_name|
-        if self.read_attribute(field_name).blank?
-          self.write_attribute(field_name, generate_authentication_token(token_generator, field_name))
+        if self.send(field_name).blank?
+          self.send("#{field_name}=", generate_authentication_token(token_generator, field_name))
         end
       end
     end
@@ -34,7 +34,7 @@ module SimpleTokenAuthentication
     end
 
     def token_suitable?(token, field_name)
-      self.class.where("#{field_name} = ?", token).exists?
+      self.class.where("#{field_name} = ?", token).blank?
     end
 
     def token_generator
@@ -63,9 +63,9 @@ module SimpleTokenAuthentication
 
     def token_for_provider(provider)
       if use_token_providers? && SimpleTokenAuthentication.token_providers[class_name_as_key][provider].present?
-        self.read_attribute(SimpleTokenAuthentication.token_providers[class_name_as_key][provider])
+        self.send(SimpleTokenAuthentication.token_providers[class_name_as_key][provider])
       else
-        self.read_attribute(default_token_field)
+        self.send(default_token_field)
       end
     end
 

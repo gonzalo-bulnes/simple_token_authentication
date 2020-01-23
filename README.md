@@ -231,7 +231,7 @@ SimpleTokenAuthentication.configure do |config|
   #
   # The default setting is false, when false, 'authentication_token' will be used as the field and no behaviour will change.
   #
-  # config.multiple_providers = false 
+  # config.use_multiple_providers = false 
 
   # Configure the name/names of the providers and their relative attributes used to store the authentication token on your model.
   # When using providers you must pass the header 'X-Entity-Provider' with your requests or set the param in your controller. 
@@ -247,7 +247,7 @@ SimpleTokenAuthentication.configure do |config|
   #
   # Example:
   #
-  #   `config.token_providers = { user: { mobile: 'authentication_token', react: 'react_authentication_token' } `
+  #   `config.token_providers = { user: { mobile: 'mobile_authentication_token', web: 'web_authentication_token' } }`
   #
   # config.token_providers = {}
 
@@ -322,6 +322,21 @@ class ApplicationController < ActiveController::Base
       renew_authentication_token!
     end
 end
+```
+
+### Multiple authentication tokens: Using providers
+
+In the case you wish to use more than one authentication token for a single model, the concept of 'providers' has been added to allow this.
+
+A use case for this would be a standalone web application and a standalone mobile application both requiring authentication tokens but you don't want them to invalidate each other whilst cycling tokens. 
+
+When enabled, providers function alongside both authentication methods (Query params/Request headers). You can define them for a single model and non-defined models will use default behaviour. You could also enable this functionality simply to rename the default token field.
+
+To use providers you need the following settings:
+
+```
+config.use_multiple_providers = true
+config.token_providers = { user: { mobile: 'mobile_authentication_token', web: 'web_authentication_token' } }
 ```
 
 ### Testing
