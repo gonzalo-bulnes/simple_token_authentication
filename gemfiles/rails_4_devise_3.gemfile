@@ -7,4 +7,4 @@ gem "actionpack", "~> 4.0"
 gem "activerecord", "~> 4.0"
 gem "devise", "~> 3.2"
 
-gemspec :path => "../"
+gemspec path: "../"
