@@ -256,8 +256,8 @@ The _token authentication handler_ (e.g. `ApplicationController`) will perform t
 You can also use request headers (which may be simpler when authenticating against an API):
 
 ```
-X-User-Email alice@example.com
-X-User-Token 1G8_s7P-V-4MGojaKD7a
+X-User-Email: alice@example.com
+X-User-Token: 1G8_s7P-V-4MGojaKD7a
 ```
 
 In fact, you can mix both methods and provide the `user_email` with one and the `user_token` with the other, even if it would be a freak thing to do.
