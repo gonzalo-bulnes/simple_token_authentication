@@ -261,7 +261,7 @@ X-User-Token 1G8_s7P-V-4MGojaKD7a
 ```
 
 ### Example Usage
-check this wiki https://github.com/gonzalo-bulnes/simple_token_authentication/wiki/Initial-Devise-sign-in
+check this [wiki]: https://github.com/gonzalo-bulnes/simple_token_authentication/wiki/Initial-Devise-sign-in 
 
 In fact, you can mix both methods and provide the `user_email` with one and the `user_token` with the other, even if it would be a freak thing to do.
 
