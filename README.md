@@ -237,9 +237,15 @@ end
 Usage
 -----
 
+
 ### Tokens Generation
 
 Assuming `user` is an instance of `User`, which is _token authenticatable_: each time `user` will be saved, and `user.authentication_token.blank?` it receives a new and unique authentication token (via `Devise.friendly_token`).
+
+### Token Request
+
+Simple Token Authentication only provides the functionality to authenticate a user based on their authentication_token.
+For example how to setup your controller to get the token at first please check this [wiki](https://github.com/gonzalo-bulnes/simple_token_authentication/wiki/Initial-Devise-sign-in)
 
 ### Authentication Method 1: Query Params
 
@@ -259,9 +265,6 @@ You can also use request headers (which may be simpler when authenticating again
 X-User-Email alice@example.com
 X-User-Token 1G8_s7P-V-4MGojaKD7a
 ```
-
-### Example Usage
-check this [wiki](https://github.com/gonzalo-bulnes/simple_token_authentication/wiki/Initial-Devise-sign-in)
 
 In fact, you can mix both methods and provide the `user_email` with one and the `user_token` with the other, even if it would be a freak thing to do.
 
