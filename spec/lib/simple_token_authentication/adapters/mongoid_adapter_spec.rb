@@ -1,5 +1,5 @@
 require 'spec_helper'
-  require 'simple_token_authentication/adapters/mongoid_adapter'
+require 'simple_token_authentication/adapters/mongoid_adapter'
 
 describe 'SimpleTokenAuthentication::Adapters::MongoidAdapter' do
 

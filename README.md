@@ -296,7 +296,7 @@ To use no fallback when token authentication fails, set `fallback: :none`.
 
 ### Hooks
 
-One hook is currently available to trigger custom behaviour after an user has been successfully authenticated through token authentication. To use it, override the `after_successful_token_authentication` method in the corresponding token authentication handler:
+One hook is currently available to trigger custom behaviour after an user has been successfully authenticated through token authentication. To use it, implement or mixin a module with an `after_successful_token_authentication` method that will be ran after authentication from a token authentication handler:
 
 ```ruby
 # app/controller/application_controller.rb
