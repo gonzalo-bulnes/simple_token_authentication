@@ -7,9 +7,8 @@ RSpec.shared_examples 'a token authentication handler' do
   end
 
   describe 'instance' do
-
-    it 'responds to :after_successful_token_authentication', hooks: true, private: true do
-      expect(token_authentication_handler.new).to respond_to :after_successful_token_authentication
+    it 'does not implement :after_successful_token_authentication by default', private: true do
+      expect(token_authentication_handler.new).not_to respond_to :after_successful_token_authentication
     end
   end
 end
