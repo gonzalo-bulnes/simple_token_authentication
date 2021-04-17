@@ -41,7 +41,7 @@ module SimpleTokenAuthentication
 
     module ClassMethods
       def acts_as_token_authenticatable(options = {})
-        before_save :ensure_authentication_token
+        before_validation :ensure_authentication_token
       end
     end
   end
