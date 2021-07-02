@@ -38,12 +38,26 @@ module SimpleTokenAuthentication
       end
     end
 
+    # Private: Return the name of the header to watch for the provider param
+    def provider_header_name
+      if SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym].presence \
+        && provider_header_name = SimpleTokenAuthentication.header_names["#{name_underscore}".to_sym][:provider]
+        provider_header_name
+      else
+        "X-#{name_underscore.camelize}-Provider"
+      end
+    end
+
     def token_param_name
       "#{name_underscore}_token".to_sym
     end
 
     def identifier_param_name
       "#{name_underscore}_#{identifier}".to_sym
+    end
+
+    def provider_param_name
+      "#{name_underscore}_provider".to_sym
     end
 
     def identifier
@@ -68,6 +82,14 @@ module SimpleTokenAuthentication
         controller.params[identifier_param_name] = identifer_param
       end
       controller.params[identifier_param_name]
+    end
+
+    def get_provider_from_params_or_headers controller
+      # if the token is not present among params, get it from headers
+      if provider = controller.params[provider_param_name].blank? && controller.request.headers[provider_header_name]
+        controller.params[provider_param_name] = provider.to_sym
+      end
+      controller.params[provider_param_name]
     end
   end
 end

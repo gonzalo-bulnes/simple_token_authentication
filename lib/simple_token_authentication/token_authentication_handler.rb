@@ -49,7 +49,7 @@ module SimpleTokenAuthentication
     end
 
     def token_correct?(record, entity, token_comparator)
-      record && token_comparator.compare(record.authentication_token,
+      record && token_comparator.compare(record.token_for_provider(entity.get_provider_from_params_or_headers(self)),
                                          entity.get_token_from_params_or_headers(self))
     end
 

@@ -9,6 +9,8 @@ module SimpleTokenAuthentication
     mattr_accessor :model_adapters
     mattr_accessor :adapters_dependencies
     mattr_accessor :skip_devise_trackable
+    mattr_accessor :use_multiple_providers
+    mattr_accessor :token_providers
 
     # Default configuration
     @@fallback = :devise
@@ -23,6 +25,8 @@ module SimpleTokenAuthentication
                                 'rails_api'     => 'ActionController::API',
                                 'rails_metal'   => 'ActionController::Metal' }
     @@skip_devise_trackable = true
+    @@use_multiple_providers = false
+    @@token_providers = {}
 
     # Allow the default configuration to be overwritten from initializers
     def configure
