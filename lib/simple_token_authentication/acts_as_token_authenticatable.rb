@@ -34,7 +34,7 @@ module SimpleTokenAuthentication
     end
 
     def token_suitable?(token, field_name)
-      self.class.where("#{field_name} = ?", token).blank?
+      self.class.unscoped.where("#{field_name} = ?", token).blank?
     end
 
     def token_generator
