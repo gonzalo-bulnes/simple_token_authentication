@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
   s.add_dependency "actionmailer", ">= 3.2.6", "< 8"
   s.add_dependency "actionpack", ">= 3.2.6", "< 8"
   s.add_dependency "devise", ">= 3.2", "< 6"
+  s.add_dependency "activemodel-serializers-xml"
+  s.add_dependency "active_model_serializers"
 
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "inch", "~> 0.4"
