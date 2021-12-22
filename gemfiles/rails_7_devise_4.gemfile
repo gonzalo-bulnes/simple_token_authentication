@@ -2,8 +2,4 @@
 
 source "https://rubygems.org"
 
-gem "actionmailer", "~> 6.0"
-gem "actionpack", "~> 6.0"
-gem "devise", "~> 4.0"
-
 gemspec path: "../"
