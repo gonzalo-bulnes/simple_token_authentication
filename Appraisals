@@ -1,3 +1,10 @@
+appraise 'rails_7_devise_4' do
+  gem "actionmailer", "~> 7.0.0"
+  gem "actionpack", "~> 7.0.0"
+  gem "activerecord", "~> 7.0.0"
+  gem "devise", git: 'https://github.com/heartcombo/devise'
+end
+
 appraise 'rails_6_devise_4' do
   # use gemspec constraints
 end
