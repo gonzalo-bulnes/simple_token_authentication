@@ -12,6 +12,7 @@ jobs:
           - '2.6'
           - '1.9.3'
         gemfile:
+          - rails_7_devise_4
           - rails_6_devise_4
           - rails_5_devise_4
           - rails_4_devise_3
@@ -31,6 +32,8 @@ jobs:
             gemfile: rails_4_devise_3
           - ruby: 2.7
             gemfile: ruby_1.9.3_rails_3.2
+          - ruby: 2.6
+            gemfile: rails_7_devise_4
           - ruby: 2.6
             gemfile: rails_6_devise_4
           - ruby: 2.6
