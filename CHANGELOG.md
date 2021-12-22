@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.18.0] - 2021-12-22
+
+### Added
+
+- Add Rails 7 support
+
 ## [1.17.0] - 2019-09-21
 
 ### Added
