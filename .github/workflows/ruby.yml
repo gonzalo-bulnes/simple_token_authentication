@@ -11,10 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['2.6.10', '2.7', '3.0.4', '3.1.2']
+        ruby-version: ['2.7.7']
         gemfile:
-          - gemfiles/rails_4_devise_3
-          - gemfiles/rails_5_devise_4
           - gemfiles/rails_6_devise_4
 
     steps:
