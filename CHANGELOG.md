@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.18.0] - 2021-12-09
+
+### Changed
+
+This version requires you to be running supported versions of Ruby and Rails
+(and by extension, Devise)
+
+- Require Ruby 2.7 or later, since all versions prior are unsupported
+- Require Rails 6.0 or later, since all versions prior are unsupported
+- Require at least Devise 4.7.2 - since that's when Ruby 2.7 support
+  was added.
+
+Removed support:
+
+- Removed Rails 5 support (end-of-life since 25 Aug 2019)
+- Removed Rails 4 support (end-of-life since 27 Apr 2017)
+- Removed Rails 3 support (end-of-life since 30 Jun 2016)
+- Removed Ruby 2.6 support (end-of-life since 31 Mar 2022)
+- Removed Ruby 1.9 support (end-of-life since 23 Feb 2015)
+
 ## [1.17.0] - 2019-09-21
 
 ### Added
