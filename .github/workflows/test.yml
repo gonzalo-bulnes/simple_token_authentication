@@ -1,0 +1,54 @@
+name: Test
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - 'head'
+          - '3.0'
+          - '1.9'
+          - '2.7'
+          - '2.6'
+        gemfile:
+          - gemfiles/rails_6_devise_4.gemfile
+          - gemfiles/rails_5_devise_4.gemfile
+          - gemfiles/rails_4_devise_3.gemfile
+          - gemfiles/ruby_1.9.3_rails_3.2.gemfile
+        exclude:
+          - ruby: 'head'
+            gemfile: gemfiles/rails_5_devise_4.gemfile
+          - ruby: 'head'
+            gemfile: gemfiles/rails_4_devise_3.gemfile
+          - ruby: 'head'
+            gemfile: gemfiles/ruby_1.9.3_rails_3.2.gemfile
+          - ruby: 3.0
+            gemfile: gemfiles/rails_4_devise_3.gemfile
+          - ruby: 3.0
+            gemfile: gemfiles/ruby_1.9.3_rails_3.2.gemfile
+          - ruby: 2.7
+            gemfile: gemfiles/rails_4_devise_3.gemfile
+          - ruby: 2.7
+            gemfile: gemfiles/ruby_1.9.3_rails_3.2.gemfile
+          - ruby: 2.6
+            gemfile: gemfiles/rails_6_devise_4.gemfile
+          - ruby: 2.6
+            gemfile: gemfiles/rails_5_devise_4.gemfile
+          - ruby: 2.6
+            gemfile: gemfiles/ruby_1.9.3_rails_3.2.gemfile
+          - ruby: 1.9
+            gemfile: gemfiles/rails_6_devise_4.gemfile
+          - ruby: 1.9
+            gemfile: gemfiles/rails_5_devise_4.gemfile
+          - ruby: 1.9
+            gemfile: gemfiles/rails_4_devise_3.gemfile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          bundler: 'latest'
+      - run: bundle exec rake
