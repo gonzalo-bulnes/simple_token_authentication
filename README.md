@@ -2,10 +2,10 @@ Simple Token Authentication
 ===========================
 
 [![Gem Version](https://badge.fury.io/rb/simple_token_authentication.svg)](http://badge.fury.io/rb/simple_token_authentication)
-[![Build Status](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication.svg?branch=master)](https://travis-ci.org/gonzalo-bulnes/simple_token_authentication)
+[![Build Status](https://github.com/gonzalo-bulnes/simple_token_authentication/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/gonzalo-bulnes/simple_token_authentication/actions/workflows/test.yml)
 [![Code Climate](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication.svg)](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication)
-[![Security](https://hakiri.io/github/gonzalo-bulnes/simple_token_authentication/master.svg)](https://hakiri.io/github/gonzalo-bulnes/simple_token_authentication/master)
 [![Inline docs](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication.svg?branch=master)](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication)
+![Last independent audit](https://img.shields.io/badge/Last%20independent%20audit-never-red)
 
 Token authentication support has been removed from [Devise][devise] for security reasons. In [this gist][original-gist], Devise's [José Valim][josevalim] explains how token authentication should be performed in order to remain safe.
 
@@ -353,7 +353,7 @@ RSpec [tags][tags] are used to categorize the spec examples.
 
 Spec examples that are tagged as `public` describe aspects of the gem public API, and MAY be considered as the gem documentation.
 
-The `private` or `protected` specs are written for development purpose only. Because they describe internal behaviour which may change at any moment without notice, they are only executed as a secondary task by the [continuous integration service][travis] and SHOULD be ignored.
+The `private` or `protected` specs are written for development purpose only. Because they describe internal behaviour which may change at any moment without notice, they are only executed as a secondary task by the [continuous integration service][ci] and SHOULD be ignored.
 
 Run `rake spec:public` to print the gem public documentation.
 
@@ -363,7 +363,7 @@ Run `rake spec:public` to print the gem public documentation.
   [regression]: https://github.com/gonzalo-bulnes/simple_token_authentication/wiki/Regression-Testing
   [rspec]: https://www.relishapp.com/rspec/rspec-rails/docs
   [tags]: https://www.relishapp.com/rspec/rspec-core/v/3-1/docs/command-line/tag-option
-  [travis]: https://travis-ci.org/gonzalo-bulnes/simple_token_authentication/builds
+  [ci]: https://github.com/gonzalo-bulnes/simple_token_authentication/actions
 
 ### Contributions
 
@@ -389,7 +389,7 @@ License
 -------
 
     Simple Token Authentication
-    Copyright (C) 2013, 2014, 2015, 2016, 2017 Gonzalo Bulnes Guilpain
+    Copyright (C) 2013‒2022 Gonzalo Bulnes Guilpain
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
