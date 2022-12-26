@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Rails 7 support
+
 ### Deprecated
 
 - Support for Ruby 1.9.3 is on the way out because I don't have a good way of testing locally or online.
