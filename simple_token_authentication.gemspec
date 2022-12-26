@@ -6,7 +6,7 @@ require "simple_token_authentication/version"
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "simple_token_authentication"
-  s.version     = SimpleTokenAuthentication::VERSION
+  s.version     = SimpleTokenAuthentication::VERSION.dup()
   s.authors     = ["Gonzalo Bulnes Guilpain"]
   s.email       = ["gon.bulnes@gmail.com"]
   s.homepage    = "https://github.com/gonzalo-bulnes/simple_token_authentication"
