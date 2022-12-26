@@ -11,22 +11,24 @@ jobs:
           - '2.7'
           - '2.6'
         gemfile:
-          - gemfiles/rails_6_devise_4.gemfile
-          - gemfiles/rails_5_devise_4.gemfile
-          - gemfiles/rails_4_devise_3.gemfile
+          - rails_6_devise_4
+          - rails_5_devise_4
+          - rails_4_devise_3
         exclude:
           - ruby: 'head'
-            gemfile: gemfiles/rails_5_devise_4.gemfile
+            gemfile: rails_5_devise_4
           - ruby: 'head'
-            gemfile: gemfiles/rails_4_devise_3.gemfile
+            gemfile: rails_4_devise_3
           - ruby: 3.0
-            gemfile: gemfiles/rails_4_devise_3.gemfile
+            gemfile: rails_4_devise_3
           - ruby: 2.7
-            gemfile: gemfiles/rails_4_devise_3.gemfile
+            gemfile: rails_4_devise_3
           - ruby: 2.6
-            gemfile: gemfiles/rails_6_devise_4.gemfile
+            gemfile: rails_6_devise_4
           - ruby: 2.6
-            gemfile: gemfiles/rails_5_devise_4.gemfile
+            gemfile: rails_5_devise_4
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
