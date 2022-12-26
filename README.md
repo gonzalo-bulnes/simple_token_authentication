@@ -5,9 +5,8 @@ Simple Token Authentication
 [![Build Status](https://github.com/gonzalo-bulnes/simple_token_authentication/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/gonzalo-bulnes/simple_token_authentication/actions/workflows/test.yml)
 [![Code Climate](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication.svg)](https://codeclimate.com/github/gonzalo-bulnes/simple_token_authentication)
 [![Inline docs](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication.svg?branch=master)](http://inch-ci.org/github/gonzalo-bulnes/simple_token_authentication)
-![Last independent audit](https://img.shields.io/badge/Last%20independent%20audit-never-red)
 
-Token authentication support has been removed from [Devise][devise] for security reasons. In [this gist][original-gist], Devise's [José Valim][josevalim] explains how token authentication should be performed in order to remain safe.
+Token authentication support has been removed from [Devise][devise] for security reasons. In [this gist][original-gist], Devise's [José Valim][josevalim] explains how token authentication should be performed in order to remain safe (see important warning below).
 
 This gem packages the content of the gist and provides a set of convenient options for increased flexibility.
 
@@ -19,6 +18,21 @@ This gem packages the content of the gist and provides a set of convenient optio
 
   [josevalim]: https://github.com/josevalim
   [gonzalo-bulnes]: https://github.com/gonzalo-bulnes
+
+Security notice
+---------------
+
+![Last independent audit](https://img.shields.io/badge/Last%20independent%20audit-never-red)
+
+**Security notice**: As the name of the gem indicates, it provides a very basic mechanism for token authentication. If your tokens are not discarded after a single use, or you don't know how to mitigate [**replay attacks**][replay-attack], then you should look at alternatives. (Simple Token Authentication doesn't mitigate those attacks for you.)
+
+In other words: if you don't know why _Simple Token Authentication_ is safe to use in your specific use case, then it probably isn't.
+
+**So... what does the gem do?** Simple Token Authentication allows to generate, revoke, and safely compare tokens for authentication purposes. That's not the only thing you need to implement a safe authentication protocol, but it can be a part of it.
+
+  [replay-attack]: https://en.wikipedia.org/wiki/Replay_attack
+
+**Personal note**: I've used the gem to manage single-use sign-in links sent by email (that's what I created it for). I would use it again for that purpose. Please do your research and check carefully if this tool is adequate to your level of experience and threat model. -- [GB][gonzalo-bulnes]
 
 Installation
 ------------
