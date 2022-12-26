@@ -10,23 +10,41 @@ jobs:
           - '3.0'
           - '2.7'
           - '2.6'
+          - '1.9.3'
         gemfile:
           - rails_6_devise_4
           - rails_5_devise_4
           - rails_4_devise_3
+          - ruby_1.9.3_rails_3.2
         exclude:
           - ruby: 'head'
             gemfile: rails_5_devise_4
           - ruby: 'head'
             gemfile: rails_4_devise_3
+          - ruby: 'head'
+            gemfile: ruby_1.9.3_rails_3.2
           - ruby: 3.0
             gemfile: rails_4_devise_3
+          - ruby: 3.0
+            gemfile: ruby_1.9.3_rails_3.2
           - ruby: 2.7
             gemfile: rails_4_devise_3
+          - ruby: 2.7
+            gemfile: ruby_1.9.3_rails_3.2
           - ruby: 2.6
             gemfile: rails_6_devise_4
           - ruby: 2.6
             gemfile: rails_5_devise_4
+          - ruby: 2.6
+            gemfile: ruby_1.9.3_rails_3.2
+          - ruby: 1.9.3
+            gemfile: rails_7_devise_4
+          - ruby: 1.9.3
+            gemfile: rails_6_devise_4
+          - ruby: 1.9.3
+            gemfile: rails_5_devise_4
+          - ruby: 1.9.3
+            gemfile: rails_4_devise_3
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
     runs-on: ubuntu-latest
