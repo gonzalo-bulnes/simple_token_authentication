@@ -3,9 +3,9 @@ appraise 'rails_7_devise_4' do
 end
 
 appraise 'rails_6_devise_4' do
-  gem "actionmailer", ">= 3.2.6", "< 7"
-  gem "actionpack", ">= 3.2.6", "< 7"
-  gem "devise", ">= 3.2", "< 6"
+  gem "actionmailer", "~> 6.0"
+  gem "actionpack", "~> 6.0"
+  gem "devise", "~> 4.0"
 end
 
 appraise 'rails_5_devise_4' do
