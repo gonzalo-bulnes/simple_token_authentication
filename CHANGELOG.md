@@ -8,7 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Add Rails 7 support - @OskarEichler
-- Fix undesirable override of hooks by (no-op) default implementation - @Startouf
+
+### Fixed
+
+- Undesirable override of hooks by (no-op) default implementation - @Startouf
 
 ## [1.17.0] - 2019-09-21
 
