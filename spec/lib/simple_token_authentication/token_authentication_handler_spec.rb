@@ -697,25 +697,44 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
     let(:token_authentication_handler) { described_class.new }
 
     before(:each) do
-        allow(token_authentication_handler).to receive(:find_record_from_identifier)
-        allow(token_authentication_handler).to receive(:perform_sign_in!)
+      allow(token_authentication_handler).to receive(:find_record_from_identifier)
+      allow(token_authentication_handler).to receive(:perform_sign_in!)
+      allow(token_authentication_handler).to receive(:token_correct?).and_return(false)
+    end
+
+    context 'when authentication is not succesful and the handler implements the :after_successful_token_authentication hook', private: true do
+      before(:each) do
         allow(token_authentication_handler).to receive(:token_correct?).and_return(false)
+        allow(token_authentication_handler).to receive(:after_successful_token_authentication)
+      end
+
+      it 'does not trigger the :after_successful_token_authentication hook' do
+        token_authentication_handler.send(:authenticate_entity_from_token!, double)
+        expect(token_authentication_handler).not_to have_received(:after_successful_token_authentication)
+      end
     end
 
-    it 'does not trigger the :after_successful_token_authentication hook', hooks: true, private: true do
-      expect(token_authentication_handler).not_to receive(:after_successful_token_authentication)
-      token_authentication_handler.send(:authenticate_entity_from_token!, double)
-    end
-
-    context 'after successful authentication' do
-
+    context 'when authentication is succesful' do
       before(:each) do
         allow(token_authentication_handler).to receive(:token_correct?).and_return(true)
       end
 
-      it 'calls the :after_successful_token_authentication hook', hooks: true, protected: true do
-        expect(token_authentication_handler).to receive(:after_successful_token_authentication).once
-        token_authentication_handler.send(:authenticate_entity_from_token!, double)
+      context 'when the handler does not implement :after_successful_token_authentication', protected: true do
+        it 'does not trigger the :after_successful_token_authentication hook' do
+          expect(token_authentication_handler).not_to respond_to(:after_successful_token_authentication)
+          expect { token_authentication_handler.send(:authenticate_entity_from_token!, double) }.not_to raise_error
+        end
+      end
+
+      context 'when the handler implements :after_successful_token_authentication', protected: true do
+        before(:each) do
+          allow(token_authentication_handler).to receive(:after_successful_token_authentication)
+        end
+
+        it 'calls the :after_successful_token_authentication hook' do
+          token_authentication_handler.send(:authenticate_entity_from_token!, double)
+          expect(token_authentication_handler).to have_received(:after_successful_token_authentication).once
+        end
       end
     end
   end
