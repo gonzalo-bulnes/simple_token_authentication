@@ -32,7 +32,7 @@ module SimpleTokenAuthentication
 
       if token_correct?(record, entity, token_comparator)
         perform_sign_in!(record, sign_in_handler)
-        after_successful_token_authentication if respond_to?(:after_successful_token_authentication)
+        after_successful_token_authentication if respond_to?(:after_successful_token_authentication, true)
       end
     end
 

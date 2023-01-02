@@ -736,6 +736,21 @@ describe 'Any class which includes SimpleTokenAuthentication::TokenAuthenticatio
           expect(token_authentication_handler).to have_received(:after_successful_token_authentication).once
         end
       end
+
+      context 'when the handler implements a private :after_successful_token_authentication', protected: true do
+        before(:each) do
+          token_authentication_handler.singleton_class.send(:include, Module.new {
+            def after_successful_token_authentication; end
+            private :after_successful_token_authentication
+          })
+          allow(token_authentication_handler).to receive(:after_successful_token_authentication)
+        end
+
+        it 'calls the :after_successful_token_authentication hook' do
+          token_authentication_handler.send(:authenticate_entity_from_token!, double)
+          expect(token_authentication_handler).to have_received(:after_successful_token_authentication).once
+        end
+      end
     end
   end
 end
