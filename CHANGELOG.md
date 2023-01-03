@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.18.1] - 2023-01-03
 
 ### Fixed
 
@@ -300,7 +300,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This [gist][gist] did refactor the Jose Valim's code into an `ActiveSupport::Concern`.
 
 [gist]: https://gist.github.com/gonzalo-bulnes/7659739
-[Unreleased]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.18.0...master
+[Unreleased]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.18.1...master
+[1.18.1]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.18.0...v1.18.1
 [1.18.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.17.0...v1.18.0
 [1.17.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.16.0...v1.17.0
 [1.16.0]: https://github.com/gonzalo-bulnes/simple_token_authentication/compare/v1.15.1...v1.16.0
