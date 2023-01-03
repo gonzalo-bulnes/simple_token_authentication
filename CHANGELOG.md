@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Fix a regression introduced by #402, that caused hooks not to be invoked - @dmke
+
 ## [1.18.0] - 2022-12-27
 
 ### Added
