@@ -14,7 +14,7 @@ describe SimpleTokenAuthentication::SignInHandler do
       request = double()
       allow(request).to receive(:env).and_return({})
       allow(controller).to receive(:request).and_return(request)
-      allow(controller).to receive(:sign_in).with(:record, option: 'some_value').and_return('Devise response.')
+      allow(controller).to receive(:sign_in).with(:record, { option: 'some_value' }).and_return('Devise response.')
 
       # delegating consists in sending the message
       expect(controller).to receive(:sign_in)

@@ -38,7 +38,7 @@ describe 'Simple Token Authentication' do
         it 'does instruct Devise not to store the session', public: true do
           allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return(false)
 
-          expect(@controller).to receive(:sign_in).with(@record, store: false)
+          expect(@controller).to receive(:sign_in).with(@record, { store: false })
           @controller.authenticate_user_from_token
         end
       end
@@ -48,7 +48,7 @@ describe 'Simple Token Authentication' do
         it 'does instruct Devise to store the session', public: true do
           allow(SimpleTokenAuthentication).to receive(:sign_in_token).and_return(true)
 
-          expect(@controller).to receive(:sign_in).with(@record, store: true)
+          expect(@controller).to receive(:sign_in).with(@record, { store: true })
           @controller.authenticate_user_from_token
         end
       end
@@ -90,7 +90,7 @@ describe 'Simple Token Authentication' do
 
       # the option updated value is taken into account
       # when token authentication is performed
-      expect(@controller).to receive(:sign_in).with(@record, store: 'updated value')
+      expect(@controller).to receive(:sign_in).with(@record, { store: 'updated value' })
       @controller.authenticate_user_from_token
     end
   end

@@ -25,3 +25,4 @@ gemfiles/*
 # Editors
 *.sublime-project
 *.sublime-workspace
+*.swp
