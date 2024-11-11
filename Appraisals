@@ -1,5 +1,11 @@
-appraise 'rails_7_devise_4' do
+appraise 'rails_8_devise_4' do
   # use gemspec constraints
+end
+
+appraise 'rails_7_devise_4' do
+  gem "actionmailer", ">= 3.2.6", "< 8"
+  gem "actionpack", ">= 3.2.6", "< 8"
+  gem "devise", ">= 3.2", "< 6"
 end
 
 appraise 'rails_6_devise_4' do
