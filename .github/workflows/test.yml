@@ -20,6 +20,8 @@ jobs:
           - ruby_1.9.3_rails_3.2
         exclude:
           - ruby: 'head'
+            gemfile: rails_6_devise_4
+          - ruby: 'head'
             gemfile: rails_5_devise_4
           - ruby: 'head'
             gemfile: rails_4_devise_3
