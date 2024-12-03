@@ -7,6 +7,8 @@ jobs:
       matrix:
         ruby:
           - 'head'
+          - '3.2'
+          - '3.1'
           - '3.0'
           - '2.7'
           - '2.6'
@@ -26,6 +28,20 @@ jobs:
           - ruby: 'head'
             gemfile: rails_4_devise_3
           - ruby: 'head'
+            gemfile: ruby_1.9.3_rails_3.2
+          - ruby: '3.2'
+            gemfile: rails_6_devise_4
+          - ruby: '3.2'
+            gemfile: rails_5_devise_4
+          - ruby: '3.2'
+            gemfile: rails_4_devise_3
+          - ruby: '3.2'
+            gemfile: ruby_1.9.3_rails_3.2
+          - ruby: '3.1'
+            gemfile: rails_5_devise_4
+          - ruby: '3.1'
+            gemfile: rails_4_devise_3
+          - ruby: '3.1'
             gemfile: ruby_1.9.3_rails_3.2
           - ruby: 3.0
             gemfile: rails_4_devise_3
@@ -59,7 +75,7 @@ jobs:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
