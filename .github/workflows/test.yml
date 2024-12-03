@@ -7,6 +7,7 @@ jobs:
       matrix:
         ruby:
           - 'head'
+          - '3.3'
           - '3.2'
           - '3.1'
           - '3.0'
@@ -21,6 +22,8 @@ jobs:
           - rails_4_devise_3
           - ruby_1.9.3_rails_3.2
         exclude:
+          - ruby: 'head'
+            gemfile: rails_7_devise_4
           - ruby: 'head'
             gemfile: rails_6_devise_4
           - ruby: 'head'
