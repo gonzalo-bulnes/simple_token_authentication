@@ -27,6 +27,7 @@ describe 'Simple Token Authentication' do
           allow(model).to receive(:find_for_authentication).with(email: 'charles@example.com').and_return(@charles_record)
         end
         allow(@charles_record).to receive(:authentication_token).and_return('ch4rlEs_toKeN')
+        allow(@charles_record).to receive(:token_for_provider).and_return('ch4rlEs_toKeN')
 
         # and one *w*rong record (which should not be signed in)
         @waldo_record = double()
@@ -34,6 +35,7 @@ describe 'Simple Token Authentication' do
           allow(model).to receive(:find_for_authentication).with(email: 'waldo@example.com').and_return(@waldo_record)
         end
         allow(@waldo_record).to receive(:authentication_token).and_return('w4LdO_toKeN')
+        allow(@waldo_record).to receive(:token_for_provider).and_return('w4LdO_toKeN')
 
         # given a controller class which acts as token authentication handler
         @controller_class = Class.new
@@ -86,6 +88,8 @@ describe 'Simple Token Authentication' do
                                                           .and_return('charles@example.com')
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
 
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({})
@@ -119,6 +123,10 @@ describe 'Simple Token Authentication' do
                                                           .and_return('charles@example.com')
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Provider')
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
 
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ user: {} })
@@ -148,6 +156,10 @@ describe 'Simple Token Authentication' do
                                                           .and_return('charles@example.com')
                 allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
                                                           .and_return('ch4rlEs_toKeN')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Provider')
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
 
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ user: { email: 'X-CustomEmail',
@@ -178,6 +190,10 @@ describe 'Simple Token Authentication' do
                                                           .and_return('charles@example.com')
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Provider')
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
 
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ admin: { email: 'X-CustomEmail',
@@ -210,6 +226,8 @@ describe 'Simple Token Authentication' do
                                                           .and_return('charles@example.com')
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
 
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ user:  { email: 'X-CustomEmail' },
@@ -244,6 +262,10 @@ describe 'Simple Token Authentication' do
                                                           .and_return('charles@example.com')
                 allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
                                                           .and_return('ch4rlEs_toKeN')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Provider')
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
 
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ admin:  { email: 'X-CustomEmail' },
@@ -279,6 +301,10 @@ describe 'Simple Token Authentication' do
                                                           .and_return('charles@example.com')
                 allow(@controller.request.headers).to receive(:[]).with('X-User-Token')
                                                           .and_return('ch4rlEs_toKeN')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Provider')
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
 
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ user:  { email: 'X-CustomEmail' } })
@@ -342,6 +368,11 @@ describe 'Simple Token Authentication' do
                 allow(@controller.request.headers).to receive(:[]).with('X-Custom_Token')
                                                           .and_return('ch4rlEs_toKeN')
 
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Provider')
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
+
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ admin:  { email: 'X-CustomEmail', authentication_token: 'X-Custom_Token' } })
               end
@@ -375,6 +406,10 @@ describe 'Simple Token Authentication' do
                                                           .and_return('charles@example.com')
                 allow(@controller.request.headers).to receive(:[]).with('X-Admin-Token')
                                                           .and_return('ch4rlEs_toKeN')
+                allow(@controller.request.headers).to receive(:[]).with('X-Admin-Provider')
+                                                          .and_return(nil)
+                allow(@controller.request.headers).to receive(:[]).with('X-User-Provider')
+                                                          .and_return(nil)
 
                 allow(SimpleTokenAuthentication).to receive(:header_names)
                   .and_return({ admin:  { email: 'X-CustomEmail' } })
@@ -404,11 +439,13 @@ describe 'Simple Token Authentication' do
       @charles_record = double()
       allow(user).to receive(:find_for_authentication).with(email: 'charles@example.com').and_return(@charles_record)
       allow(@charles_record).to receive(:authentication_token).and_return('ch4rlEs_toKeN')
+      allow(@charles_record).to receive(:token_for_provider).and_return('ch4rlEs_toKeN')
 
       # and one *w*rong record (which should not be signed in)
       @waldo_record = double()
       allow(user).to receive(:find_for_authentication).with(email: 'waldo@example.com').and_return(@waldo_record)
       allow(@waldo_record).to receive(:authentication_token).and_return('w4LdO_toKeN')
+      allow(@charles_record).to receive(:token_for_provider).and_return('w4LdO_toKeN')
 
       # given a controller class which acts as token authentication handler
       @controller_class = Class.new

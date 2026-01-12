@@ -193,7 +193,7 @@ SimpleTokenAuthentication.configure do |config|
   # Configure the name of the HTTP headers watched for authentication.
   #
   # Default header names for a given token authenticatable entity follow the pattern:
-  #   { entity: { authentication_token: 'X-Entity-Token', email: 'X-Entity-Email'} }
+  #   { entity: { authentication_token: 'X-Entity-Token', email: 'X-Entity-Email', provider: 'X-Entity-Provider'} }
   #
   # When several token authenticatable models are defined, custom header names
   # can be specified for none, any, or all of them.
@@ -235,6 +235,35 @@ SimpleTokenAuthentication.configure do |config|
   #   `config.identifiers = { super_admin: 'phone_number', user: 'uuid' }`
   #
   # config.identifiers = { user: 'email' }
+ 
+  # Configure the use of multiple 'providers' and custom field names.
+  # Providers allow you to have any number of different token scopes instead of just the default 'authentication_token'. 
+  # You can define any number of 'providers', or even use just one to allow a custom field name for your token. 
+  # 
+  # Note: setting this option will have no affect unless token_providers are setup correctly,
+  # see the token_providers section below.
+  #
+  # The default setting is false, when false, 'authentication_token' will be used as the field and no behaviour will change.
+  #
+  # config.use_multiple_providers = false 
+
+  # Configure the name/names of the providers and their relative attributes used to store the authentication token on your model.
+  # When using providers you must pass the header 'X-Entity-Provider' with your requests or set the param in your controller. 
+  # The attributes defined for providers must exist in your model.
+  #
+  # The default provider does not require defining. Fallback behaviour is preserved at a code level.
+  #
+  # When several token authenticatable models are defined, providers can be specified for none, any, or all of them.
+  # If a token authenticatable model is not defined, it will follow default behaviour.
+  #
+  # Note: setting this option does nothing unless the use_multiple_providers behaviour is enabled,
+  # see the use_multiple_providers section above.
+  #
+  # Example:
+  #
+  #   `config.token_providers = { user: { mobile: 'mobile_authentication_token', web: 'web_authentication_token' } }`
+  #
+  # config.token_providers = {}
 
   # Configure the Devise trackable strategy integration.
   #
@@ -313,6 +342,21 @@ class ApplicationController < ActiveController::Base
       renew_authentication_token!
     end
 end
+```
+
+### Multiple authentication tokens: Using providers
+
+In the case you wish to use more than one authentication token for a single model, the concept of 'providers' has been added to allow this.
+
+A use case for this would be a standalone web application and a standalone mobile application both requiring authentication tokens but you don't want them to invalidate each other whilst cycling tokens. 
+
+When enabled, providers function alongside both authentication methods (Query params/Request headers). You can define them for a single model and non-defined models will use default behaviour. You could also enable this functionality simply to rename the default token field.
+
+To use providers you need the following settings:
+
+```
+config.use_multiple_providers = true
+config.token_providers = { user: { mobile: 'mobile_authentication_token', web: 'web_authentication_token' } }
 ```
 
 ### Testing

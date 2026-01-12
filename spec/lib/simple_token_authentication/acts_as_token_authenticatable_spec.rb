@@ -82,7 +82,7 @@ describe 'A token authenticatable class (or one of its children)' do
             end
 
             # the 'ExampleTok3n' is already in use
-            def token_suitable?(token)
+            def token_suitable?(token, field)
               not TOKENS_IN_USE.include? token
             end
 
